@@ -20,8 +20,28 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <script type="text/javascript">
+      uploadConfig={
+        saveType : "onedrive",
+        maxSize : "20000mb",
+        allowedType: [ 
+                ],
+        allowSource : "0",
+        upUrl : "/Upload",
+        allowShare:"1",
+              allowRemoteDownload:"1",
+              allowTorrentDownload:"1",
+      };
+      </script>
+    <script src="http://lite.aoaoao.me/dev/moxie.js"></script>
+  <script src="http://lite.aoaoao.me/dev/plupload.dev.js"></script>
+  <script src="http://lite.aoaoao.me/dev/i18n/zh_CN.js"></script>
+  <script src="http://lite.aoaoao.me/dev/ui.js"></script>
+  <script src="http://lite.aoaoao.me/dev/qiniu.js"></script>
+  <script src="http://lite.aoaoao.me/dev/main.js"></script>
   </head>
   <body>
+    
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
@@ -37,10 +57,5 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
-  <script src="http://127.0.0.1/static/js/moxie.js"></script>
-  <script src="http://127.0.0.1/static/js/plupload.dev.js"></script>
-  <script src="http://127.0.0.1/static/js/i18n/zh_CN.js"></script>
-  <script src="http://127.0.0.1/static/js/ui.js"></script>
-  <script src="http://127.0.0.1/static/js/qiniu.js"></script>
-  <script src="http://127.0.0.1/static/js/main.js"></script>
+  
 </html>

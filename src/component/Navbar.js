@@ -62,9 +62,9 @@ class Navbar extends Component {
         const { classes, theme } = this.props;
 
         const drawer = (
-            <div>
+            <div id="container">
                 <List>
-                    <ListItem button key="上传文件">
+                    <ListItem button key="上传文件" id="pickfiles">
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText primary="上传文件" />
                     </ListItem>
