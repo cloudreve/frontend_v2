@@ -1,11 +1,21 @@
 import React, { Component } from 'react'
 import scriptLoader from 'react-async-script-loader'
 
+let loaded = false;
+
 class Uploader extends Component {
+
+    constructor(props){
+        super(props);
+    }
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
+                if(loaded){
+                    return;
+                }
+                loaded = true;
                 var uploader = window.Qiniu.uploader({
                     runtimes: 'html5,flash,html4',
                     browse_button: 'pickfiles',
@@ -30,14 +40,14 @@ class Uploader extends Component {
                             // $('#upload_box').show();
                             // $('#success').hide();
                             // $('#info_box').hide();
-
+        
                             //   $.cookie('path', decodeURI(getCookieByString("path_tmp"))); 
                             // plupload.each(files, function(file) {
                             // 	var progress = new FileProgress(file, 'fsUploadProgress');
                             // 	progress.setStatus("等待...");
                             // 	progress.bindUploadCancel(up);
                             // });
-
+        
                         },
                         'BeforeUpload': function (up, file) {
                             // var progress = new FileProgress(file, 'fsUploadProgress');
@@ -81,15 +91,17 @@ class Uploader extends Component {
         if (isScriptLoaded && isScriptLoadSucceed) {
         }
     }
+
+
     render() { return (<div></div>); }
 
 }
 
 export default scriptLoader(
-    ['http://lite.aoaoao.me/dev/moxie.js'],
-    ['http://lite.aoaoao.me/dev/plupload.dev.js'],
-    ['http://lite.aoaoao.me/dev/i18n/zh_CN.js'],
-    ['http://lite.aoaoao.me/dev/ui.js'],
-    ['http://lite.aoaoao.me/dev/qiniu.js'],
+    ['http://127.0.0.1/static/new/dev/moxie.js'],
+    ['http://127.0.0.1/static/new/dev/plupload.dev.js'],
+    ['http://127.0.0.1/static/new/dev/i18n/zh_CN.js'],
+    ['http://127.0.0.1/static/new/dev/ui.js'],
+    ['http://127.0.0.1/static/new/dev/qiniu.js'],
 
 )(Uploader)

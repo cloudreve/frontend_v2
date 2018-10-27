@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
+import Uploader from "./Uploader.js"
 
 const drawerWidth = 240;
 
@@ -47,6 +48,9 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
+    hiddenButton:{
+        display:"none",
+    }
 });
 class Navbar extends Component {
 
@@ -58,17 +62,31 @@ class Navbar extends Component {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
 
+    clickUpload = ()=>{
+        document.getElementsByClassName("uploadForm")[0].click();
+    }
+
+    loadUploader(){   
+		if(true){
+			return (<Uploader/>)
+		}
+	}
+
     render() {
-        const { classes, theme } = this.props;
+        const { classes } = this.props;
 
         const drawer = (
             <div id="container">
+            {this.loadUploader()}
                 <List>
-                    <ListItem button key="上传文件" id="pickfiles">
+                    <ListItem button key="上传文件"  onClick={this.clickUpload}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText primary="上传文件" />
                     </ListItem>
-
+                    <ListItem button id="pickfiles" className={classes.hiddenButton}>
+                        <ListItemIcon><UploadIcon /></ListItemIcon>
+                        <ListItemText />
+                    </ListItem>
                 </List>
                 <Divider />
                 <List>
@@ -106,9 +124,6 @@ class Navbar extends Component {
                             anchor="left"
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
-                            classes={{
-                                paper: classes.drawerPaper,
-                            }}
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
                             }}

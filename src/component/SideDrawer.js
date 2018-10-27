@@ -31,15 +31,19 @@ class SideDrawer extends Component {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
 
+    upload(){
+        alert("");
+    }   
+
     render() {
         const { classes } = this.props;
-
+        
         const drawer = (
             <div><div className={classes.toolbar} />
                 <List>
-                    <ListItem button key="上传文件">
+                    <ListItem button key="上传文d件" onClick={this.upload}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
-                        <ListItemText primary="上传文件" />
+                        <ListItemText primary="上传文d件" />
                     </ListItem>
 
                 </List>
