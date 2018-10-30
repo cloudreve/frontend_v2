@@ -64,6 +64,7 @@ class Navbar extends Component {
 
     clickUpload = ()=>{
         document.getElementsByClassName("uploadForm")[0].click();
+        //console.log(this.uploader);
     }
 
     loadUploader(){   
@@ -79,7 +80,7 @@ class Navbar extends Component {
             <div id="container">
             {this.loadUploader()}
                 <List>
-                    <ListItem button key="上传文件"  onClick={this.clickUpload}>
+                    <ListItem button key="上传文件" ref="s" onClick={this.clickUpload}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText primary="上传文件" />
                     </ListItem>

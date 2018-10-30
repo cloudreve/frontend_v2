@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
 import scriptLoader from 'react-async-script-loader'
 
+import FileList from "./Upload/FileList.js"
+
 let loaded = false;
 
 class Uploader extends Component {
 
     constructor(props){
         super(props);
+        this.fileList = React.createRef();
     }
+
+    FilesAdded (up, files) {
+        this.fileList.current.openFileList();
+    }
+
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
@@ -35,54 +43,26 @@ class Uploader extends Component {
                     auto_start: true,
                     log_level: 5,
                     init: {
-                        'FilesAdded': function (up, files) {
-                            // $('table').show();
-                            // $('#upload_box').show();
-                            // $('#success').hide();
-                            // $('#info_box').hide();
-        
-                            //   $.cookie('path', decodeURI(getCookieByString("path_tmp"))); 
-                            // plupload.each(files, function(file) {
-                            // 	var progress = new FileProgress(file, 'fsUploadProgress');
-                            // 	progress.setStatus("等待...");
-                            // 	progress.bindUploadCancel(up);
-                            // });
-        
-                        },
+                        'FilesAdded':(up,file)=>this.FilesAdded,
                         'BeforeUpload': function (up, file) {
-                            // var progress = new FileProgress(file, 'fsUploadProgress');
-                            // var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
-                            // if (up.runtime === 'html5' && chunk_size) {
-                            // 	progress.setChunkProgess(chunk_size);
-                            // }
                         },
                         'UploadProgress': function (up, file) {
-                            // var progress = new FileProgress(file, 'fsUploadProgress');
-                            // var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
-                            // progress.setProgress(file.percent + "%", file.speed, chunk_size);
                         },
                         'UploadComplete': function (up, file) {
-                            // $('#success').show();
-                            // toastr["success"]("队列全部文件处理完毕");
-                            // getMemory();
                         },
                         'FileUploaded': function (up, file, info) {
                             var progress = new window.FileProgress(file, 'fsUploadProgress');
                             progress.setComplete(up, info);
                         },
                         'Error': function (up, err, errTip) {
-                            // $('#upload_box').show();
-                            // 	$('table').show();
-                            // 	$('#info_box').hide();
                             var progress = new window.FileProgress(err.file, 'fsUploadProgress');
                             progress.setError();
                             progress.setStatus(errTip);
-                            //toastr["error"]("上传时遇到错误");
                         }
                     }
                 });
             }
-            else this.props.onError()
+            else this.onError()
         }
     }
 
@@ -90,10 +70,19 @@ class Uploader extends Component {
         const { isScriptLoaded, isScriptLoadSucceed } = this.props
         if (isScriptLoaded && isScriptLoadSucceed) {
         }
+        
+    }
+
+    onError(){
+
+    }
+
+    openFileList(){
+        alert();
     }
 
 
-    render() { return (<div></div>); }
+    render() { return (<div><FileList  innerRef={this.fileList}/></div>); }
 
 }
 
