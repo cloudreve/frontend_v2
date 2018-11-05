@@ -12,12 +12,8 @@ class Uploader extends Component {
         this.fileList = React.createRef();
     }
 
-    FilesAdded (up, files) {
-        this.fileList.current.openFileList();
-    }
-
-
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
+        this.fileList.current.openFileList();
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
                 if(loaded){
@@ -43,21 +39,26 @@ class Uploader extends Component {
                     auto_start: true,
                     log_level: 5,
                     init: {
-                        'FilesAdded':(up,file)=>this.FilesAdded,
+                        'FilesAdded':({up, files})=>{
+                            this.fileList.current.openFileList();
+                            window.plupload.each(files, function(files) {
+                                this.fileList.current.enQueue(files);
+                           })
+                        },
+                            
+                        
                         'BeforeUpload': function (up, file) {
+                            alert("BeforeUpload");
                         },
                         'UploadProgress': function (up, file) {
                         },
                         'UploadComplete': function (up, file) {
                         },
                         'FileUploaded': function (up, file, info) {
-                            var progress = new window.FileProgress(file, 'fsUploadProgress');
-                            progress.setComplete(up, info);
+                           
                         },
                         'Error': function (up, err, errTip) {
-                            var progress = new window.FileProgress(err.file, 'fsUploadProgress');
-                            progress.setError();
-                            progress.setStatus(errTip);
+                        
                         }
                     }
                 });
@@ -87,10 +88,10 @@ class Uploader extends Component {
 }
 
 export default scriptLoader(
-    ['http://127.0.0.1/static/new/dev/moxie.js'],
-    ['http://127.0.0.1/static/new/dev/plupload.dev.js'],
-    ['http://127.0.0.1/static/new/dev/i18n/zh_CN.js'],
-    ['http://127.0.0.1/static/new/dev/ui.js'],
-    ['http://127.0.0.1/static/new/dev/qiniu.js'],
+    ['http://localhost/static/new/dev/moxie.js'],
+    ['http://localhost/static/new/dev/plupload.dev.js'],
+    ['http://localhost/static/new/dev/i18n/zh_CN.js'],
+    ['http://localhost/static/new/dev/ui.js'],
+    ['http://localhost/static/new/dev/qiniu.js'],
 
 )(Uploader)

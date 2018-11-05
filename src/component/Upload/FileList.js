@@ -25,11 +25,19 @@ const styles = theme => ({
 });
 class FileList extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             open: false,
+            files: [
+                { "name": "111" },
+                { "name": "222" },
+            ],
         };
+    }
+
+    enQueue(files) {
+
     }
 
     Transition(props) {
@@ -61,14 +69,21 @@ class FileList extends Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.flex}>
-                            Sound
-              </Typography>
-                        <Button color="inherit" onClick={this.handleClose}>
-                            save
-              </Button>
+                            上传队列
+                        </Typography>
+
                     </Toolbar>
                 </AppBar>
                 <List>
+                    {
+                        this.state.files.map(function (item, i) {
+                            return (
+                                <ListItem button key={i}>
+                                <ListItemText primary={item.name} secondary="Titania"  />
+                            </ListItem>
+                            );
+                        })
+                    }
                     <ListItem button>
                         <ListItemText primary="Phone ringtone" secondary="Titania" />
                     </ListItem>
