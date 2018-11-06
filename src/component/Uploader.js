@@ -13,7 +13,6 @@ class Uploader extends Component {
     }
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
-        this.fileList.current.openFileList();
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
                 if(loaded){
@@ -41,8 +40,9 @@ class Uploader extends Component {
                     init: {
                         'FilesAdded':({up, files})=>{
                             this.fileList.current.openFileList();
-                            window.plupload.each(files, function(files) {
+                            window.plupload.each(files, (files)=> {
                                 this.fileList.current.enQueue(files);
+                                console.log(files);
                            })
                         },
                             

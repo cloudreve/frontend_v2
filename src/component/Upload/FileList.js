@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
 
 
@@ -30,13 +31,18 @@ class FileList extends Component {
         this.state = {
             open: false,
             files: [
-                { "name": "111" },
-                { "name": "222" },
             ],
         };
     }
 
     enQueue(files) {
+        var filesNow = this.state.files;
+        if(filesNow.findIndex((file) => {return file.id === files.id})===-1){
+            filesNow.push(files);
+            this.setState({
+                files:filesNow,
+            });
+        }
 
     }
 
@@ -79,18 +85,12 @@ class FileList extends Component {
                         this.state.files.map(function (item, i) {
                             return (
                                 <ListItem button key={i}>
-                                <ListItemText primary={item.name} secondary="Titania"  />
-                            </ListItem>
+                                    <ListItemText primary={item.name} secondary={<div>50<LinearProgress /></div>}  />
+                                    
+                                 </ListItem>
                             );
                         })
                     }
-                    <ListItem button>
-                        <ListItemText primary="Phone ringtone" secondary="Titania" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button>
-                        <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-                    </ListItem>
                 </List>
             </Dialog>
         );
