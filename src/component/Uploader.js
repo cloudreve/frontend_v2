@@ -9,10 +9,14 @@ class Uploader extends Component {
 
     constructor(props){
         super(props);
-        this.fileList = React.createRef();
+    }
+
+    setRef(val){
+        this.fileList=val;
     }
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
+        this.fileList();
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
                 if(loaded){
@@ -83,7 +87,7 @@ class Uploader extends Component {
     }
 
 
-    render() { return (<div><FileList  innerRef={this.fileList}/></div>); }
+    render() { return (<div><FileList inRef= {this.setRef.bind(this)}/></div>); }
 
 }
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,9 +11,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import FileIcon from '@material-ui/icons/InsertDriveFile';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
-
+import Avatar from '@material-ui/core/Avatar';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import DeleteIcon from '@material-ui/icons/Delete';
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
 
 const styles = theme => ({
     appBar: {
@@ -31,16 +34,17 @@ class FileList extends Component {
         this.state = {
             open: false,
             files: [
+                { name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" }
             ],
         };
     }
 
     enQueue(files) {
         var filesNow = this.state.files;
-        if(filesNow.findIndex((file) => {return file.id === files.id})===-1){
+        if (filesNow.findIndex((file) => { return file.id === files.id }) === -1) {
             filesNow.push(files);
             this.setState({
-                files:filesNow,
+                files: filesNow,
             });
         }
 
@@ -50,7 +54,10 @@ class FileList extends Component {
         return <Slide direction="up" {...props} />;
     }
     openFileList = () => {
-        this.setState({ open: true });
+        if(!this.state.open){
+            this.setState({ open: true });
+        }
+        
     };
 
     handleClose = () => {
@@ -58,13 +65,15 @@ class FileList extends Component {
     };
 
     render() {
+
         const { classes } = this.props;
+        const { width } = this.props;
 
-
+        this.props.inRef(this.openFileList.bind(this));
 
         return (
             <Dialog
-                fullScreen
+            fullScreen={isWidthDown("sm", width)}
                 open={this.state.open}
                 onClose={this.handleClose}
                 TransitionComponent={this.Transition}
@@ -74,7 +83,7 @@ class FileList extends Component {
                         <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>
+                        <Typography variant="h6" color="inherit" >
                             上传队列
                         </Typography>
 
@@ -84,10 +93,20 @@ class FileList extends Component {
                     {
                         this.state.files.map(function (item, i) {
                             return (
-                                <ListItem button key={i}>
-                                    <ListItemText primary={item.name} secondary={<div>50<LinearProgress /></div>}  />
-                                    
-                                 </ListItem>
+                                <div key={i}>
+                                    <ListItem button >
+                                        <Avatar>
+                                            <FileIcon />
+                                        </Avatar>
+                                        <ListItemText primary={item.name} secondary={<div>50<LinearProgress /></div>} />
+                                        <ListItemSecondaryAction>
+                                            <IconButton aria-label="Delete">
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
+
+                                    </ListItem>
+                                    <Divider /></div>
                             );
                         })
                     }
@@ -98,7 +117,6 @@ class FileList extends Component {
 
 }
 FileList.propTypes = {
-    classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FileList);
+export default withStyles(styles)(withWidth()(FileList));
