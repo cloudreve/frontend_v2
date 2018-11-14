@@ -7,16 +7,11 @@ let loaded = false;
 
 class Uploader extends Component {
 
-    constructor(props){
-        super(props);
-    }
-
     setRef(val){
         this.fileList=val;
     }
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
-        this.fileList();
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
                 if(loaded){
@@ -43,9 +38,9 @@ class Uploader extends Component {
                     log_level: 5,
                     init: {
                         'FilesAdded':({up, files})=>{
-                            this.fileList.current.openFileList();
+                            this.fileList["openFileList"]();
                             window.plupload.each(files, (files)=> {
-                                this.fileList.current.enQueue(files);
+                                this.fileList["enQueue"](files);
                                 console.log(files);
                            })
                         },
@@ -54,7 +49,9 @@ class Uploader extends Component {
                         'BeforeUpload': function (up, file) {
                             alert("BeforeUpload");
                         },
-                        'UploadProgress': function (up, file) {
+                        'UploadProgress': (up, file)=>{
+                            this.fileList["updateStatus"](file);
+                            console.log(file.percent);
                         },
                         'UploadComplete': function (up, file) {
                         },

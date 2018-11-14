@@ -18,7 +18,7 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
-
+import Hidden from '@material-ui/core/Hidden';
 const styles = theme => ({
     appBar: {
         position: 'relative',
@@ -33,8 +33,7 @@ class FileList extends Component {
         super(props);
         this.state = {
             open: false,
-            files: [
-                { name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" },{ name: "第第二次第二次第二次二次.docx" }
+            files: [{name:"s","percenr":0,id:"placeorder",status:5}
             ],
         };
     }
@@ -48,6 +47,17 @@ class FileList extends Component {
             });
         }
 
+    }
+
+    updateStatus(file){
+        var filesNow = this.state.files;
+        var fileID = filesNow.findIndex((f) => { return f.id === file.id });
+        if (fileID !== -1) {
+            filesNow[fileID] = file;
+            this.setState({
+                files: filesNow,
+            });
+        }
     }
 
     Transition(props) {
@@ -69,7 +79,11 @@ class FileList extends Component {
         const { classes } = this.props;
         const { width } = this.props;
 
-        this.props.inRef(this.openFileList.bind(this));
+        this.props.inRef({
+            "openFileList":this.openFileList.bind(this),
+            "enQueue":this.enQueue.bind(this),
+            "updateStatus":this.updateStatus.bind(this),
+        });
 
         return (
             <Dialog
@@ -92,13 +106,19 @@ class FileList extends Component {
                 <List>
                     {
                         this.state.files.map(function (item, i) {
+                            if(item.status ===5){
+                                var progressItem = (<ListItemText primary={item.name} secondary={<div>60<LinearProgress /></div>} />);
+                            }else{
+                                var progressItem = (<ListItemText primary={item.name} secondary={<div>{item.percent}<LinearProgress   variant="determinate" value={item.percent} /></div>} />);
+                            }
                             return (
-                                <div key={i}>
+                                <div key={i} style={ item.id==="placeorder" ?{display:""}:{}}>
                                     <ListItem button >
                                         <Avatar>
                                             <FileIcon />
                                         </Avatar>
-                                        <ListItemText primary={item.name} secondary={<div>50<LinearProgress /></div>} />
+                                        {progressItem}
+                                        
                                         <ListItemSecondaryAction>
                                             <IconButton aria-label="Delete">
                                                 <DeleteIcon />
