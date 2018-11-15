@@ -18,7 +18,8 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
-import Hidden from '@material-ui/core/Hidden';
+import DialogContent from '@material-ui/core/DialogContent';
+
 const styles = theme => ({
     appBar: {
         position: 'relative',
@@ -26,6 +27,17 @@ const styles = theme => ({
     flex: {
         flex: 1,
     },
+    progressBar:{
+        marginTop:5,
+    },
+    minHight:{
+        [theme.breakpoints.up('sm')]: {
+            minWidth:500,
+        }
+    },
+    dialogContent:{
+        padding:0,
+    }
 });
 class FileList extends Component {
 
@@ -33,8 +45,7 @@ class FileList extends Component {
         super(props);
         this.state = {
             open: false,
-            files: [{name:"s","percenr":0,id:"placeorder",status:5}
-            ],
+            files: [],
         };
     }
 
@@ -70,6 +81,10 @@ class FileList extends Component {
         
     };
 
+    cancelUpload = file =>{
+        this.props.cancelUpload(file);
+    }
+
     handleClose = () => {
         this.setState({ open: false });
     };
@@ -84,6 +99,39 @@ class FileList extends Component {
             "enQueue":this.enQueue.bind(this),
             "updateStatus":this.updateStatus.bind(this),
         });
+
+        var listContent = (
+            this.state.files.map(function(item, i){
+                var progressItem;
+                if(item.status ===5){
+                    progressItem = (<ListItemText primary={item.name} secondary={<div>60<br/><LinearProgress className={classes.progressBar}/></div>} />);
+                }else if (item.status ===2){
+                    var progressItem = (<ListItemText primary={item.name} secondary={<div>{window.plupload.formatSize(item.speed).toUpperCase()}/s 已上传 {window.plupload.formatSize(item.loaded).toUpperCase()} , 共 {window.plupload.formatSize(item.size).toUpperCase()} - {item.percent}% <br/><LinearProgress variant="determinate" value={item.percent} className={classes.progressBar} /></div>}/>);
+                }else if (item.status ===1){
+                    progressItem = (<ListItemText primary={item.name} secondary={<div>排队中<br/><LinearProgress className={classes.progressBar}/></div>} />);
+                }else{
+                    progressItem = (<ListItemText primary={item.name} secondary={item.status} />);
+                }
+                return (
+                    <div key={i}>
+                        <ListItem button >
+                            <Avatar>
+                                <FileIcon />
+                            </Avatar>
+                            {progressItem}
+                            
+                            <ListItemSecondaryAction>
+                                <IconButton aria-label="Delete" onClick={()=>this.cancelUpload(item)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+
+                        </ListItem>
+                        <Divider /></div>
+                );
+            },this)
+
+        );
 
         return (
             <Dialog
@@ -103,34 +151,11 @@ class FileList extends Component {
 
                     </Toolbar>
                 </AppBar>
-                <List>
-                    {
-                        this.state.files.map(function (item, i) {
-                            if(item.status ===5){
-                                var progressItem = (<ListItemText primary={item.name} secondary={<div>60<LinearProgress /></div>} />);
-                            }else{
-                                var progressItem = (<ListItemText primary={item.name} secondary={<div>{item.percent}<LinearProgress   variant="determinate" value={item.percent} /></div>} />);
-                            }
-                            return (
-                                <div key={i} style={ item.id==="placeorder" ?{display:""}:{}}>
-                                    <ListItem button >
-                                        <Avatar>
-                                            <FileIcon />
-                                        </Avatar>
-                                        {progressItem}
-                                        
-                                        <ListItemSecondaryAction>
-                                            <IconButton aria-label="Delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-
-                                    </ListItem>
-                                    <Divider /></div>
-                            );
-                        })
-                    }
+                <DialogContent className={classes.dialogContent}>
+                <List className={classes.minHight}>
+                    {listContent}
                 </List>
+                </DialogContent>
             </Dialog>
         );
     }

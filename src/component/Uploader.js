@@ -11,6 +11,10 @@ class Uploader extends Component {
         this.fileList=val;
     }
 
+    cancelUpload(file){
+        this.uploader.removeFile(file);
+    }
+
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
         if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
             if (isScriptLoadSucceed) {
@@ -18,7 +22,7 @@ class Uploader extends Component {
                     return;
                 }
                 loaded = true;
-                var uploader = window.Qiniu.uploader({
+                this.uploader = window.Qiniu.uploader({
                     runtimes: 'html5,flash,html4',
                     browse_button: 'pickfiles',
                     container: 'container',
@@ -47,6 +51,7 @@ class Uploader extends Component {
                             
                         
                         'BeforeUpload': function (up, file) {
+                            console.log(up);
                             alert("BeforeUpload");
                         },
                         'UploadProgress': (up, file)=>{
@@ -60,7 +65,10 @@ class Uploader extends Component {
                         },
                         'Error': function (up, err, errTip) {
                         
-                        }
+                        },
+                        "FilesRemoved":(up, files)=>{
+                            alert("removed");
+                        },
                     }
                 });
             }
@@ -84,7 +92,7 @@ class Uploader extends Component {
     }
 
 
-    render() { return (<div><FileList inRef= {this.setRef.bind(this)}/></div>); }
+    render() { return (<div><FileList inRef= {this.setRef.bind(this)} cancelUpload={this.cancelUpload.bind(this)}/></div>); }
 
 }
 
