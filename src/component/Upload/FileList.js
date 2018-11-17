@@ -49,6 +49,7 @@ class FileList extends Component {
         };
     }
 
+    //入队
     enQueue(files) {
         var filesNow = this.state.files;
         if (filesNow.findIndex((file) => { return file.id === files.id }) === -1) {
@@ -58,6 +59,17 @@ class FileList extends Component {
             });
         }
 
+    }
+
+    deQueue(file){
+        var filesNow = this.state.files;
+        var fileID = filesNow.findIndex((f) => { return f.id === file.id });
+        if (fileID !== -1) {
+            filesNow.splice(fileID, 1);
+            this.setState({
+                files: filesNow,
+            });
+        }
     }
 
     updateStatus(file){
@@ -83,6 +95,7 @@ class FileList extends Component {
 
     cancelUpload = file =>{
         this.props.cancelUpload(file);
+        this.deQueue(file);
     }
 
     handleClose = () => {

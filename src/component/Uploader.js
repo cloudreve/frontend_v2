@@ -67,7 +67,6 @@ class Uploader extends Component {
                         
                         },
                         "FilesRemoved":(up, files)=>{
-                            alert("removed");
                         },
                     }
                 });
