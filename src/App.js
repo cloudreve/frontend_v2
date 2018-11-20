@@ -32,7 +32,7 @@ class App extends Component {
 		return (
 			<React.Fragment>
 				<MuiThemeProvider theme={theme}>
-					<div className={classes.root}>
+					<div className={classes.root} id="container">
 						<CssBaseline />
 						<Navbar />
 						<main className={classes.content}>

@@ -45,31 +45,31 @@ class Uploader extends Component {
                             this.fileList["openFileList"]();
                             window.plupload.each(files, (files)=> {
                                 this.fileList["enQueue"](files);
-                                console.log(files);
                            })
                         },
                             
                         
                         'BeforeUpload': function (up, file) {
-                            console.log(up);
-                            alert("BeforeUpload");
+
                         },
                         'UploadProgress': (up, file)=>{
                             this.fileList["updateStatus"](file);
-                            console.log(file.percent);
                         },
-                        'UploadComplete': function (up, file) {
+                        'UploadComplete': (up, file)=>{
+                            this.fileList["setComplete"](file[0]);
                         },
                         'FileUploaded': function (up, file, info) {
                            
                         },
-                        'Error': function (up, err, errTip) {
-                        
+                        'Error': (up, err, errTip)=>{
+                            this.fileList["openFileList"]();
+                            this.fileList["setError"](err.file,errTip);
                         },
                         "FilesRemoved":(up, files)=>{
                         },
                     }
                 });
+               // this.fileList["openFileList"]();
             }
             else this.onError()
         }

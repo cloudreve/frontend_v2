@@ -37,7 +37,15 @@ const styles = theme => ({
     },
     dialogContent:{
         padding:0,
-    }
+    },
+    successStatus:{
+        marginBottom:10,
+        color:"#4caf50",
+    },
+    errorStatus:{
+        marginBottom:10,
+        color:"#ff5722",
+    },
 });
 class FileList extends Component {
 
@@ -45,7 +53,9 @@ class FileList extends Component {
         super(props);
         this.state = {
             open: false,
-            files: [],
+            files: [
+                //{name:"测试.zip",status:5,size:151201}
+            ],
         };
     }
 
@@ -83,6 +93,36 @@ class FileList extends Component {
         }
     }
 
+    setComplete(file){
+        var filesNow = this.state.files;
+        var fileID = filesNow.findIndex((f) => { return f.id === file.id });
+        if (fileID !== -1) {
+            if(filesNow[fileID].status!==4){
+                filesNow[fileID].status = 5;
+                this.setState({
+                    files: filesNow,
+                });
+            }
+            
+        }
+    }
+
+    setError(file,errMsg){
+        var filesNow = this.state.files;
+        var fileID = filesNow.findIndex((f) => { return f.id === file.id });
+        if (fileID !== -1) {
+            filesNow[fileID].status = 4;
+            filesNow[fileID].errMsg = errMsg;
+        }else{
+            file.status = 4;
+            file.errMsg = errMsg;
+            filesNow.push(file);
+        }
+        this.setState({
+            files: filesNow,
+        });
+    }
+
     Transition(props) {
         return <Slide direction="up" {...props} />;
     }
@@ -111,17 +151,21 @@ class FileList extends Component {
             "openFileList":this.openFileList.bind(this),
             "enQueue":this.enQueue.bind(this),
             "updateStatus":this.updateStatus.bind(this),
+            "setComplete":this.setComplete.bind(this),
+            "setError":this.setError.bind(this),
         });
 
         var listContent = (
             this.state.files.map(function(item, i){
                 var progressItem;
                 if(item.status ===5){
-                    progressItem = (<ListItemText primary={item.name} secondary={<div>60<br/><LinearProgress className={classes.progressBar}/></div>} />);
+                    progressItem = (<ListItemText primary={item.name} secondary={<div className={classes.successStatus}>已完成<br/></div>} />);
                 }else if (item.status ===2){
                     var progressItem = (<ListItemText primary={item.name} secondary={<div>{window.plupload.formatSize(item.speed).toUpperCase()}/s 已上传 {window.plupload.formatSize(item.loaded).toUpperCase()} , 共 {window.plupload.formatSize(item.size).toUpperCase()} - {item.percent}% <br/><LinearProgress variant="determinate" value={item.percent} className={classes.progressBar} /></div>}/>);
                 }else if (item.status ===1){
                     progressItem = (<ListItemText primary={item.name} secondary={<div>排队中<br/><LinearProgress className={classes.progressBar}/></div>} />);
+                }else if (item.status ===4){
+                    progressItem = (<ListItemText primary={item.name} secondary={<div className={classes.errorStatus}>{item.errMsg}<br/></div>} />);
                 }else{
                     progressItem = (<ListItemText primary={item.name} secondary={item.status} />);
                 }
