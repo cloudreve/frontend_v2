@@ -15,6 +15,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
+import Badge from '@material-ui/core/Badge';
+
 import Uploader from "./Uploader.js"
 
 const drawerWidth = 240;
@@ -25,6 +27,7 @@ const styles = theme => ({
 
         zIndex: theme.zIndex.drawer + 1,
     },
+    
     drawer: {
         [theme.breakpoints.up('sm')]: {
             width: drawerWidth,
@@ -50,12 +53,18 @@ const styles = theme => ({
     },
     hiddenButton:{
         display:"none",
+    },
+    badge:{
+        top: 1,
+        right: -15,
+
     }
 });
 class Navbar extends Component {
 
     state = {
         mobileOpen: false,
+        queued:0,
     };
 
     handleDrawerToggle = () => {
@@ -64,12 +73,15 @@ class Navbar extends Component {
 
     clickUpload = ()=>{
         document.getElementsByClassName("uploadForm")[0].click();
-        //console.log(this.uploader);
+    }
+
+    updateQueueStatus = (queued)=>{
+        this.setState({queued:queued});
     }
 
     loadUploader(){   
 		if(true){
-			return (<Uploader/>)
+			return (<Uploader queueChange={queued=>this.updateQueueStatus(queued)}/>)
 		}
 	}
 
@@ -80,8 +92,15 @@ class Navbar extends Component {
             <div id="container">
             {this.loadUploader()}
                 <List>
+               
                     <ListItem button key="上传文件" ref="s" onClick={this.clickUpload}>
-                        <ListItemIcon><UploadIcon /></ListItemIcon>
+                       
+                            <ListItemIcon> 
+                                <Badge badgeContent={this.state.queued} className={classes.badge}  invisible={this.state.queued==0} color="secondary">
+                                    <UploadIcon />
+                                </Badge>
+                            </ListItemIcon>
+                        
                         <ListItemText primary="上传文件" />
                     </ListItem>
                     <ListItem button id="pickfiles" className={classes.hiddenButton}>

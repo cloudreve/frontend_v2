@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,6 +11,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
+import PhotoIcon from '@material-ui/icons/MusicNote';
+import VideoIcon from '@material-ui/icons/Videocam';
+import MusicIcon from '@material-ui/icons/MusicNote';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
 import Avatar from '@material-ui/core/Avatar';
@@ -147,6 +149,12 @@ class FileList extends Component {
         const { classes } = this.props;
         const { width } = this.props;
 
+        const fileIcon = {
+            "image":["jpg","bpm","png","gif","jpeg","webp","svg"],
+            "video":["mp4","rmvb","flv","avi"],
+            "audio":["mp3","ogg","flac","aac"],
+        };
+
         this.props.inRef({
             "openFileList":this.openFileList.bind(this),
             "enQueue":this.enQueue.bind(this),
@@ -158,6 +166,18 @@ class FileList extends Component {
         var listContent = (
             this.state.files.map(function(item, i){
                 var progressItem;
+                var queueIcon;
+
+                if(fileIcon["image"].indexOf(item.name.split(".").pop())!==-1){
+                    queueIcon = (<PhotoIcon></PhotoIcon>);
+                }else if(fileIcon["video"].indexOf(item.name.split(".").pop())!==-1){
+                    queueIcon = (<VideoIcon></VideoIcon>);
+                }else if(fileIcon["audio"].indexOf(item.name.split(".").pop())!==-1){
+                    queueIcon = (<MusicIcon></MusicIcon>);
+                }else{
+                    queueIcon = (<FileIcon></FileIcon>);
+                }
+            
                 if(item.status ===5){
                     progressItem = (<ListItemText primary={item.name} secondary={<div className={classes.successStatus}>已完成<br/></div>} />);
                 }else if (item.status ===2){
@@ -173,7 +193,7 @@ class FileList extends Component {
                     <div key={i}>
                         <ListItem button >
                             <Avatar>
-                                <FileIcon />
+                                {queueIcon}
                             </Avatar>
                             {progressItem}
                             

@@ -7,12 +7,25 @@ let loaded = false;
 
 class Uploader extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state={
+            queued:0,
+        }
+    }
+
     setRef(val){
         this.fileList=val;
     }
 
     cancelUpload(file){
         this.uploader.removeFile(file);
+    }
+    shouldComponentUpdate(nextProps,nextState){
+        if(nextState.queued !== this.state.queued){
+          this.props.queueChange(nextState.queued);
+        }
+        return false;
     }
 
     componentWillReceiveProps({ isScriptLoaded, isScriptLoadSucceed }) {
@@ -23,12 +36,11 @@ class Uploader extends Component {
                 }
                 loaded = true;
                 this.uploader = window.Qiniu.uploader({
-                    runtimes: 'html5,flash,html4',
+                    runtimes: 'html5',
                     browse_button: 'pickfiles',
                     container: 'container',
                     drop_element: 'container',
                     max_file_size: window.uploadConfig.maxSize,
-                    flash_swf_url: '/bower_components/plupload/js/Moxie.swf',
                     dragdrop: true,
                     chunk_size: window.ChunkSize,
                     filters: {
@@ -52,6 +64,9 @@ class Uploader extends Component {
                         'BeforeUpload': function (up, file) {
 
                         },
+                        "QueueChanged":(up=>{
+                            this.setState({queued:up.total.queued});
+                        }),
                         'UploadProgress': (up, file)=>{
                             this.fileList["updateStatus"](file);
                         },
@@ -91,7 +106,13 @@ class Uploader extends Component {
     }
 
 
-    render() { return (<div><FileList inRef= {this.setRef.bind(this)} cancelUpload={this.cancelUpload.bind(this)}/></div>); }
+    render() {
+        return (
+             <div>
+                <FileList inRef= {this.setRef.bind(this)} cancelUpload={this.cancelUpload.bind(this)}/>
+             </div>
+        );
+    }
 
 }
 
