@@ -62,10 +62,16 @@ const styles = theme => ({
 });
 class Navbar extends Component {
 
-    state = {
-        mobileOpen: false,
-        queued:0,
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            mobileOpen: false,
+            queued:0,
+        };
+        this.UploaderRef = React.createRef();
+    }
+
+   
 
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
@@ -73,6 +79,7 @@ class Navbar extends Component {
 
     clickUpload = ()=>{
         document.getElementsByClassName("uploadForm")[0].click();
+        console.log(this.UploaderRef.current.refs.wrappedInstance);
     }
 
     updateQueueStatus = (queued)=>{
@@ -81,7 +88,7 @@ class Navbar extends Component {
 
     loadUploader(){   
 		if(true){
-			return (<Uploader queueChange={queued=>this.updateQueueStatus(queued)}/>)
+			return (<Uploader queueChange={queued=>this.updateQueueStatus(queued)} ref={this.UploaderRef}/>)
 		}
 	}
 

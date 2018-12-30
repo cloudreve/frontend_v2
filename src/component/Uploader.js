@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import scriptLoader from 'react-async-script-loader'
+import scriptLoader from '../loader/index.js'
 
 import FileList from "./Upload/FileList.js"
 
