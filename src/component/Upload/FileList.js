@@ -51,15 +51,11 @@ const styles = theme => ({
 });
 class FileList extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false,
-            files: [
-                //{name:"测试.zip",status:5,size:151201}
-            ],
-        };
-    }
+    state = {
+        open: false,
+        files: [
+        ],
+    };
 
     //入队
     enQueue(files) {
@@ -70,6 +66,7 @@ class FileList extends Component {
                 files: filesNow,
             });
         }
+        console.log(this.state);
 
     }
 
@@ -142,6 +139,7 @@ class FileList extends Component {
 
     handleClose = () => {
         this.setState({ open: false });
+
     };
 
     render() {

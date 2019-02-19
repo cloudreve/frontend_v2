@@ -78,8 +78,11 @@ class Navbar extends Component {
     };
 
     clickUpload = ()=>{
-        document.getElementsByClassName("uploadForm")[0].click();
-        console.log(this.UploaderRef.current.refs.wrappedInstance);
+        if(this.state.queued===0){
+            document.getElementsByClassName("uploadForm")[0].click();
+        }else{
+            this.UploaderRef.current.getWrappedInstance().openFileList();
+        }
     }
 
     updateQueueStatus = (queued)=>{
@@ -97,7 +100,7 @@ class Navbar extends Component {
 
         const drawer = (
             <div id="container">
-            {this.loadUploader()}
+            
                 <List>
                
                     <ListItem button key="上传文件" ref="s" onClick={this.clickUpload}>
@@ -139,6 +142,7 @@ class Navbar extends Component {
         				</Typography>
                     </Toolbar>
                 </AppBar>
+                {this.loadUploader()}
 
                 <nav className={classes.drawer}>
                     <Hidden smUp implementation="css">

@@ -101,9 +101,9 @@ class Uploader extends Component {
 
     }
 
-    openFileList(){
-        alert();
-    }
+    openFileList=()=>{
+        this.fileList["openFileList"]();
+    };
 
 
     render() {
