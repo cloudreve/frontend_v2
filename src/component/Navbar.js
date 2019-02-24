@@ -4,7 +4,19 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
+
+import NewFolderIcon from '@material-ui/icons/CreateNewFolder';
+import VideoIcon from '@material-ui/icons/VideoLibrary';
+import MusicIcon from '@material-ui/icons/LibraryMusic';
+import ImageIcon from '@material-ui/icons/Collections';
+import DocIcon from '@material-ui/icons/FileCopy';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ShareIcon from '@material-ui/icons/Share';
+import LockIcon from '@material-ui/icons/Lock';
+import EyeIcon from '@material-ui/icons/RemoveRedEye';
+
+import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
@@ -27,7 +39,7 @@ const styles = theme => ({
 
         zIndex: theme.zIndex.drawer + 1,
     },
-    
+
     drawer: {
         [theme.breakpoints.up('sm')]: {
             width: drawerWidth,
@@ -51,74 +63,160 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
-    hiddenButton:{
-        display:"none",
+    hiddenButton: {
+        display: "none",
     },
-    badge:{
+    badge: {
         top: 1,
         right: -15,
 
-    }
+    },
+    nested: {
+        paddingLeft: theme.spacing.unit * 4,
+    },
 });
 class Navbar extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             mobileOpen: false,
-            queued:0,
+            queued: 0,
+            shareOpen:0,
         };
         this.UploaderRef = React.createRef();
     }
 
-   
+
 
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
 
-    clickUpload = ()=>{
-        if(this.state.queued===0){
+    handleShareClick = () => {
+        this.setState(state => ({ shareOpen: !state.shareOpen }));
+    }
+
+    clickUpload = () => {
+        if (this.state.queued === 0) {
             document.getElementsByClassName("uploadForm")[0].click();
-        }else{
+        } else {
             this.UploaderRef.current.getWrappedInstance().openFileList();
         }
     }
 
-    updateQueueStatus = (queued)=>{
-        this.setState({queued:queued});
+    updateQueueStatus = (queued) => {
+        this.setState({ queued: queued });
     }
 
-    loadUploader(){   
-		if(true){
-			return (<Uploader queueChange={queued=>this.updateQueueStatus(queued)} ref={this.UploaderRef}/>)
-		}
-	}
+    loadUploader() {
+        if (true) {
+            return (<Uploader queueChange={queued => this.updateQueueStatus(queued)} ref={this.UploaderRef} />)
+        }
+    }
 
     render() {
         const { classes } = this.props;
 
         const drawer = (
             <div id="container">
-            
+
                 <List>
-               
                     <ListItem button key="上传文件" ref="s" onClick={this.clickUpload}>
-                       
-                            <ListItemIcon> 
-                                <Badge badgeContent={this.state.queued} className={classes.badge}  invisible={this.state.queued==0} color="secondary">
-                                    <UploadIcon />
-                                </Badge>
-                            </ListItemIcon>
-                        
+
+                        <ListItemIcon>
+                            <Badge badgeContent={this.state.queued} className={classes.badge} invisible={this.state.queued == 0} color="secondary">
+                                <UploadIcon />
+                            </Badge>
+                        </ListItemIcon>
+
                         <ListItemText primary="上传文件" />
                     </ListItem>
+
+                    <ListItem button key="新建目录" >
+                        <ListItemIcon>
+                            <Badge className={classes.badge} invisible={1} color="secondary">
+                                <NewFolderIcon />
+                            </Badge>
+                        </ListItemIcon>
+                        <ListItemText primary="新建目录" />
+                    </ListItem>
+
                     <ListItem button id="pickfiles" className={classes.hiddenButton}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText />
                     </ListItem>
                 </List>
+
                 <Divider />
+
+                <ListItem button key="视频" >
+                    <ListItemIcon>
+                        <Badge className={classes.badge} invisible={1} color="secondary">
+                            <VideoIcon />
+                        </Badge>
+                    </ListItemIcon>
+                    <ListItemText primary="视频" />
+                </ListItem>
+
+                <ListItem button key="图片" >
+                    <ListItemIcon>
+                        <Badge className={classes.badge} invisible={1} color="secondary">
+                            <ImageIcon />
+                        </Badge>
+                    </ListItemIcon>
+                    <ListItemText primary="图片" />
+                </ListItem>
+
+                <ListItem button key="音频" >
+                    <ListItemIcon>
+                        <Badge className={classes.badge} invisible={1} color="secondary">
+                            <MusicIcon />
+                        </Badge>
+                    </ListItemIcon>
+                    <ListItemText primary="音频" />
+                </ListItem>
+
+                <ListItem button key="文档" >
+                    <ListItemIcon>
+                        <Badge className={classes.badge} invisible={1} color="secondary">
+                            <DocIcon />
+                        </Badge>
+                    </ListItemIcon>
+                    <ListItemText primary="文档" />
+                </ListItem>
+
+                <Divider />
+
+                <ListItem button key="我的分享"  onClick={this.handleShareClick}>
+                    <ListItemIcon>
+                        <Badge className={classes.badge} invisible={1} color="secondary">
+                            <ShareIcon />
+                        </Badge>
+                    </ListItemIcon>
+                    <ListItemText inset primary="我的分享" />
+                    {this.state.shareOpen ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+
+                <Collapse in={this.state.shareOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                                <LockIcon />
+                            </ListItemIcon>
+                            <ListItemText inset primary="私密分享" />
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                                <EyeIcon />
+                            </ListItemIcon>
+                            <ListItemText inset primary="公开分享" />
+                        </ListItem>
+                    </List>
+                </Collapse>
+
+                <Divider />
+
                 <List>
 
                 </List></div>
@@ -136,7 +234,6 @@ class Navbar extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <CameraIcon className={classes.icon} />
                         <Typography variant="h6" color="inherit" noWrap>
                             Cloudreve
         				</Typography>

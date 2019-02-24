@@ -13,7 +13,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
 import PhotoIcon from '@material-ui/icons/MusicNote';
 import VideoIcon from '@material-ui/icons/Videocam';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
 import MusicIcon from '@material-ui/icons/MusicNote';
+import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
 import Avatar from '@material-ui/core/Avatar';
@@ -47,6 +49,9 @@ const styles = theme => ({
     errorStatus:{
         marginBottom:10,
         color:"#ff5722",
+    },
+    flex: {
+        flex: 1,
     },
 });
 class FileList extends Component {
@@ -142,6 +147,10 @@ class FileList extends Component {
 
     };
 
+    addNewFile = () => {
+        document.getElementsByClassName("uploadForm")[0].click();
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -220,11 +229,14 @@ class FileList extends Component {
                         <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" >
+                        <Typography variant="h6" color="inherit"  className={classes.flex}>
                             上传队列
                         </Typography>
-
+                        <IconButton color="inherit" onClick={this.addNewFile}>
+                           <AddIcon/>
+                        </IconButton>
                     </Toolbar>
+                    
                 </AppBar>
                 <DialogContent className={classes.dialogContent}>
                 <List className={classes.minHight}>
