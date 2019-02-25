@@ -9,10 +9,6 @@ const styles = theme => ({
 })
 
 class FileManager extends Component {
-
-    constructor(props) {
-        super(props);
-    }
     
     render() {
         return (

@@ -1,12 +1,27 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
 
 import { withStyles } from '@material-ui/core/styles';
-
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-
 import RightIcon from '@material-ui/icons/KeyboardArrowRight'
+
+import {navitateTo} from "../../actions/index"
+
+const mapStateToProps = state => {
+    return {
+      path: state.navigator.path,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+      onTodoClick: path => {
+        dispatch(navitateTo(path))
+      }
+    }
+}
 
 const styles = theme => ({
     container:{
@@ -25,7 +40,7 @@ const styles = theme => ({
     }
 })
 
-class Navigator extends Component {
+class NavigatorCompoment extends Component {
 
     
 
@@ -35,21 +50,21 @@ class Navigator extends Component {
     }
 
     click=()=> {
-
+        this.props.onTodoClick("//");
+        alert(this.props.path);
         const hasOverflowingChildren = this.element.current.offsetHeight < this.element.current.scrollHeight ||
         this.element.current.offsetWidth < this.element.current.scrollWidth;
-        alert(hasOverflowingChildren);
     }
     
     render() {
 
-        const { classes } = this.props;
+        const { classes,path } = this.props;
 
         return (
              <div className={classes.container}>
                 <div className={classes.nav} ref={this.element}>
                     <Button component="span" onClick={this.click}>
-                        /
+                        {path}
                     </Button>
                     <RightIcon className={classes.rightIcon}/>
                     <Button component="span">
@@ -84,8 +99,15 @@ class Navigator extends Component {
 
 }
 
-Navigator.propTypes = {
+NavigatorCompoment.propTypes = {
     classes: PropTypes.object.isRequired,
+    path:PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(Navigator);
+
+const Navigator = connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )( withStyles(styles)(NavigatorCompoment))
+  
+  export default Navigator
