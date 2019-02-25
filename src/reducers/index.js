@@ -5,4 +5,4 @@ const cloudreveApp = combineReducers({
     navigator,navigator
 })
   
-  export default cloudreveApp
+export default cloudreveApp

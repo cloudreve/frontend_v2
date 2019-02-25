@@ -41,19 +41,49 @@ const styles = theme => ({
 })
 
 class NavigatorCompoment extends Component {
-
     
+
+    state = {
+        hidden:false,
+        hiddenFolders:[],
+        folders:[],
+    }
 
     constructor(props) {
         super(props);
         this.element = React.createRef();
     }
 
-    click=()=> {
-        this.props.onTodoClick("//");
-        alert(this.props.path);
+    componentDidMount = ()=>{
+        this.renderPath();
+    }
+
+    renderPath = (path=null)=>{
+        this.setState({
+            folders:path!==null?path.substr(1).split("/"):this.props.path.substr(1).split("/"),
+        });
+
+    }
+
+    componentWillReceiveProps = (nextProps)=>{
+        if(this.props.path !== nextProps.path){
+            this.renderPath(nextProps.path);
+        }
+    }
+
+    componentDidUpdate = ()=>{
+        this.checkOverFlow();
+    }
+
+    checkOverFlow = ()=>{
         const hasOverflowingChildren = this.element.current.offsetHeight < this.element.current.scrollHeight ||
         this.element.current.offsetWidth < this.element.current.scrollWidth;
+        alert(hasOverflowingChildren);
+    }
+
+    click=()=> {
+        this.props.onTodoClick(this.props.path+"/ss");
+        
     }
     
     render() {
@@ -63,34 +93,15 @@ class NavigatorCompoment extends Component {
         return (
              <div className={classes.container}>
                 <div className={classes.nav} ref={this.element}>
-                    <Button component="span" onClick={this.click}>
-                        {path}
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        视频
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        MSC纳新
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        MSC纳新
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        MSC纳新
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        MSC纳新
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
-                    <Button component="span">
-                        MSC纳新
-                    </Button>
-                    <RightIcon className={classes.rightIcon}/>
+                    {this.state.folders.map((folder,key)=>(
+                        <span>           
+                            <Button component="span" onClick={this.click}>
+                                {folder === ""?"/":folder}
+                            </Button>
+                            <RightIcon className={classes.rightIcon}/>
+                        </span>
+                    ))}
+                  
                 </div>
                 <Divider/>
              </div>
