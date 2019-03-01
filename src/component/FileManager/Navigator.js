@@ -13,7 +13,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import IconButton from '@material-ui/core/IconButton';
 import {navitateTo} from "../../actions/index"
 
 const mapStateToProps = state => {
@@ -35,10 +35,19 @@ const styles = theme => ({
         [theme.breakpoints.down('xs')]: {
             display:"none",
         },
+        backgroundColor:"#fff",
+    },
+    navigatorContainer:{
+        "display": "flex",
+        "justifyContent": "space-between",
     },
     nav:{
         height:"47px",
         padding:"5px 15px",
+        display:"flex",
+    },
+    optionContainer:{
+
     },
     rightIcon:{
         marginTop: "6px",
@@ -136,6 +145,7 @@ class NavigatorCompoment extends Component {
             anchorEl={this.state.anchorEl}
             open={Boolean(this.state.anchorEl)}
             onClose={this.handleClose}
+            disableAutoFocusItem={true}
             >
                 <MenuItem onClick={this.add}>Profile</MenuItem>
                 <MenuItem onClick={this.handleClose}>My account</MenuItem>
@@ -144,61 +154,69 @@ class NavigatorCompoment extends Component {
 
         return (
              <div className={classes.container}>
-                <div className={classes.nav} ref={this.element}>
-                    <span>           
-                        <Button component="span" onClick={()=>this.navigateTo(-1)}>
-                            /
-                        </Button>
-                        <RightIcon className={classes.rightIcon}/>
-                    </span>
-                    {this.state.hiddenMode && 
-                        <span>
-                            <Button title="显示路径" component="span" onClick={this.showHiddenPath}>
-                                <MoreIcon/>     
+                <div className={classes.navigatorContainer}>
+                    <div className={classes.nav} ref={this.element}>
+                        <span>           
+                            <Button component="span" onClick={()=>this.navigateTo(-1)}>
+                                /
                             </Button>
-                            <Menu
-                                id="hiddenPathMenu"
-                                anchorEl={this.state.anchorHidden}
-                                open={Boolean(this.state.anchorHidden)}
-                                onClose={this.handleClose}
-                            >
-                                {this.state.folders.slice(0,-1).map((folder,id)=>(
-                                    <MenuItem onClick={(e)=>this.navigateTo(e,id)}>
-                                        <ListItemIcon>
-                                            <FolderIcon />
-                                        </ListItemIcon>
-                                        <ListItemText inset primary={folder} />
-                                    </MenuItem>
-                                ))}
-                            </Menu>
                             <RightIcon className={classes.rightIcon}/>
-                            <Button component="span" onClick={(e)=>this.navigateTo(e,this.state.folders.length-1)}>
-                                {this.state.folders.slice(-1)}  
-                                <ExpandMore className={classes.expandMore}/>
-                            </Button>
-                            {presentFolderMenu}           
                         </span>
-                    }
-                    {!this.state.hiddenMode && this.state.folders.map((folder,id,folders)=>(
-                        <span> 
-                            {folder !=="" &&  
-                            <span> 
-                                <Button component="span" onClick={(e)=>this.navigateTo(e,id)}>
-                                    {folder === ""?"":folder}
-                                    {(id === folders.length-1) &&
-                                        <ExpandMore className={classes.expandMore}/>
-                                    }
+                        {this.state.hiddenMode && 
+                            <span>
+                                <Button title="显示路径" component="span" onClick={this.showHiddenPath}>
+                                    <MoreIcon/>     
                                 </Button>
-                                    {(id === folders.length-1) &&
-                                       presentFolderMenu
-                                    }
-                                 {(id !== folders.length-1) && <RightIcon className={classes.rightIcon}/>}
-                            </span> 
-                            }          
-                           
-                        </span>
-                    ))}
-                  
+                                <Menu
+                                    id="hiddenPathMenu"
+                                    anchorEl={this.state.anchorHidden}
+                                    open={Boolean(this.state.anchorHidden)}
+                                    onClose={this.handleClose}
+                                    disableAutoFocusItem={true}
+                                >
+                                    {this.state.folders.slice(0,-1).map((folder,id)=>(
+                                        <MenuItem onClick={(e)=>this.navigateTo(e,id)}>
+                                            <ListItemIcon>
+                                                <FolderIcon />
+                                            </ListItemIcon>
+                                            <ListItemText inset primary={folder} />
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                                <RightIcon className={classes.rightIcon}/>
+                                <Button component="span" onClick={(e)=>this.navigateTo(e,this.state.folders.length-1)}>
+                                    {this.state.folders.slice(-1)}  
+                                    <ExpandMore className={classes.expandMore}/>
+                                </Button>
+                                {presentFolderMenu}           
+                            </span>
+                        }
+                        {!this.state.hiddenMode && this.state.folders.map((folder,id,folders)=>(
+                            <span> 
+                                {folder !=="" &&  
+                                <span> 
+                                    <Button component="span" onClick={(e)=>this.navigateTo(e,id)}>
+                                        {folder === ""?"":folder}
+                                        {(id === folders.length-1) &&
+                                            <ExpandMore className={classes.expandMore}/>
+                                        }
+                                    </Button>
+                                        {(id === folders.length-1) &&
+                                        presentFolderMenu
+                                        }
+                                    {(id !== folders.length-1) && <RightIcon className={classes.rightIcon}/>}
+                                </span> 
+                                }          
+                            
+                            </span>
+                        ))}
+                    
+                    </div>
+                    <div className={classes.optionContainer}>
+                    <IconButton aria-label="Delete" >
+                        <FolderIcon fontSize="small" />
+                    </IconButton>
+                    </div>
                 </div>
                 <Divider/>
              </div>

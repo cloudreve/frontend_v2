@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import NewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import VideoIcon from '@material-ui/icons/VideoLibrary';
@@ -41,10 +42,12 @@ const styles = theme => ({
     },
 
     drawer: {
-        [theme.breakpoints.up('sm')]: {
-            width: drawerWidth,
+            width: 0,
             flexShrink: 0,
-        },
+    },
+    drawerDesktop:{
+        width: drawerWidth,
+        flexShrink: 0,
     },
     icon: {
         marginRight: theme.spacing.unit * 2,
@@ -55,10 +58,32 @@ const styles = theme => ({
             display: 'none',
         },
     },
-    toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: drawerWidth,
+    menuButtonDesktop:{
+        marginRight: 20,
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper:{
+        width:drawerWidth,
+    },
+    drawerOpen: {
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+      },
+      drawerClose: {
+        transition: theme.transitions.create('width', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: 0,
+    
+      },
     content: {
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
@@ -83,6 +108,7 @@ class Navbar extends Component {
             mobileOpen: false,
             queued: 0,
             shareOpen:0,
+            desktopOpen:true,
         };
         this.UploaderRef = React.createRef();
     }
@@ -92,6 +118,10 @@ class Navbar extends Component {
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
+
+    handleDesktopToggle = () => {
+        this.setState(state => ({ desktopOpen: !state.desktopOpen }));
+    }
 
     handleShareClick = () => {
         this.setState(state => ({ shareOpen: !state.shareOpen }));
@@ -234,6 +264,14 @@ class Navbar extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
+                        <IconButton
+                            color="inherit"
+                            aria-label="Open drawer"
+                            onClick={this.handleDesktopToggle}
+                            className={classes.menuButtonDesktop}
+                        >
+                            <MenuIcon />
+                        </IconButton>
                         <Typography variant="h6" color="inherit" noWrap>
                             Cloudreve
         				</Typography>
@@ -241,7 +279,6 @@ class Navbar extends Component {
                 </AppBar>
                 {this.loadUploader()}
 
-                <nav className={classes.drawer}>
                     <Hidden smUp implementation="css">
                         <Drawer
                             container={this.props.container}
@@ -262,15 +299,23 @@ class Navbar extends Component {
                     <Hidden xsDown implementation="css">
                         <Drawer
                             classes={{
-                                paper: classes.drawerPaper,
+                                paper: classNames({
+                                    [classes.drawerOpen]: this.state.desktopOpen,
+                                    [classes.drawerClose]: !this.state.desktopOpen,
+                                  }),
                             }}
-                            variant="permanent"
-                            open
+                            className={classNames(classes.drawer, {
+                                [classes.drawerOpen]: this.state.desktopOpen,
+                                [classes.drawerClose]: !this.state.desktopOpen,
+                            })}
+                            variant="persistent"
+                            anchor="left"
+                            open={this.state.desktopOpen}
                         ><div className={classes.toolbar} />
                             {drawer}
                         </Drawer>
                     </Hidden>
-                </nav>
+        
             </div>
         );
     }
