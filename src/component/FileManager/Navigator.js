@@ -6,6 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import RightIcon from '@material-ui/icons/KeyboardArrowRight'
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import {navitateTo} from "../../actions/index"
 
@@ -17,7 +20,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      onTodoClick: path => {
+      navigateToPath: path => {
         dispatch(navitateTo(path))
       }
     }
@@ -37,6 +40,9 @@ const styles = theme => ({
         marginTop: "6px",
         verticalAlign: "top",
         color:"#868686",
+    },
+    expandMore:{
+        color:"#8d8d8d",
     }
 })
 
@@ -47,6 +53,7 @@ class NavigatorCompoment extends Component {
         hidden:false,
         hiddenFolders:[],
         folders:[],
+        anchorEl: null,
     }
 
     constructor(props) {
@@ -78,27 +85,63 @@ class NavigatorCompoment extends Component {
     checkOverFlow = ()=>{
         const hasOverflowingChildren = this.element.current.offsetHeight < this.element.current.scrollHeight ||
         this.element.current.offsetWidth < this.element.current.scrollWidth;
-        alert(hasOverflowingChildren);
     }
 
-    click=()=> {
-        this.props.onTodoClick(this.props.path+"/ss");
+    navigateTo=(event,id)=> {
+        if(id===-1){
+            this.props.navigateToPath("/");
+        }else if (id == this.state.folders.length-1){
+            this.setState({ anchorEl: event.currentTarget });
+        }else{
+            this.props.navigateToPath("/"+this.state.folders.slice(0,id+1).join("/"));
+        }
         
     }
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+      };
+    
     
     render() {
 
-        const { classes,path } = this.props;
+        const { classes} = this.props;
 
         return (
              <div className={classes.container}>
                 <div className={classes.nav} ref={this.element}>
-                    {this.state.folders.map((folder,key)=>(
-                        <span>           
-                            <Button component="span" onClick={this.click}>
-                                {folder === ""?"/":folder}
-                            </Button>
-                            <RightIcon className={classes.rightIcon}/>
+                    <span>           
+                        <Button component="span" onClick={()=>this.navigateTo(-1)}>
+                            /
+                        </Button>
+                        <RightIcon className={classes.rightIcon}/>
+                    </span>
+                    {this.state.folders.map((folder,id,folders)=>(
+                        <span> 
+                            {folder !=="" &&  
+                            <span> 
+                                <Button component="span" onClick={(e)=>this.navigateTo(e,id)}>
+                                    {folder === ""?"":folder}
+                                    {(id === folders.length-1) &&
+                                        <ExpandMore className={classes.expandMore}/>
+                                    }
+                                </Button>
+                                    {(id === folders.length-1) &&
+                                        <Menu
+                                        id="simple-menu"
+                                        anchorEl={this.state.anchorEl}
+                                        open={Boolean(this.state.anchorEl)}
+                                        onClose={this.handleClose}
+                                        >
+                                            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                                            <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                                            <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                                        </Menu>
+                                    }
+                                 {(id !== folders.length-1) && <RightIcon className={classes.rightIcon}/>}
+                            </span> 
+                            }          
+                           
                         </span>
                     ))}
                   
