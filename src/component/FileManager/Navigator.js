@@ -6,9 +6,13 @@ import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import RightIcon from '@material-ui/icons/KeyboardArrowRight'
+import MoreIcon from '@material-ui/icons/MoreHoriz'
+import FolderIcon from '@material-ui/icons/Folder'
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import {navitateTo} from "../../actions/index"
 
@@ -54,6 +58,8 @@ class NavigatorCompoment extends Component {
         hiddenFolders:[],
         folders:[],
         anchorEl: null,
+        hiddenMode:false,
+        anchorHidden:null,
     }
 
     constructor(props) {
@@ -69,7 +75,6 @@ class NavigatorCompoment extends Component {
         this.setState({
             folders:path!==null?path.substr(1).split("/"):this.props.path.substr(1).split("/"),
         });
-
     }
 
     componentWillReceiveProps = (nextProps)=>{
@@ -78,34 +83,64 @@ class NavigatorCompoment extends Component {
         }
     }
 
-    componentDidUpdate = ()=>{
-        this.checkOverFlow();
+    componentDidUpdate = (prevProps,prevStates)=>{
+        if(this.state.folders !== prevStates.folders){
+            this.checkOverFlow();
+        }
     }
 
     checkOverFlow = ()=>{
         const hasOverflowingChildren = this.element.current.offsetHeight < this.element.current.scrollHeight ||
         this.element.current.offsetWidth < this.element.current.scrollWidth;
+        if(hasOverflowingChildren && !this.state.hiddenMode){
+            this.setState({hiddenMode:true});
+        }
+        if(!hasOverflowingChildren && this.state.hiddenMode){
+            this.setState({hiddenMode:false});
+        }
     }
 
     navigateTo=(event,id)=> {
         if(id===-1){
             this.props.navigateToPath("/");
+            this.handleClose();
         }else if (id == this.state.folders.length-1){
             this.setState({ anchorEl: event.currentTarget });
         }else{
             this.props.navigateToPath("/"+this.state.folders.slice(0,id+1).join("/"));
+            this.handleClose();
         }
+        
         
     }
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
-      };
+        this.setState({ anchorEl: null ,anchorHidden:null,});
+    };
+
+    showHiddenPath = (e) => {
+        this.setState({ anchorHidden: e.currentTarget });
+    }
+
+    add = () => {
+        this.props.navigateToPath("/"+this.state.folders.join("/")+"/ss");
+    }
     
     
     render() {
 
         const { classes} = this.props;
+
+        let presentFolderMenu = (<Menu
+            id="presentFolderMenu"
+            anchorEl={this.state.anchorEl}
+            open={Boolean(this.state.anchorEl)}
+            onClose={this.handleClose}
+            >
+                <MenuItem onClick={this.add}>Profile</MenuItem>
+                <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+            </Menu>);
 
         return (
              <div className={classes.container}>
@@ -116,7 +151,35 @@ class NavigatorCompoment extends Component {
                         </Button>
                         <RightIcon className={classes.rightIcon}/>
                     </span>
-                    {this.state.folders.map((folder,id,folders)=>(
+                    {this.state.hiddenMode && 
+                        <span>
+                            <Button title="显示路径" component="span" onClick={this.showHiddenPath}>
+                                <MoreIcon/>     
+                            </Button>
+                            <Menu
+                                id="hiddenPathMenu"
+                                anchorEl={this.state.anchorHidden}
+                                open={Boolean(this.state.anchorHidden)}
+                                onClose={this.handleClose}
+                            >
+                                {this.state.folders.slice(0,-1).map((folder,id)=>(
+                                    <MenuItem onClick={(e)=>this.navigateTo(e,id)}>
+                                        <ListItemIcon>
+                                            <FolderIcon />
+                                        </ListItemIcon>
+                                        <ListItemText inset primary={folder} />
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                            <RightIcon className={classes.rightIcon}/>
+                            <Button component="span" onClick={(e)=>this.navigateTo(e,this.state.folders.length-1)}>
+                                {this.state.folders.slice(-1)}  
+                                <ExpandMore className={classes.expandMore}/>
+                            </Button>
+                            {presentFolderMenu}           
+                        </span>
+                    }
+                    {!this.state.hiddenMode && this.state.folders.map((folder,id,folders)=>(
                         <span> 
                             {folder !=="" &&  
                             <span> 
@@ -127,16 +190,7 @@ class NavigatorCompoment extends Component {
                                     }
                                 </Button>
                                     {(id === folders.length-1) &&
-                                        <Menu
-                                        id="simple-menu"
-                                        anchorEl={this.state.anchorEl}
-                                        open={Boolean(this.state.anchorEl)}
-                                        onClose={this.handleClose}
-                                        >
-                                            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                                            <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                                            <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-                                        </Menu>
+                                       presentFolderMenu
                                     }
                                  {(id !== folders.length-1) && <RightIcon className={classes.rightIcon}/>}
                             </span> 
@@ -164,4 +218,4 @@ const Navigator = connect(
     mapDispatchToProps
   )( withStyles(styles)(NavigatorCompoment))
   
-  export default Navigator
+export default Navigator
