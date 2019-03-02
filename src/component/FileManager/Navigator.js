@@ -19,6 +19,7 @@ import {navitateTo} from "../../actions/index"
 const mapStateToProps = state => {
     return {
       path: state.navigator.path,
+      drawerDesktopOpen:state.viewUpdate.open,
     }
 }
 
@@ -29,6 +30,10 @@ const mapDispatchToProps = dispatch => {
       }
     }
 }
+
+const delay = (ms) => new Promise(  
+    (resolve) => setTimeout(resolve, ms)  
+);
 
 const styles = theme => ({
     container:{
@@ -96,6 +101,10 @@ class NavigatorCompoment extends Component {
         if(this.state.folders !== prevStates.folders){
             this.checkOverFlow();
         }
+        if(this.props.drawerDesktopOpen !== prevProps.drawerDesktopOpen){
+            delay(500).then(() => this.checkOverFlow());
+            
+        }
     }
 
     checkOverFlow = ()=>{
@@ -108,7 +117,7 @@ class NavigatorCompoment extends Component {
             this.setState({hiddenMode:false});
         }
     }
-
+    
     navigateTo=(event,id)=> {
         if(id===-1){
             this.props.navigateToPath("/");

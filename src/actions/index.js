@@ -4,3 +4,10 @@ export const navitateTo = path => {
     path:path,
   }
 }
+
+export const drawerToggleAction = open => {
+  return {
+    type: 'DRAWER_TOGGLE',
+    open:open,
+  }
+}

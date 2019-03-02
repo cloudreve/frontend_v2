@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
 import navigator from './navigator'
+import viewUpdate from './view'
 
 const cloudreveApp = combineReducers({
-    navigator,navigator
+    navigator,viewUpdate
 })
   
 export default cloudreveApp

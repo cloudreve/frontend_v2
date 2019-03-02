@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
+import { connect } from 'react-redux'
 
 import NewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import VideoIcon from '@material-ui/icons/VideoLibrary';
@@ -30,9 +31,24 @@ import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import Badge from '@material-ui/core/Badge';
 
+import {drawerToggleAction} from "../actions/index"
 import Uploader from "./Uploader.js"
 
 const drawerWidth = 240;
+
+const mapStateToProps = state => {
+    return {
+        desktopOpen: state.viewUpdate.open,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        handleDesktopToggle: open => {
+        dispatch(drawerToggleAction(open))
+      }
+    }
+}
 
 const styles = theme => ({
     appBar: {
@@ -100,7 +116,7 @@ const styles = theme => ({
         paddingLeft: theme.spacing.unit * 4,
     },
 });
-class Navbar extends Component {
+class NavbarCompoment extends Component {
 
     constructor(props) {
         super(props);
@@ -108,7 +124,6 @@ class Navbar extends Component {
             mobileOpen: false,
             queued: 0,
             shareOpen:0,
-            desktopOpen:true,
         };
         this.UploaderRef = React.createRef();
     }
@@ -118,10 +133,6 @@ class Navbar extends Component {
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
-
-    handleDesktopToggle = () => {
-        this.setState(state => ({ desktopOpen: !state.desktopOpen }));
-    }
 
     handleShareClick = () => {
         this.setState(state => ({ shareOpen: !state.shareOpen }));
@@ -267,7 +278,7 @@ class Navbar extends Component {
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
-                            onClick={this.handleDesktopToggle}
+                            onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
                             className={classes.menuButtonDesktop}
                         >
                             <MenuIcon />
@@ -300,17 +311,17 @@ class Navbar extends Component {
                         <Drawer
                             classes={{
                                 paper: classNames({
-                                    [classes.drawerOpen]: this.state.desktopOpen,
-                                    [classes.drawerClose]: !this.state.desktopOpen,
+                                    [classes.drawerOpen]: this.props.desktopOpen,
+                                    [classes.drawerClose]: !this.props.desktopOpen,
                                   }),
                             }}
                             className={classNames(classes.drawer, {
-                                [classes.drawerOpen]: this.state.desktopOpen,
-                                [classes.drawerClose]: !this.state.desktopOpen,
+                                [classes.drawerOpen]: this.props.desktopOpen,
+                                [classes.drawerClose]: !this.props.desktopOpen,
                             })}
                             variant="persistent"
                             anchor="left"
-                            open={this.state.desktopOpen}
+                            open={this.props.desktopOpen}
                         ><div className={classes.toolbar} />
                             {drawer}
                         </Drawer>
@@ -321,8 +332,13 @@ class Navbar extends Component {
     }
 
 }
-Navbar.propTypes = {
+NavbarCompoment.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Navbar);
+const Navbar = connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )( withStyles(styles)(NavbarCompoment))
+  
+export default Navbar

@@ -7,7 +7,14 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import cloureveApp from './reducers'
 
-const defaultStatus = {navigator:{path:"/我的视频/MSC纳新/2018"}};
+const defaultStatus = {
+    navigator:{
+        path:"/我的视频/MSC纳新/2018"
+    },
+    viewUpdate:{
+        open:true,
+    }
+};
 
 let store = createStore(cloureveApp,defaultStatus)
 ReactDOM.render(
