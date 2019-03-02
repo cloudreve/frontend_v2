@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
 
 import Navigator from "./Navigator.js"
+import Explorer from "./Explorer.js"
 
 const styles = theme => ({
 
@@ -14,6 +15,7 @@ class FileManager extends Component {
         return (
              <div>
                 <Navigator/>
+                <Explorer/>
              </div>
         );
     }

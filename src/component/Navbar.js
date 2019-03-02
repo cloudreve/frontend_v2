@@ -109,7 +109,7 @@ const styles = theme => ({
     },
     badge: {
         top: 1,
-        right: -15,
+        right:-15,
 
     },
     nested: {
@@ -166,7 +166,7 @@ class NavbarCompoment extends Component {
                     <ListItem button key="上传文件" ref="s" onClick={this.clickUpload}>
 
                         <ListItemIcon>
-                            <Badge badgeContent={this.state.queued} className={classes.badge} invisible={this.state.queued == 0} color="secondary">
+                            <Badge badgeContent={this.state.queued} className={classes.badge} invisible={this.state.queued === 0} color="secondary">
                                 <UploadIcon />
                             </Badge>
                         </ListItemIcon>
@@ -176,7 +176,7 @@ class NavbarCompoment extends Component {
 
                     <ListItem button key="新建目录" >
                         <ListItemIcon>
-                            <Badge className={classes.badge} invisible={1} color="secondary">
+                        <Badge className={classes.badge} invisible={1} color="secondary">
                                 <NewFolderIcon />
                             </Badge>
                         </ListItemIcon>

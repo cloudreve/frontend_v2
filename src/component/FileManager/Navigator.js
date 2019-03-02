@@ -149,7 +149,7 @@ class NavigatorCompoment extends Component {
         if(id===-1){
             this.props.navigateToPath("/");
             this.handleClose();
-        }else if (id == this.state.folders.length-1){
+        }else if (id === this.state.folders.length-1){
             this.setState({ anchorEl: event.currentTarget });
         }else{
             this.props.navigateToPath("/"+this.state.folders.slice(0,id+1).join("/"));
@@ -248,7 +248,7 @@ class NavigatorCompoment extends Component {
                             </span>
                         }
                         {!this.state.hiddenMode && this.state.folders.map((folder,id,folders)=>(
-                            <span> 
+                            <span key={id}> 
                                 {folder !=="" &&  
                                 <span> 
                                     <Button component="span" onClick={(e)=>this.navigateTo(e,id)}>

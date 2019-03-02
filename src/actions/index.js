@@ -25,3 +25,10 @@ export const changeSortMethod = method => {
         method:method,
     }
 }
+
+export const updateFileList = list => {
+    return {
+        type: 'UPDATE_FILE_LIST',
+        list:list,
+    }
+}

@@ -15,6 +15,21 @@ const defaultStatus = {
         open:true,
         explorerViewMethod: "icon",
         sortMethod:"namePos",
+    },
+    explorer:{
+        fileList:[],
+        dirList:[
+            {"name":"目录1","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录2","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录目录3目录3目录3目录3目录33","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录4","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录5","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录6","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录7","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录8","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录9","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+            {"name":"目录10","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
+        ],
     }
 };
 

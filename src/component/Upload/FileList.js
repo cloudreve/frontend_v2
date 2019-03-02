@@ -15,7 +15,6 @@ import PhotoIcon from '@material-ui/icons/MusicNote';
 import VideoIcon from '@material-ui/icons/Videocam';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import MusicIcon from '@material-ui/icons/MusicNote';
-import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
 import Avatar from '@material-ui/core/Avatar';
@@ -49,9 +48,6 @@ const styles = theme => ({
     errorStatus:{
         marginBottom:10,
         color:"#ff5722",
-    },
-    flex: {
-        flex: 1,
     },
 });
 class FileList extends Component {
@@ -188,7 +184,7 @@ class FileList extends Component {
                 if(item.status ===5){
                     progressItem = (<ListItemText primary={item.name} secondary={<div className={classes.successStatus}>已完成<br/></div>} />);
                 }else if (item.status ===2){
-                    var progressItem = (<ListItemText primary={item.name} secondary={<div>{window.plupload.formatSize(item.speed).toUpperCase()}/s 已上传 {window.plupload.formatSize(item.loaded).toUpperCase()} , 共 {window.plupload.formatSize(item.size).toUpperCase()} - {item.percent}% <br/><LinearProgress variant="determinate" value={item.percent} className={classes.progressBar} /></div>}/>);
+                    progressItem = (<ListItemText primary={item.name} secondary={<div>{window.plupload.formatSize(item.speed).toUpperCase()}/s 已上传 {window.plupload.formatSize(item.loaded).toUpperCase()} , 共 {window.plupload.formatSize(item.size).toUpperCase()} - {item.percent}% <br/><LinearProgress variant="determinate" value={item.percent} className={classes.progressBar} /></div>}/>);
                 }else if (item.status ===1){
                     progressItem = (<ListItemText primary={item.name} secondary={<div>排队中<br/><LinearProgress className={classes.progressBar}/></div>} />);
                 }else if (item.status ===4){
