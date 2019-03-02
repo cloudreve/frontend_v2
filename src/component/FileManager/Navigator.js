@@ -7,6 +7,9 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import RightIcon from '@material-ui/icons/KeyboardArrowRight'
 import MoreIcon from '@material-ui/icons/MoreHoriz'
+import ViewListIcon from '@material-ui/icons/ViewList'
+import ViewModuleIcon from '@material-ui/icons/ViewModule'
+import TextTotateVerticalIcon from '@material-ui/icons/TextRotateVertical'
 import FolderIcon from '@material-ui/icons/Folder'
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Menu from '@material-ui/core/Menu';
@@ -14,20 +17,28 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import {navitateTo} from "../../actions/index"
+import {navitateTo,changeViewMethod,changeSortMethod} from "../../actions/index"
 
 const mapStateToProps = state => {
     return {
       path: state.navigator.path,
       drawerDesktopOpen:state.viewUpdate.open,
+      viewMethod:state.viewUpdate.explorerViewMethod,
+      sortMethod:state.viewUpdate.sortMethod,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-      navigateToPath: path => {
-        dispatch(navitateTo(path))
-      }
+        navigateToPath: path => {
+            dispatch(navitateTo(path))
+        },
+        changeView:method=>{
+            dispatch(changeViewMethod(method))
+        },
+        changeSort:method=>{
+            dispatch(changeSortMethod(method))
+        },
     }
 }
 
@@ -35,11 +46,20 @@ const delay = (ms) => new Promise(
     (resolve) => setTimeout(resolve, ms)  
 );
 
+const sortOptions = [
+    "文件名称正序",
+    "文件名称倒序",
+    "上传时间正序",
+    "上传时间到序",
+];
+
 const styles = theme => ({
     container:{
         [theme.breakpoints.down('xs')]: {
             display:"none",
         },
+        height:"48px",
+        overflow:"hidden",
         backgroundColor:"#fff",
     },
     navigatorContainer:{
@@ -52,7 +72,8 @@ const styles = theme => ({
         display:"flex",
     },
     optionContainer:{
-
+        paddingTop: "6px",
+        marginRight:"10px",
     },
     rightIcon:{
         marginTop: "6px",
@@ -61,6 +82,10 @@ const styles = theme => ({
     },
     expandMore:{
         color:"#8d8d8d",
+    },
+    sideButton:{
+        padding:"8px",
+        marginRight:"5px",
     }
 })
 
@@ -74,6 +99,8 @@ class NavigatorCompoment extends Component {
         anchorEl: null,
         hiddenMode:false,
         anchorHidden:null,
+        anchorSort:null,
+        selectedIndex:0,
     }
 
     constructor(props) {
@@ -133,15 +160,35 @@ class NavigatorCompoment extends Component {
     }
 
     handleClose = () => {
-        this.setState({ anchorEl: null ,anchorHidden:null,});
+        this.setState({ anchorEl: null ,anchorHidden:null,anchorSort:null});
     };
 
     showHiddenPath = (e) => {
         this.setState({ anchorHidden: e.currentTarget });
     }
 
+    showSortOptions = (e) => {
+        this.setState({ anchorSort: e.currentTarget });
+    }
+
     add = () => {
         this.props.navigateToPath("/"+this.state.folders.join("/")+"/ss");
+    }
+
+    toggleViewMethod = () => {
+        this.props.changeView(this.props.viewMethod==="icon"?"list":"icon");
+    }
+
+    handleMenuItemClick = (e,index) => {
+        this.setState({ selectedIndex: index, anchorEl: null });
+        let optionsTable = {
+            0:"namePos",
+            1:"nameRev",
+            2:"timePos",
+            3:"timeRev",
+        };
+        this.props.changeSort(optionsTable[index]);
+        this.handleClose();
     }
     
     
@@ -222,9 +269,36 @@ class NavigatorCompoment extends Component {
                     
                     </div>
                     <div className={classes.optionContainer}>
-                    <IconButton aria-label="Delete" >
-                        <FolderIcon fontSize="small" />
-                    </IconButton>
+                        {(this.props.viewMethod === "icon")&&
+                            <IconButton title="列表展示" className={classes.sideButton} onClick={this.toggleViewMethod}>
+                                <ViewListIcon fontSize="small" />
+                            </IconButton>
+                        }
+                        {(this.props.viewMethod === "list")&&
+                            <IconButton title="图标展示" className={classes.sideButton} onClick={this.toggleViewMethod}>
+                                <ViewModuleIcon fontSize="small" />
+                            </IconButton>
+                        }
+                        
+                        <IconButton title="排序方式" className={classes.sideButton} onClick={this.showSortOptions}>
+                            <TextTotateVerticalIcon fontSize="small" />
+                        </IconButton>
+                        <Menu
+                            id="sort-menu"
+                            anchorEl={this.state.anchorSort}
+                            open={Boolean(this.state.anchorSort)}
+                            onClose={this.handleClose}
+                        >
+                        {sortOptions.map((option, index) => (
+                            <MenuItem
+                            key={option}
+                            selected={index === this.state.selectedIndex}
+                            onClick={event => this.handleMenuItemClick(event, index)}
+                            >
+                            {option}
+                            </MenuItem>
+                        ))}
+                        </Menu>
                     </div>
                 </div>
                 <Divider/>

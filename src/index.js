@@ -13,6 +13,8 @@ const defaultStatus = {
     },
     viewUpdate:{
         open:true,
+        explorerViewMethod: "icon",
+        sortMethod:"namePos",
     }
 };
 
