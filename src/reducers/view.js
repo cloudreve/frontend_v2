@@ -12,6 +12,10 @@ const viewUpdate = (state = [], action) => {
             return Object.assign({}, state, {
                 sortMethod: action.method
             });
+        case 'CHANGE_CONTEXT_MENU':
+            return Object.assign({}, state, {
+                contextType: action.menuType
+            });
         default:
             return state
     }

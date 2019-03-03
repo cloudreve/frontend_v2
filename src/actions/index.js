@@ -32,3 +32,24 @@ export const updateFileList = list => {
         list:list,
     }
 }
+
+export const changeContextMenu = type => {
+    return {
+        type: 'CHANGE_CONTEXT_MENU',
+        menuType:type,
+    }
+}
+
+export const addSelectedTarget = targets => {
+    return {
+        type: 'ADD_SELECTED_TARGET',
+        targets:targets,
+    }
+}
+
+export const setSelectedTarget = targets => {
+    return {
+        type: 'SET_SELECTED_TARGET',
+        targets:targets,
+    }
+}

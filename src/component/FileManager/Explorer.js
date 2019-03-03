@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 
-import {navitateTo,updateFileList} from "../../actions/index"
+import {navitateTo,changeContextMenu} from "../../actions/index"
 import Folder from "./Folder"
+import ContextMenu from "./ContextMenu"
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -44,20 +45,26 @@ const mapDispatchToProps = dispatch => {
         navigateToPath: path => {
             dispatch(navitateTo(path))
         },
+        changeContextMenu: type => {
+            dispatch(changeContextMenu(type))
+        },
     }
 }
 
 class ExplorerCompoment extends Component {
     
-    state={
-        rows:[0,1,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4,2,3,4],
+    contextMenu = (e) => {
+        e.preventDefault();
+        this.props.changeContextMenu("empty");
     }
+
     render() {
         
         const { classes} = this.props;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} onContextMenu = {this.contextMenu}>
+                <ContextMenu/>
                 {this.props.dirList.length!==0&&
                     <div>
                         <Typography className={classes.typeHeader}>文件夹</Typography>

@@ -15,6 +15,7 @@ const defaultStatus = {
         open:true,
         explorerViewMethod: "icon",
         sortMethod:"namePos",
+        contextType:"none",
     },
     explorer:{
         fileList:[],
@@ -30,6 +31,7 @@ const defaultStatus = {
             {"name":"目录9","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
             {"name":"目录10","size":"0","date":"2019-03-02 14:41:46","type":"dir","name2":"","id":32,"pic":""},
         ],
+        selected:[],
     }
 };
 

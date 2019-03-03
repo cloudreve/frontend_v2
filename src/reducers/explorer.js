@@ -4,6 +4,14 @@ const explorer = (state = [], action) => {
             return Object.assign({}, state, {
                 fileList: action.list
             });
+        case 'ADD_SELECTED_TARGET':
+            return Object.assign({}, state, {
+                selected: [...state.selected,action.targets]
+            });
+        case 'SET_SELECTED_TARGET':
+            return Object.assign({}, state, {
+                selected: action.targets
+            });
         default:
             return state
     }
