@@ -33,10 +33,11 @@ export const updateFileList = list => {
     }
 }
 
-export const changeContextMenu = type => {
+export const changeContextMenu = (type,open) => {
     return {
         type: 'CHANGE_CONTEXT_MENU',
         menuType:type,
+        open:open,
     }
 }
 
@@ -51,5 +52,27 @@ export const setSelectedTarget = targets => {
     return {
         type: 'SET_SELECTED_TARGET',
         targets:targets,
+    }
+}
+
+export const removeSelectedTarget = id => {
+    return {
+        type: 'RMOVE_SELECTED_TARGET',
+        id:id,
+    }
+}
+
+export const setNavigatorLoadingStatus = status => {
+    return {
+        type: 'SET_NAVIGATOR_LOADING_STATUE',
+        status:status,
+    }
+}
+
+export const setNavigatorError = (status,msg) => {
+    return {
+        type: 'SET_NAVIGATOR_ERROR',
+        status:status,
+        msg:msg,
     }
 }

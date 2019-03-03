@@ -17,7 +17,12 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import ShareIcon from '@material-ui/icons/Share';
 import LockIcon from '@material-ui/icons/Lock';
 import EyeIcon from '@material-ui/icons/RemoveRedEye';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
+import OpenFolderIcon from '@material-ui/icons/FolderOpen'
+import RenameIcon from '@material-ui/icons/BorderColor'
+import MoveIcon from '@material-ui/icons/Input'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
@@ -33,8 +38,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
+import Grow from '@material-ui/core/Grow';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import {drawerToggleAction} from "../actions/index"
+import {drawerToggleAction,setSelectedTarget} from "../actions/index"
 import Uploader from "./Uploader.js"
 
 const drawerWidth = 240;
@@ -42,22 +49,29 @@ const drawerWidth = 240;
 const mapStateToProps = state => {
     return {
         desktopOpen: state.viewUpdate.open,
+        selected:state.explorer.selected,
+        isMultiple:state.explorer.selectProps.isMultiple,
+        withFolder:state.explorer.selectProps.withFolder,
+        withFile:state.explorer.selectProps.withFile,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         handleDesktopToggle: open => {
-        dispatch(drawerToggleAction(open))
-      }
+            dispatch(drawerToggleAction(open))
+        },
+        setSelectedTarget:targets=>{
+            dispatch(setSelectedTarget(targets))
+        },
     }
 }
 
 const styles = theme => ({
     appBar: {
         marginLeft: drawerWidth,
-
         zIndex: theme.zIndex.drawer + 1,
+        transition:" background-color 250ms" ,
     },
 
     drawer: {
@@ -82,6 +96,9 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
+    },
+    menuIcon:{
+        marginRight: 20,
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper:{
@@ -109,6 +126,9 @@ const styles = theme => ({
     },
     hiddenButton: {
         display: "none",
+    },
+    grow: {
+        flexGrow: 1,
     },
     badge: {
         top: 1,
@@ -159,6 +179,12 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
           width: 200,
         },
+      },
+      sectionForFile:{
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+            display: 'flex',
+            },
       },
 });
 class NavbarCompoment extends Component {
@@ -310,7 +336,7 @@ class NavbarCompoment extends Component {
 
         return (
             <div>
-                <AppBar position="fixed" className={classes.appBar}>
+                <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length ===0)?"primary":"default"}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -320,30 +346,103 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <IconButton
+                        {(this.props.selected.length ===0)&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
                             className={classes.menuButtonDesktop}
                         >
                             <MenuIcon />
-                        </IconButton>
+                        </IconButton>}
+                        {(this.props.selected.length !==0)&&
+                            <Grow in={(this.props.selected.length !==0)}>
+                                <IconButton
+                                    color="inherit"
+                                    className={classes.menuIcon}
+                                    onClick = {()=>this.props.setSelectedTarget([])}
+                                >
+                                    <BackIcon />
+                                </IconButton>
+                            </Grow>
+                        }
+                        {(this.props.selected.length ===0)&&
                         <Typography variant="h6" color="inherit" noWrap>
                             Cloudreve
         				</Typography>
+                        }
 
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
+                        {(this.props.selected.length ===1)&&
+                        <Typography variant="h6" color="inherit" noWrap>
+                            {this.props.selected[0].name}
+        				</Typography>
+                        }
+
+                        {(this.props.selected.length >1)&&
+                        <Typography variant="h6" color="inherit" noWrap>
+                            {this.props.selected.length}个对象
+        				</Typography>
+                        }
+                        {(this.props.selected.length ===0)&&
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="搜索..."
+                                    classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                    }}
+                                />
                             </div>
-                            <InputBase
-                                placeholder="搜索..."
-                                classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                                }}
-                            />
-                        </div>
+                        }
+                        <div className={classes.grow} />
+                        {this.props.selected.length!==0&&
+                            <div className={classes.sectionForFile}>
+                                {(!this.props.isMultiple && this.props.withFolder)&&
+                                    <Grow in={(!this.props.isMultiple && this.props.withFolder)}>
+                                        <Tooltip title="进入目录">
+                                            <IconButton color="inherit">
+                                                <OpenFolderIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grow>
+                                }
+                                {(!this.props.isMultiple)&&
+                                    <Grow in={(!this.props.isMultiple)}>
+                                        <Tooltip title="分享">
+                                            <IconButton color="inherit">
+                                                <ShareIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grow>
+                                }
+                                {(!this.props.isMultiple)&&
+                                    <Grow in={(!this.props.isMultiple)}>
+                                        <Tooltip title="重命名">
+                                            <IconButton color="inherit">
+                                                <RenameIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grow>
+                                }
+                                <Grow in={(this.props.selected.length!==0)}>
+                                    <Tooltip title="移动">
+                                        <IconButton color="inherit">
+                                            <MoveIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </Grow>
+                                <Grow in={(this.props.selected.length!==0)}>
+                                    <Tooltip title="删除">
+                                        <IconButton color="inherit">
+                                            <DeleteIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </Grow>
+                                
+                            </div>
+                        }
                     </Toolbar>
                 </AppBar>
                 {this.loadUploader()}

@@ -13,8 +13,21 @@ const viewUpdate = (state = [], action) => {
                 sortMethod: action.method
             });
         case 'CHANGE_CONTEXT_MENU':
+            if(state.contextOpen && action.open){
+                return Object.assign({}, state);
+            }
             return Object.assign({}, state, {
-                contextType: action.menuType
+                contextType: action.menuType,
+                contextOpen: action.open,
+            });
+        case 'SET_NAVIGATOR_LOADING_STATUE':
+            return Object.assign({}, state, {
+                navigatorLoading: action.status
+            });
+        case 'SET_NAVIGATOR_ERROR':
+            return Object.assign({}, state, {
+                navigatorError: action.status,
+                navigatorErrorMsg: action.msg,
             });
         default:
             return state

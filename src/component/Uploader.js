@@ -117,10 +117,10 @@ class Uploader extends Component {
 }
 
 export default scriptLoader(
-    ['http://localhost/static/new/dev/moxie.js'],
-    ['http://localhost/static/new/dev/plupload.dev.js'],
-    ['http://localhost/static/new/dev/i18n/zh_CN.js'],
-    ['http://localhost/static/new/dev/ui.js'],
-    ['http://localhost/static/new/dev/qiniu.js'],
+    ['/static/js/uploader/moxie.js'],
+    ['/static/js/uploader/plupload.dev.js'],
+    ['/static/js/uploader/i18n/zh_CN.js'],
+    ['/static/js/uploader/ui.js'],
+    ['/static/js/uploader/qiniu.js'],
 
 )(Uploader)

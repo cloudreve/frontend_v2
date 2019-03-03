@@ -17,7 +17,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import {navitateTo,changeViewMethod,changeSortMethod} from "../../actions/index"
+import {navitateTo,changeViewMethod,changeSortMethod,setNavigatorError,updateFileList,setNavigatorLoadingStatus} from "../../actions/index"
+import axios from 'axios'
 
 const mapStateToProps = state => {
     return {
@@ -39,6 +40,15 @@ const mapDispatchToProps = dispatch => {
         changeSort:method=>{
             dispatch(changeSortMethod(method))
         },
+        setNavigatorError:(status,msg)=>{
+            dispatch(setNavigatorError(status,msg))
+        },
+        updateFileList:list=>{
+            dispatch(updateFileList(list))
+        },
+        setNavigatorLoadingStatus:status=>{
+            dispatch(setNavigatorLoadingStatus(status))
+        }
     }
 }
 
@@ -116,6 +126,18 @@ class NavigatorCompoment extends Component {
         this.setState({
             folders:path!==null?path.substr(1).split("/"):this.props.path.substr(1).split("/"),
         });
+        var newPath = path!==null?path:this.props.path;
+        axios.post('/File/ListFile', {
+            action: 'list',
+            path: newPath
+        })
+        .then( (response)=> {
+            this.props.updateFileList(response.data.result);
+            this.props.setNavigatorLoadingStatus(false);
+        })
+        .catch((error) =>{
+            this.props.setNavigatorError(true,error);
+        });
     }
 
     componentWillReceiveProps = (nextProps)=>{
@@ -155,8 +177,6 @@ class NavigatorCompoment extends Component {
             this.props.navigateToPath("/"+this.state.folders.slice(0,id+1).join("/"));
             this.handleClose();
         }
-        
-        
     }
 
     handleClose = () => {

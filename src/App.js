@@ -24,7 +24,7 @@ const theme = createMuiTheme(
 			"text":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","hint":"rgba(0, 0, 0, 0.38)"},
 			"explorer":{
 				"filename":"#474849","icon":"#8f8f8f",
-				"bgSelected":"#D5DAF0"
+				"bgSelected":"#D5DAF0",
 			}
 		}
 	}

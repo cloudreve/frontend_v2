@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import {changeContextMenu,setSelectedTarget} from "../../actions/index"
+import {changeContextMenu,setSelectedTarget,addSelectedTarget,removeSelectedTarget} from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
@@ -75,12 +75,18 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        ContextMenu: type => {
-            dispatch(changeContextMenu(type))
+        ContextMenu: (type,open) => {
+            dispatch(changeContextMenu(type,open))
         },
         setSelectedTarget:targets=>{
             dispatch(setSelectedTarget(targets))
         },
+        addSelectedTarget:targets=>{
+            dispatch(addSelectedTarget(targets))
+        },
+        removeSelectedTarget:id=>{
+            dispatch(removeSelectedTarget(id));
+        }
     }
 }
 
@@ -91,11 +97,30 @@ class FolderCompoment extends Component {
 
     contextMenu = (e) => {
         e.preventDefault();
-        this.props.ContextMenu("singleFile");
+        if((this.props.selected.findIndex((value) =>{
+                return value ===this.props.folder;
+        }))===-1){
+            this.props.setSelectedTarget([this.props.folder]);
+        }
+        this.props.ContextMenu("file",true);
     }
 
     select = (e)=>{
-        this.props.setSelectedTarget([this.props.folder]);
+        let presentIndex = this.props.selected.findIndex((value) =>{
+            return value ===this.props.folder;
+        });
+        if(presentIndex!==-1 && e.ctrlKey){
+            this.props.removeSelectedTarget(presentIndex);
+        }else{
+            if(e.ctrlKey){
+                this.props.addSelectedTarget(this.props.folder);
+            }else{
+                this.props.setSelectedTarget([this.props.folder]);
+            }
+        }
+        
+        
+        
     }
 
     render() {
@@ -105,9 +130,6 @@ class FolderCompoment extends Component {
         const isSelected = (this.props.selected.findIndex((value) =>{
                 return value ===this.props.folder;
         }))!==-1;
-        
-
-        console.log(isSelected);
 
         return (
            <div className={classes.container}>
