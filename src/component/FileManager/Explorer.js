@@ -60,6 +60,7 @@ const mapDispatchToProps = dispatch => {
         navigateToPath: path => {
             dispatch(navitateTo(path))
         },
+        
         changeContextMenu: (type,open) => {
             dispatch(changeContextMenu(type,open))
         }
@@ -100,7 +101,7 @@ class ExplorerCompoment extends Component {
                         <CircularProgress />
                     </div>
                 }
-                {this.props.dirList.length!==0&&
+                {(this.props.dirList.length!==0 && !this.props.loading)&&
                     <div>
                         <Typography className={classes.typeHeader}>文件夹</Typography>
                         <Grid container spacing={0}

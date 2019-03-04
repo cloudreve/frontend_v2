@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import {changeContextMenu,setSelectedTarget,addSelectedTarget,removeSelectedTarget} from "../../actions/index"
+import {
+    changeContextMenu,
+    setSelectedTarget,
+    addSelectedTarget,
+    removeSelectedTarget,
+    setNavigatorLoadingStatus,
+} from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder'
 import classNames from 'classnames';
+import { stat } from 'fs';
 
 const styles = theme => ({
     container:{
@@ -70,6 +77,7 @@ const mapStateToProps = state => {
     return {
       path: state.navigator.path,
       selected:state.explorer.selected,
+      
     }
 }
 
@@ -86,6 +94,9 @@ const mapDispatchToProps = dispatch => {
         },
         removeSelectedTarget:id=>{
             dispatch(removeSelectedTarget(id));
+        },
+        setNavigatorLoadingStatus:status=>{
+            dispatch(setNavigatorLoadingStatus(status));
         }
     }
 }

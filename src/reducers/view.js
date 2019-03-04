@@ -7,6 +7,7 @@ const viewUpdate = (state = [], action) => {
         case 'CHANGE_VIEW_METHOD':
             return Object.assign({}, state, {
                 explorerViewMethod: action.method
+                
             });
         case 'CHANGE_SORT_METHOD':
             return Object.assign({}, state, {

@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import {changeContextMenu} from "../../actions/index"
+import {
+    changeContextMenu,
+    setNavigatorLoadingStatus,
+    navitateTo,
+ } from "../../actions/index"
+
 
 import { withStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -32,14 +37,22 @@ const mapStateToProps = state => {
         isMultiple:state.explorer.selectProps.isMultiple,
         withFolder:state.explorer.selectProps.withFolder,
         withFile:state.explorer.selectProps.withFile,
+        path:state.navigator.path,
+        selected:state.explorer.selected,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        changeContextMenu: type => {
-            dispatch(changeContextMenu(type))
+        changeContextMenu: (type,open) => {
+            dispatch(changeContextMenu(type,open))
         },
+        setNavigatorLoadingStatus: status => {
+            dispatch(setNavigatorLoadingStatus(status))
+        },
+        navitateTo:path => {
+            dispatch(navitateTo(path))
+        }
     }
 }
 
@@ -56,6 +69,10 @@ class ContextMenuCompoment extends Component {
             this.Y=window.event.clientY;
             this.X=window.event.clientX;
         }
+    }
+
+    enterFolder = () => {
+        this.props.navitateTo(this.props.path+this.props.selected[0].name);
     }
 
     render() {
@@ -109,7 +126,7 @@ class ContextMenuCompoment extends Component {
                 {this.props.menuType!=="empty"&&
                     <MenuList>
                         {(!this.props.isMultiple && this.props.withFolder)&&
-                            <MenuItem>
+                            <MenuItem onClick={this.enterFolder}>
                                 <ListItemIcon>
                                     <OpenFolderIcon/>
                                 </ListItemIcon>

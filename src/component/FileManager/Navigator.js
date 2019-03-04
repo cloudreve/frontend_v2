@@ -140,6 +140,11 @@ class NavigatorCompoment extends Component {
         });
     }
 
+    redresh = () => {
+        this.props.setNavigatorLoadingStatus(true);
+        this.renderPath();
+    }
+
     componentWillReceiveProps = (nextProps)=>{
         if(this.props.path !== nextProps.path){
             this.renderPath(nextProps.path);
@@ -168,11 +173,18 @@ class NavigatorCompoment extends Component {
     }
     
     navigateTo=(event,id)=> {
-        if(id===-1){
+        if (id === this.state.folders.length-1){
+            //最后一个路径
+            this.setState({ anchorEl: event.currentTarget });
+            return;
+        }else if(id===-1 && this.state.folders.length === 1 && this.state.folders[0] === ""){
+            this.redresh();
+            this.handleClose();
+            return;
+        }else if (id === -1){
             this.props.navigateToPath("/");
             this.handleClose();
-        }else if (id === this.state.folders.length-1){
-            this.setState({ anchorEl: event.currentTarget });
+            return;
         }else{
             this.props.navigateToPath("/"+this.state.folders.slice(0,id+1).join("/"));
             this.handleClose();
@@ -233,7 +245,7 @@ class NavigatorCompoment extends Component {
                 <div className={classes.navigatorContainer}>
                     <div className={classes.nav} ref={this.element}>
                         <span>           
-                            <Button component="span" onClick={()=>this.navigateTo(-1)}>
+                            <Button component="span" onClick={(e)=>this.navigateTo(e,-1)}>
                                 /
                             </Button>
                             <RightIcon className={classes.rightIcon}/>
