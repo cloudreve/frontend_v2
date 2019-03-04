@@ -26,6 +26,7 @@ const theme = createMuiTheme(
 			"explorer":{
 				"filename":"#474849","icon":"#8f8f8f",
 				"bgSelected":"#D5DAF0",
+				"emptyIcon":"#e8e8e8",
 			}
 		}
 	}

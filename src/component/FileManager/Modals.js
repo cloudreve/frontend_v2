@@ -4,20 +4,33 @@ import { connect } from 'react-redux'
 import {
     closeAllModals,
     toggleSnackbar,
+    setModalsLoading,
+    refreshFileList,
 } from "../../actions/index"
 
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import axios from 'axios'
 
 const styles = theme => ({
-
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
+    buttonProgress: {
+        color: theme.palette.secondary.light ,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+      },
 })
 
 const mapStateToProps = state => {
@@ -25,6 +38,8 @@ const mapStateToProps = state => {
         path:state.navigator.path,
         selected:state.explorer.selected,
         modalsStatus:state.viewUpdate.modals,
+        modalsLoading:state.viewUpdate.modalsLoading,
+        dirList:state.explorer.dirList,
     }
 }
 
@@ -34,7 +49,13 @@ const mapDispatchToProps = dispatch => {
             dispatch(closeAllModals());
         },
         toggleSnackbar:(vertical,horizontal,msg,color)=>{
-            dispatch(toggleSnackbar("top","right","不能为空","warning"))
+            dispatch(toggleSnackbar(vertical,horizontal,msg,color))
+        },
+        setModalsLoading:(status)=>{
+            dispatch(setModalsLoading(status))
+        },
+        refreshFileList:()=>{
+            dispatch(refreshFileList())
         }
     }
 }
@@ -54,7 +75,38 @@ class ModalsCompoment extends Component {
 
     submitCreateNewFolder = (e)=>{
         e.preventDefault();
-        this.props.toggleSnackbar();
+        this.props.setModalsLoading(true); 
+        if(this.props.dirList.findIndex((value,index)=>{
+            return value.name === this.state.newFolderName;
+        })!==-1){
+            this.props.toggleSnackbar("top","right","文件夹名称重复","warning");
+            this.props.setModalsLoading(false); 
+        }else{
+            axios.post('/File/createFolder', {
+                action: '"createFolder"',
+                newPath: this.props.path+"/"+this.state.newFolderName,
+            })
+            .then( (response)=> {
+                if(response.data.result.success){
+                    this.onClose();
+                    this.props.refreshFileList(); 
+                }else{
+                    this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+                }
+            })
+            .catch((error) =>{
+                this.props.toggleSnackbar("top","right",error.message ,"error");
+            });
+            this.props.setModalsLoading(false);
+        }
+        //this.props.toggleSnackbar();
+    }
+
+    onClose = ()=>{
+        this.setState({
+            newFolderName: "",
+        });
+        this.props.closeAllModals();
     }
 
     render() {
@@ -65,7 +117,7 @@ class ModalsCompoment extends Component {
             <div>
                 <Dialog
                 open={this.props.modalsStatus.createNewFolder}
-                onClose={this.props.closeAllModals}
+                onClose={this.onClose}
                 aria-labelledby="form-dialog-title"
                 >
                 <DialogTitle id="form-dialog-title">新建文件夹</DialogTitle>
@@ -85,12 +137,15 @@ class ModalsCompoment extends Component {
                          </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.closeAllModals}>
-                        取消
+                        <Button onClick={this.onClose}>
+                            取消
                         </Button>
-                        <Button onClick={this.submitCreateNewFolder} color="primary">
-                        创建
-                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button onClick={this.submitCreateNewFolder} color="primary" disabled={this.state.newFolderName==="" || this.props.modalsLoading }>
+                                创建
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>
                     </DialogActions>
                 
                 </Dialog>

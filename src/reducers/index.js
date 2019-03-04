@@ -157,6 +157,18 @@ const cloudreveApp = (state = [], action) => {
                     },
                 }),
             });
+        case 'SET_MODALS_LOADING':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modalsLoading:action.status,
+                }),
+            });
+        case 'REFRESH_FILE_LIST':
+            return Object.assign({}, state, {
+                navigator: Object.assign({}, state.navigator, {
+                    refresh:!state.navigator.refresh,
+                }),
+            });
         default:
             return state
     }

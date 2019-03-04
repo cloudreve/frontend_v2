@@ -146,8 +146,8 @@ class FolderCompoment extends Component {
         this.enterFolder();
     }
 
-    enterFolder = ()=>{
-        this.props.navitateTo(this.props.path+this.props.folder.name );
+    enterFolder = ()=>{ 
+        this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.folder.name:this.props.path+"/"+this.props.folder.name );
     }
 
     render() {

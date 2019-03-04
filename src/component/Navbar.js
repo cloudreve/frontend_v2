@@ -348,7 +348,7 @@ class NavbarCompoment extends Component {
 
         return (
             <div>
-                <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length ===0)?"primary":"default"}>
+                <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1)?"primary":"default"}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -358,7 +358,7 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        {(this.props.selected.length ===0)&&<IconButton
+                        {(this.props.selected.length <=1)&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
@@ -366,8 +366,8 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>}
-                        {(this.props.selected.length !==0)&&
-                            <Grow in={(this.props.selected.length !==0)}>
+                        {(this.props.selected.length >1)&&
+                            <Grow in={(this.props.selected.length >1)}>
                                 <IconButton
                                     color="inherit"
                                     className={classes.menuIcon}
@@ -377,13 +377,13 @@ class NavbarCompoment extends Component {
                                 </IconButton>
                             </Grow>
                         }
-                        {(this.props.selected.length ===0)&&
+                        {(this.props.selected.length <=1)&&
                         <Typography variant="h6" color="inherit" noWrap>
                             Cloudreve
         				</Typography>
                         }
 
-                        {(this.props.selected.length ===1)&&
+                        {false&&
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.props.selected[0].name}
         				</Typography>
@@ -394,8 +394,8 @@ class NavbarCompoment extends Component {
                             {this.props.selected.length}个对象
         				</Typography>
                         }
-                        {(this.props.selected.length ===0)&&
-                            <div className={classes.search}>
+                        {(this.props.selected.length <=1)&&
+                            <div className={classes.search}> 
                                 <div className={classes.searchIcon}>
                                     <SearchIcon />
                                 </div>
@@ -409,16 +409,16 @@ class NavbarCompoment extends Component {
                             </div>
                         }
                         <div className={classes.grow} />
-                        {this.props.selected.length!==0&&
+                        {this.props.selected.length>1&&
                             <div className={classes.sectionForFile}>
                                 {(!this.props.isMultiple && this.props.withFolder)&&
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>
                                         <Tooltip title="进入目录">
                                             <IconButton color="inherit"
-                                                onClick = {()=>this.props.navitateTo(this.props.path+this.props.selected[0].name)}
+                                                onClick = {()=>this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.selected[0].name:this.props.path+"/"+this.props.selected[0].name) }
                                             >
                                                 <OpenFolderIcon/>
-                                            </IconButton>
+                                            </IconButton> 
                                         </Tooltip>
                                     </Grow>
                                 }
@@ -456,7 +456,7 @@ class NavbarCompoment extends Component {
                                 </Grow>
                                 
                             </div>
-                        }
+                        } 
                     </Toolbar>
                 </AppBar>
                 {this.loadUploader()}

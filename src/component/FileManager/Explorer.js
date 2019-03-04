@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper'
+import EmptyIcon from "@material-ui/icons/Unarchive"
+
 const styles = theme => ({
     paper: {
         padding: theme.spacing.unit * 2,
@@ -38,6 +40,25 @@ const styles = theme => ({
     },
     errorMsg:{
         marginTop:"10px",
+    },
+    emptyContainer:{
+        bottom: "0",
+        height: "300px",
+        margin: "50px auto",
+        width: "300px",
+        color: theme.palette.explorer.emptyIcon,
+        textAlign: "center",
+        paddingTop: "20px", 
+    },
+    emptyIcon:{
+        fontSize: "160px", 
+    },
+    emptyInfoBig:{
+        fontSize: "25px",
+        color:theme.palette.text.disabled,
+    },
+    emptyInfoSmall:{
+        color:theme.palette.text.hint,
     }
 })
 
@@ -99,6 +120,14 @@ class ExplorerCompoment extends Component {
                 {(this.props.loading && !this.props.navigatorError) &&
                     <div className={classes.loading}>
                         <CircularProgress />
+                    </div>
+                }
+                {(this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
+                    <div className={classes.emptyContainer}>
+                       <EmptyIcon className={classes.emptyIcon}/> 
+                       <div className={classes.emptyInfoBig}>拖拽文件至此</div>
+                       <div className={classes.emptyInfoSmall}>或点击左侧“上传文件”按钮添加文件</div>
+
                     </div>
                 }
                 {(this.props.dirList.length!==0 && !this.props.loading)&&

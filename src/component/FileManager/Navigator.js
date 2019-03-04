@@ -23,6 +23,7 @@ import axios from 'axios'
 const mapStateToProps = state => {
     return {
       path: state.navigator.path,
+      refresh: state.navigator.refresh,
       drawerDesktopOpen:state.viewUpdate.open,
       viewMethod:state.viewUpdate.explorerViewMethod,
       sortMethod:state.viewUpdate.sortMethod,
@@ -142,6 +143,7 @@ class NavigatorCompoment extends Component {
 
     redresh = () => {
         this.props.setNavigatorLoadingStatus(true);
+        this.props.setNavigatorError(false,"error");
         this.renderPath();
     }
 
@@ -149,6 +151,10 @@ class NavigatorCompoment extends Component {
         if(this.props.path !== nextProps.path){
             this.renderPath(nextProps.path);
         }
+        if(this.props.refresh !== nextProps.refresh){
+            this.redresh(); 
+        }
+
     }
 
     componentDidUpdate = (prevProps,prevStates)=>{

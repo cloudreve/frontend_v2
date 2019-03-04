@@ -9,7 +9,8 @@ import cloureveApp from './reducers'
 
 const defaultStatus = {
     navigator:{
-        path:"/"
+        path:"/",
+        refresh:true,
     },
     viewUpdate:{
         open:true,
@@ -20,6 +21,7 @@ const defaultStatus = {
         navigatorLoading:true,
         navigatorError:false,
         navigatorErrorMsg:null,
+        modalsLoading:false,
         modals:{
             createNewFolder:false,
         },

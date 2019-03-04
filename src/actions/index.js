@@ -98,3 +98,16 @@ export const toggleSnackbar = (vertical,horizontal,msg,color) => {
         color:color,
     }
 }
+
+export const setModalsLoading = (status) => {
+    return {
+        type: 'SET_MODALS_LOADING',
+        status:status,
+    }
+}
+
+export const refreshFileList = () => {
+    return {
+        type: 'REFRESH_FILE_LIST',
+    }
+}
