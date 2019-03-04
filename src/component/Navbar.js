@@ -41,7 +41,12 @@ import Badge from '@material-ui/core/Badge';
 import Grow from '@material-ui/core/Grow';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import {drawerToggleAction,setSelectedTarget} from "../actions/index"
+import {
+    drawerToggleAction,
+    setSelectedTarget,
+    navitateTo,
+    openCreateFolderDialog,
+} from "../actions/index"
 import Uploader from "./Uploader.js"
 
 const drawerWidth = 240;
@@ -53,6 +58,7 @@ const mapStateToProps = state => {
         isMultiple:state.explorer.selectProps.isMultiple,
         withFolder:state.explorer.selectProps.withFolder,
         withFile:state.explorer.selectProps.withFile,
+        path:state.navigator.path, 
     }
 }
 
@@ -64,6 +70,12 @@ const mapDispatchToProps = dispatch => {
         setSelectedTarget:targets=>{
             dispatch(setSelectedTarget(targets))
         },
+        navitateTo:path => {
+            dispatch(navitateTo(path))
+        },
+        openCreateFolderDialog:()=>{
+            dispatch(openCreateFolderDialog())
+        }
     }
 }
 
@@ -245,7 +257,7 @@ class NavbarCompoment extends Component {
                         <ListItemText primary="上传文件" />
                     </ListItem>
 
-                    <ListItem button key="新建目录" >
+                    <ListItem button key="新建目录" onClick={this.props.openCreateFolderDialog }>
                         <ListItemIcon>
                         <Badge className={classes.badge} invisible={1} color="secondary">
                                 <NewFolderIcon />
@@ -402,7 +414,9 @@ class NavbarCompoment extends Component {
                                 {(!this.props.isMultiple && this.props.withFolder)&&
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>
                                         <Tooltip title="进入目录">
-                                            <IconButton color="inherit">
+                                            <IconButton color="inherit"
+                                                onClick = {()=>this.props.navitateTo(this.props.path+this.props.selected[0].name)}
+                                            >
                                                 <OpenFolderIcon/>
                                             </IconButton>
                                         </Tooltip>

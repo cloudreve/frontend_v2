@@ -5,6 +5,7 @@ import {
     changeContextMenu,
     setNavigatorLoadingStatus,
     navitateTo,
+    openCreateFolderDialog,
  } from "../../actions/index"
 
 
@@ -52,6 +53,9 @@ const mapDispatchToProps = dispatch => {
         },
         navitateTo:path => {
             dispatch(navitateTo(path))
+        },
+        openCreateFolderDialog:()=>{
+            dispatch(openCreateFolderDialog())
         }
     }
 }
@@ -114,7 +118,7 @@ class ContextMenuCompoment extends Component {
                         }
                         
                         <Divider/>
-                        <MenuItem>
+                        <MenuItem onClick = {()=>this.props.openCreateFolderDialog()}> 
                             <ListItemIcon>
                                 <NewFolderIcon/>
                             </ListItemIcon>

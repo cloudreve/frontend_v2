@@ -76,3 +76,25 @@ export const setNavigatorError = (status,msg) => {
         msg:msg,
     }
 }
+
+export const openCreateFolderDialog = () => {
+    return {
+        type: 'OPEN_CREATE_FOLDER_DIALOG',
+    }
+}
+
+export const closeAllModals = () => {
+    return {
+        type: 'CLOSE_ALL_MODALS',
+    }
+}
+
+export const toggleSnackbar = (vertical,horizontal,msg,color) => {
+    return {
+        type: 'TOGGLE_SNACKBAR',
+        vertical:vertical,
+        horizontal:horizontal,
+        msg:msg,
+        color:color,
+    }
+}

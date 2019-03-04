@@ -128,6 +128,35 @@ const cloudreveApp = (state = [], action) => {
                     selected:[],
                 }),
             });
+        case 'OPEN_CREATE_FOLDER_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        createNewFolder:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
+        case 'CLOSE_ALL_MODALS': 
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        createNewFolder:false,
+                    }),
+                }),
+            });
+        case 'TOGGLE_SNACKBAR':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    snackbar:{
+                        toggle:!state.viewUpdate.snackbar.toggle,
+                        vertical:action.vertical,
+                        horizontal:action.horizontal,
+                        msg:action.msg,
+                        color:action.color,
+                    },
+                }),
+            });
         default:
             return state
     }

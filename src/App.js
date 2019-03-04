@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Navbar from "./component/Navbar.js"
 import FileManager from "./component/FileManager/FileManager.js"
+import AlertBar from "./component/Snackbar"
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import pink from '@material-ui/core/colors/pink';
@@ -50,6 +51,7 @@ class App extends Component {
 				<MuiThemeProvider theme={theme}>
 					<div className={classes.root} id="container">
 						<CssBaseline />
+						<AlertBar/>
 						<Navbar />
 						<main className={classes.content}>
 							<div className={classes.toolbar} />

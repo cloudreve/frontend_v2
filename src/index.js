@@ -15,11 +15,21 @@ const defaultStatus = {
         open:true,
         explorerViewMethod: "icon",
         sortMethod:"namePos",
-        contextType:"empty",
+        contextType:"none",  
         menuOpen:false,
         navigatorLoading:true,
         navigatorError:false,
         navigatorErrorMsg:null,
+        modals:{
+            createNewFolder:false,
+        },
+        snackbar:{
+            toggle:false,
+            vertical:"top",
+            horizontal:"center",
+            msg:"",
+            color:"",
+        }
     },
     explorer:{
         fileList:[],
