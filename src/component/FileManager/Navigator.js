@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import {navitateTo,changeViewMethod,changeSortMethod,setNavigatorError,updateFileList,setNavigatorLoadingStatus} from "../../actions/index"
 import axios from 'axios'
+import {setCookie} from "../../untils/index"
 
 const mapStateToProps = state => {
     return {
@@ -135,10 +136,13 @@ class NavigatorCompoment extends Component {
         .then( (response)=> {
             this.props.updateFileList(response.data.result);
             this.props.setNavigatorLoadingStatus(false);
+            let pathTemp = (null?path.substr(1).split("/"):this.props.path.substr(1).split("/")).join(",");
+            setCookie("path_tmp",encodeURIComponent(pathTemp),1);
         })
         .catch((error) =>{
-            this.props.setNavigatorError(true,error);
+            this.props.setNavigatorError(true,error); 
         });
+        this.checkOverFlow(); 
     }
 
     redresh = () => {
@@ -174,7 +178,7 @@ class NavigatorCompoment extends Component {
             this.setState({hiddenMode:true});
         }
         if(!hasOverflowingChildren && this.state.hiddenMode){
-            this.setState({hiddenMode:false});
+            this.setState({hiddenMode:false}); 
         }
     }
     

@@ -1,21 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import {
-    changeContextMenu,
-    setSelectedTarget,
-    addSelectedTarget,
-    removeSelectedTarget,
-    setNavigatorLoadingStatus,
-    navitateTo,
-} from "../../actions/index"
+
 import { withStyles } from '@material-ui/core/styles';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder'
 import classNames from 'classnames';
-import { stat } from 'fs';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
     container: {
@@ -76,79 +69,21 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
     return {
-        path: state.navigator.path,
         selected: state.explorer.selected,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        ContextMenu: (type, open) => {
-            dispatch(changeContextMenu(type, open))
-        },
-        setSelectedTarget: targets => {
-            dispatch(setSelectedTarget(targets))
-        },
-        addSelectedTarget: targets => {
-            dispatch(addSelectedTarget(targets))
-        },
-        removeSelectedTarget: id => {
-            dispatch(removeSelectedTarget(id));
-        },
-        setNavigatorLoadingStatus: status => {
-            dispatch(setNavigatorLoadingStatus(status));
-        },
-        navitateTo:path => {
-            dispatch(navitateTo(path))
-        }
     }
 }
 
-let timer = 0;
-let delay = 200;
-let prevent = false;
 
 class FolderCompoment extends Component {
 
     state = {
     }
 
-    contextMenu = (e) => {
-        e.preventDefault();
-        if ((this.props.selected.findIndex((value) => {
-            return value === this.props.folder;
-        })) === -1) {
-            this.props.setSelectedTarget([this.props.folder]);
-        }
-        this.props.ContextMenu("file", true);
-    } 
-
-    selectFile = (e) => {
-        let presentIndex = this.props.selected.findIndex((value) => {
-            return value === this.props.folder;
-        });
-        if (presentIndex !== -1 && e.ctrlKey) {
-            this.props.removeSelectedTarget(presentIndex);
-        } else {
-            if (e.ctrlKey) {
-                this.props.addSelectedTarget(this.props.folder);
-            } else {
-                this.props.setSelectedTarget([this.props.folder]);
-            }
-        }
-    } 
-
-    handleClick=(e)=> {
-        this.selectFile(e);
-    }
-
-    handleDoubleClick() {
-        this.enterFolder();
-    }
-
-    enterFolder = ()=>{ 
-        this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.folder.name:this.props.path+"/"+this.props.folder.name );
-    }
 
     render() {
 
@@ -159,28 +94,24 @@ class FolderCompoment extends Component {
         })) !== -1;
 
         return (
-            <div className={classes.container}>
                 <ButtonBase
                     focusRipple
                     className={classNames({
                         [classes.selected]: isSelected,
                         [classes.notSelected]: !isSelected,
                     }, classes.button)}
-                    onContextMenu={this.contextMenu}
-                    onClick={this.handleClick} 
-                    onDoubleClick = {this.handleDoubleClick.bind(this)}
                 >
                     <div className={classNames(classes.icon, {
                         [classes.iconSelected]: isSelected,
                         [classes.iconNotSelected]: !isSelected,
                     })}><FolderIcon /></div>
-                    <Typography className={classNames(classes.folderName, {
-                        [classes.folderNameSelected]: isSelected,
-                        [classes.folderNameNotSelected]: !isSelected,
-                    })}>{this.props.folder.name}</Typography>
+                    <Tooltip title={this.props.folder.name} aria-label={this.props.folder.name}>
+                        <Typography className={classNames(classes.folderName, {
+                            [classes.folderNameSelected]: isSelected,
+                            [classes.folderNameNotSelected]: !isSelected,
+                        })}>{this.props.folder.name}</Typography>
+                    </Tooltip>
                 </ButtonBase>
-
-            </div>
         );
     }
 }

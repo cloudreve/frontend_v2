@@ -48,6 +48,7 @@ import {
     openCreateFolderDialog,
 } from "../actions/index"
 import Uploader from "./Uploader.js"
+import {sizeToString} from "../untils/index"
 
 const drawerWidth = 240;
 
@@ -348,7 +349,7 @@ class NavbarCompoment extends Component {
 
         return (
             <div>
-                <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1)?"primary":"default"}>
+                <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?"primary":"default"}> 
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -358,7 +359,7 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        {(this.props.selected.length <=1)&&<IconButton
+                        {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
@@ -366,8 +367,8 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>}
-                        {(this.props.selected.length >1)&&
-                            <Grow in={(this.props.selected.length >1)}>
+                        {(this.props.selected.length >1 || (!this.props.isMultiple&&this.props.withFile))&&
+                            <Grow in={(this.props.selected.length >1) || (!this.props.isMultiple&&this.props.withFile)}>
                                 <IconButton
                                     color="inherit"
                                     className={classes.menuIcon}
@@ -377,15 +378,15 @@ class NavbarCompoment extends Component {
                                 </IconButton>
                             </Grow>
                         }
-                        {(this.props.selected.length <=1)&&
+                        {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <Typography variant="h6" color="inherit" noWrap>
                             Cloudreve
         				</Typography>
                         }
 
-                        {false&&
+                        {(!this.props.isMultiple&&this.props.withFile)&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            {this.props.selected[0].name}
+                            {this.props.selected[0].name} ({sizeToString(this.props.selected[0].size)}) 
         				</Typography>
                         }
 
@@ -394,7 +395,7 @@ class NavbarCompoment extends Component {
                             {this.props.selected.length}个对象
         				</Typography>
                         }
-                        {(this.props.selected.length <=1)&&
+                        {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                             <div className={classes.search}> 
                                 <div className={classes.searchIcon}>
                                     <SearchIcon />
@@ -409,7 +410,7 @@ class NavbarCompoment extends Component {
                             </div>
                         }
                         <div className={classes.grow} />
-                        {this.props.selected.length>1&&
+                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile))&&
                             <div className={classes.sectionForFile}>
                                 {(!this.props.isMultiple && this.props.withFolder)&&
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>

@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import {navitateTo,changeContextMenu} from "../../actions/index"
 import Folder from "./Folder"
+import FileIcon from "./FileIcon"
+import ObjectIcon from "./ObjectIcon"
 import ContextMenu from "./ContextMenu"
 
 import { withStyles } from '@material-ui/core/styles';
@@ -12,6 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper'
 import EmptyIcon from "@material-ui/icons/Unarchive"
+import { trackWindowScroll }
+  from 'react-lazy-load-image-component';
 
 const styles = theme => ({
     paper: {
@@ -138,7 +142,21 @@ class ExplorerCompoment extends Component {
                         >
                             {this.props.dirList.map((value,index)=>(
                                 <Grid item xs={6} md={3} sm={4} lg={2}>
-                                    <Folder folder={value}/>
+                                    <ObjectIcon file={value}/>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </div>
+                }
+                {(this.props.fileList.length!==0 && !this.props.loading)&&
+                    <div>
+                        <Typography className={classes.typeHeader}>文件</Typography>
+                        <Grid container spacing={0}
+                        alignItems="flex-start"
+                        >
+                            {this.props.fileList.map((value,index)=>(
+                                <Grid item xs={6} md={3} sm={4} lg={2}>
+                                    <ObjectIcon file={value}/>
                                 </Grid>
                             ))}
                         </Grid>
@@ -159,6 +177,6 @@ ExplorerCompoment.propTypes = {
 const Explorer = connect(
     mapStateToProps,
     mapDispatchToProps
-  )( withStyles(styles)(ExplorerCompoment))
+  )( withStyles(styles)(trackWindowScroll(ExplorerCompoment)))  
   
 export default Explorer

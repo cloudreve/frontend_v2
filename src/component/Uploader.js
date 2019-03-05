@@ -1,11 +1,27 @@
 import React, { Component } from 'react'
 import scriptLoader from '../loader/index.js'
-
+import { connect } from 'react-redux'
+import {
+    refreshFileList,
+} from "../actions/index"
 import FileList from "./Upload/FileList.js"
 
 let loaded = false;
 
-class Uploader extends Component {
+const mapStateToProps = state => {
+    return {
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        refreshFileList:()=>{
+            dispatch(refreshFileList())
+        }
+    }
+}
+
+class UploaderCompoment extends Component {
 
     constructor(props) {
         super(props);
@@ -72,6 +88,7 @@ class Uploader extends Component {
                         },
                         'UploadComplete': (up, file)=>{
                             this.fileList["setComplete"](file[0]);
+                            this.props.refreshFileList(); 
                         },
                         'FileUploaded': function (up, file, info) {
                            
@@ -116,11 +133,18 @@ class Uploader extends Component {
 
 }
 
-export default scriptLoader(
+const Uploader = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {forwardRef : true}
+)( scriptLoader(
     ['/static/js/uploader/moxie.js'],
     ['/static/js/uploader/plupload.dev.js'],
-    ['/static/js/uploader/i18n/zh_CN.js'],
+    ['/static/js/uploader/i18n/zh_CN.js'], 
     ['/static/js/uploader/ui.js'],
     ['/static/js/uploader/qiniu.js'],
 
-)(Uploader)
+)(UploaderCompoment))
+  
+export default Uploader

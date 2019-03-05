@@ -58,9 +58,12 @@ const cloudreveApp = (state = [], action) => {
             var dirList =  action.list.filter(function (x) {
                 return x .type === "dir";
             });
+            var fileList =  action.list.filter(function (x) {
+                return x .type === "file";
+            });
             return Object.assign({}, state, {
                 explorer: Object.assign({}, state.explorer, {
-                    fileList: action.list,
+                    fileList: fileList,
                     dirList: dirList,
                 }),
             });
