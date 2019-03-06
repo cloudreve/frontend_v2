@@ -83,6 +83,12 @@ export const openCreateFolderDialog = () => {
     }
 }
 
+export const openRenameDialog = () => {
+    return {
+        type: 'OPEN_RENAME_DIALOG',
+    }
+}
+
 export const closeAllModals = () => {
     return {
         type: 'CLOSE_ALL_MODALS',

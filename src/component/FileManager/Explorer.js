@@ -177,6 +177,6 @@ ExplorerCompoment.propTypes = {
 const Explorer = connect(
     mapStateToProps,
     mapDispatchToProps
-  )( withStyles(styles)(trackWindowScroll(ExplorerCompoment)))  
+  )( withStyles(styles)(ExplorerCompoment))  
   
 export default Explorer

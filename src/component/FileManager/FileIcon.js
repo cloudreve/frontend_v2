@@ -193,7 +193,7 @@ class FileIconCompoment extends Component {
 
 
     state={
-        loading:true,
+        loading:false,
     }
 
     render() {
@@ -203,6 +203,8 @@ class FileIconCompoment extends Component {
         const isSelected = (this.props.selected.findIndex((value) => {
             return value === this.props.file;
         })) !== -1;
+
+        console.log(this.props.scrollPosition);
 
         let icon,iconBig;
         let fileType =this.props.file.name.split(".").pop().toLowerCase();
@@ -253,10 +255,11 @@ class FileIconCompoment extends Component {
                         })}
                         src={window.apiURL.imgThumb+"?isImg=true&path="+encodeURIComponent(this.props.path==="/"?this.props.path+this.props.file.name:this.props.path+"/"+this.props.file.name)}
                         afterLoad = {()=>this.setState({loading:false})}
+                        beforeLoad = {()=>this.setState({loading:true})}
                         />  
                         <ContentLoader
                         height={150}
-                        width="100%"
+                        width={170}
                         className = {classNames({
                             [classes.hide]:!this.state.loading, 
                         },classes.loadingAnimation)}

@@ -17,7 +17,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import {navitateTo,changeViewMethod,changeSortMethod,setNavigatorError,updateFileList,setNavigatorLoadingStatus} from "../../actions/index"
+import {
+    navitateTo,
+    changeViewMethod,
+    changeSortMethod,
+    setNavigatorError,
+    updateFileList,
+    setNavigatorLoadingStatus,
+    refreshFileList
+} from "../../actions/index"
 import axios from 'axios'
 import {setCookie} from "../../untils/index"
 
@@ -50,6 +58,9 @@ const mapDispatchToProps = dispatch => {
         },
         setNavigatorLoadingStatus:status=>{
             dispatch(setNavigatorLoadingStatus(status))
+        },
+        refreshFileList:()=>{
+            dispatch(refreshFileList())
         }
     }
 }
@@ -63,6 +74,8 @@ const sortOptions = [
     "文件名称倒序",
     "上传时间正序",
     "上传时间到序",
+    "文件大小正序",
+    "文件大小倒序",
 ];
 
 const styles = theme => ({
@@ -188,8 +201,8 @@ class NavigatorCompoment extends Component {
             this.setState({ anchorEl: event.currentTarget });
             return;
         }else if(id===-1 && this.state.folders.length === 1 && this.state.folders[0] === ""){
-            this.redresh();
-            this.handleClose();
+            this.props.refreshFileList();
+            this.handleClose(); 
             return;
         }else if (id === -1){
             this.props.navigateToPath("/");
@@ -228,9 +241,12 @@ class NavigatorCompoment extends Component {
             1:"nameRev",
             2:"timePos",
             3:"timeRev",
+            4:"sizePos",
+            5:"sizeRes",
         };
         this.props.changeSort(optionsTable[index]);
         this.handleClose();
+        this.props.refreshFileList();
     }
     
     

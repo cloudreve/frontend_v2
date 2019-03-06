@@ -6,6 +6,7 @@ import {
     setNavigatorLoadingStatus,
     navitateTo,
     openCreateFolderDialog,
+    openRenameDialog,
  } from "../../actions/index"
 
 
@@ -56,6 +57,9 @@ const mapDispatchToProps = dispatch => {
         },
         openCreateFolderDialog:()=>{
             dispatch(openCreateFolderDialog())
+        },
+        openRenameDialog:()=>{
+            dispatch(openRenameDialog())
         }
     }
 }
@@ -148,7 +152,7 @@ class ContextMenuCompoment extends Component {
                         }
                         
                         {(!this.props.isMultiple)&&
-                            <MenuItem>
+                            <MenuItem onClick={()=>this.props.openRenameDialog() }>
                                 <ListItemIcon>
                                     <RenameIcon/>
                                 </ListItemIcon>

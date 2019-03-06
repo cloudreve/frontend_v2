@@ -55,6 +55,24 @@ const cloudreveApp = (state = [], action) => {
                 }),
             });
         case 'UPDATE_FILE_LIST':
+            action.list.sort((a,b)=>{
+                switch (state.viewUpdate.sortMethod) {
+                    case "sizePos":
+                        return a.size-b.size;
+                    case "sizeRes": 
+                        return b.size-a.size;
+                    case 'namePos':
+                        return a.name.localeCompare(b.name);
+                    case 'nameRev':
+                        return b.name.localeCompare(a.name);
+                    case 'timePos':
+                        return Date.parse(a.date)-Date.parse(b.date);
+                    case 'timeRev':
+                        return Date.parse(b.date)-Date.parse(a.date);
+                    default:
+                        break; 
+                }
+            })
             var dirList =  action.list.filter(function (x) {
                 return x .type === "dir";
             });
@@ -129,6 +147,11 @@ const cloudreveApp = (state = [], action) => {
                 }),
                 explorer:Object.assign({}, state.explorer, {
                     selected:[],
+                    selectProps: {
+                        isMultiple:false,
+                        withFolder:false,
+                        withFile:false,
+                    }
                 }),
             });
         case 'OPEN_CREATE_FOLDER_DIALOG':
@@ -140,11 +163,21 @@ const cloudreveApp = (state = [], action) => {
                     contextOpen:false,
                 }),
             });
+        case 'OPEN_RENAME_DIALOG':
+        return Object.assign({}, state, {
+            viewUpdate: Object.assign({}, state.viewUpdate, {
+                modals: Object.assign({}, state.viewUpdate.modals, {
+                    rename:true,
+                }),
+                contextOpen:false,
+            }),
+        });
         case 'CLOSE_ALL_MODALS': 
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
                     modals: Object.assign({}, state.viewUpdate.modals, {
                         createNewFolder:false,
+                        rename:false,
                     }),
                 }),
             });
@@ -170,6 +203,14 @@ const cloudreveApp = (state = [], action) => {
             return Object.assign({}, state, {
                 navigator: Object.assign({}, state.navigator, {
                     refresh:!state.navigator.refresh,
+                }),
+                explorer:Object.assign({}, state.explorer, {
+                    selected:[],
+                    selectProps: {
+                        isMultiple:false,
+                        withFolder:false,
+                        withFile:false, 
+                    }
                 }),
             });
         default:

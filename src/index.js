@@ -15,7 +15,7 @@ const defaultStatus = {
     viewUpdate:{
         open:true,
         explorerViewMethod: "icon",
-        sortMethod:"namePos",
+        sortMethod:"timePos",
         contextType:"none",  
         menuOpen:false,
         navigatorLoading:true,
@@ -24,6 +24,7 @@ const defaultStatus = {
         modalsLoading:false,
         modals:{
             createNewFolder:false,
+            rename:false,
         },
         snackbar:{
             toggle:false,
