@@ -164,20 +164,30 @@ const cloudreveApp = (state = [], action) => {
                 }),
             });
         case 'OPEN_RENAME_DIALOG':
-        return Object.assign({}, state, {
-            viewUpdate: Object.assign({}, state.viewUpdate, {
-                modals: Object.assign({}, state.viewUpdate.modals, {
-                    rename:true,
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        rename:true,
+                    }),
+                    contextOpen:false,
                 }),
-                contextOpen:false,
-            }),
-        });
+            });
+        case 'OPEN_MOVE_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        move:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
         case 'CLOSE_ALL_MODALS': 
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
                     modals: Object.assign({}, state.viewUpdate.modals, {
                         createNewFolder:false,
                         rename:false,
+                        move:false,
                     }),
                 }),
             });

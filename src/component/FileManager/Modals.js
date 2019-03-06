@@ -7,7 +7,7 @@ import {
     setModalsLoading,
     refreshFileList,
 } from "../../actions/index"
-
+import PathSelector from "./PathSelector"
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -31,7 +31,10 @@ const styles = theme => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
-      },
+    },
+    contentFix:{
+        padding: "10px 24px 0px 24px",
+    },
 })
 
 const mapStateToProps = state => {
@@ -68,6 +71,8 @@ class ModalsCompoment extends Component {
     state={
         newFolderName: "",
         newName:"",
+        selectedPath:"",
+        selectedPathName:"",
     } 
 
     handleInputChange = (e)=>{
@@ -89,6 +94,37 @@ class ModalsCompoment extends Component {
             });
             return; 
         }
+    }
+
+    submitMove = (e)=>{
+        e.preventDefault();
+        this.props.setModalsLoading(true);
+        let dirs=[],items = [];
+        this.props.selected.map((value)=>{
+            if(value.type==="dir"){
+                dirs.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);
+            }else{
+                items.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);
+            }
+        });
+        axios.post('/File/Move', {
+            action: 'move',
+            items: items,
+            dirs:dirs, 
+            newPath:this.state.selectedPath === "//"?"/":this.state.selectedPath,
+        })
+        .then( (response)=> {
+            if(response.data.result.success){
+                this.onClose();
+                this.props.refreshFileList(); 
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+            }
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+        });
+        this.props.setModalsLoading(false);
     }
 
     submitRename = (e)=>{
@@ -152,10 +188,20 @@ class ModalsCompoment extends Component {
         //this.props.toggleSnackbar();
     }
 
+    setMoveTarget = (folder) =>{
+        let path = folder.path === "/" ?folder.path+folder.name:folder.path+"/"+folder.name;
+        this.setState({
+            selectedPath:path,
+            selectedPathName:folder.name,
+        });
+    }
+
     onClose = ()=>{
         this.setState({
             newFolderName: "",
             newName:"",
+            selectedPath:"",
+            selectedPathName:"",
         });
         this.newNameSuffix = "";
         this.props.closeAllModals();
@@ -233,6 +279,32 @@ class ModalsCompoment extends Component {
                         </Button>
                         <div className={classes.wrapper}>
                             <Button onClick={this.submitRename} color="primary" disabled={this.state.newName==="" || this.props.modalsLoading }>
+                                确定
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>
+                    </DialogActions>
+                
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.move}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">移动至</DialogTitle>
+                <PathSelector presentPath={this.props.path} selected={this.props.selected} onSelect ={ this.setMoveTarget}/>
+
+                {this.state.selectedPath!==""&&<DialogContent className={classes.contentFix}>
+                    <DialogContentText >
+                        移动至 <strong>{this.state.selectedPathName}</strong>
+                    </DialogContentText>
+                </DialogContent>}
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            取消
+                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button onClick={this.submitMove} color="primary" disabled={this.state.selectedPath==="" || this.props.modalsLoading }>
                                 确定
                                 {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Button>

@@ -89,6 +89,12 @@ export const openRenameDialog = () => {
     }
 }
 
+export const openMoveDialog = () => {
+    return {
+        type: 'OPEN_MOVE_DIALOG',
+    }
+}
+
 export const closeAllModals = () => {
     return {
         type: 'CLOSE_ALL_MODALS',

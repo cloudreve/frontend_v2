@@ -25,6 +25,7 @@ const defaultStatus = {
         modals:{
             createNewFolder:false,
             rename:false,
+            move:false,
         },
         snackbar:{
             toggle:false,

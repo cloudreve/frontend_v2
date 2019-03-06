@@ -204,8 +204,6 @@ class FileIconCompoment extends Component {
             return value === this.props.file;
         })) !== -1;
 
-        console.log(this.props.scrollPosition);
-
         let icon,iconBig;
         let fileType =this.props.file.name.split(".").pop().toLowerCase();
         if (mediaType["image"].indexOf(fileType)!==-1){

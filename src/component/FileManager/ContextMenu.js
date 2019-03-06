@@ -7,6 +7,7 @@ import {
     navitateTo,
     openCreateFolderDialog,
     openRenameDialog,
+    openMoveDialog,
  } from "../../actions/index"
 
 
@@ -60,7 +61,10 @@ const mapDispatchToProps = dispatch => {
         },
         openRenameDialog:()=>{
             dispatch(openRenameDialog())
-        }
+        },
+        openMoveDialog:()=>{
+            dispatch(openMoveDialog())
+        },
     }
 }
 
@@ -159,7 +163,7 @@ class ContextMenuCompoment extends Component {
                                 <Typography variant="inherit">重命名</Typography>
                             </MenuItem>
                         }
-                        <MenuItem>
+                        <MenuItem onClick={()=>this.props.openMoveDialog() }>
                             <ListItemIcon>
                                 <MoveIcon/>
                             </ListItemIcon>
