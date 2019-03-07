@@ -13,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Folder from "./Folder"
 import FileIcon from "./FileIcon"
+import SmallIcon from "./SmallIcon"
 
 const styles = theme => ({
     container: {
@@ -24,6 +25,7 @@ const mapStateToProps = state => {
     return {
         path: state.navigator.path,
         selected: state.explorer.selected,
+        viewMethod:state.viewUpdate.explorerViewMethod,
     }
 }
 
@@ -115,8 +117,11 @@ class ObjectCompoment extends Component {
                     {(this.props.file.type==="dir") &&
                         <Folder folder={this.props.file}/>
                     }
-                    {(this.props.file.type==="file") &&
+                    {((this.props.file.type==="file") && this.props.viewMethod == "icon") &&
                         <FileIcon file={this.props.file}/>
+                    }
+                    {((this.props.file.type==="file") && this.props.viewMethod == "smallIcon") &&
+                        <SmallIcon file={this.props.file}/>
                     }
                 </div>
             </div>

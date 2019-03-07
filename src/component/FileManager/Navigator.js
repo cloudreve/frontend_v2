@@ -9,6 +9,7 @@ import RightIcon from '@material-ui/icons/KeyboardArrowRight'
 import MoreIcon from '@material-ui/icons/MoreHoriz'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import ViewModuleIcon from '@material-ui/icons/ViewModule'
+import ViewSmallIcon from '@material-ui/icons/ViewComfy'
 import TextTotateVerticalIcon from '@material-ui/icons/TextRotateVertical'
 import FolderIcon from '@material-ui/icons/Folder'
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -231,7 +232,7 @@ class NavigatorCompoment extends Component {
     }
 
     toggleViewMethod = () => {
-        this.props.changeView(this.props.viewMethod==="icon"?"list":"icon");
+        this.props.changeView(this.props.viewMethod==="icon"?"list":(this.props.viewMethod==="list"?"smallIcon":"icon"));
     }
 
     handleMenuItemClick = (e,index) => {
@@ -333,7 +334,13 @@ class NavigatorCompoment extends Component {
                             </IconButton>
                         }
                         {(this.props.viewMethod === "list")&&
-                            <IconButton title="图标展示" className={classes.sideButton} onClick={this.toggleViewMethod}>
+                            <IconButton title="小图标展示" className={classes.sideButton} onClick={this.toggleViewMethod}>
+                                <ViewSmallIcon fontSize="small" />
+                            </IconButton>
+                        }
+
+                        {(this.props.viewMethod === "smallIcon")&&
+                            <IconButton title="大图标展示" className={classes.sideButton} onClick={this.toggleViewMethod}>
                                 <ViewModuleIcon fontSize="small" />
                             </IconButton>
                         }
