@@ -26,6 +26,7 @@ const defaultStatus = {
             createNewFolder:false,
             rename:false,
             move:false,
+            remove:false,
         },
         snackbar:{
             toggle:false,

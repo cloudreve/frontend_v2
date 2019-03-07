@@ -96,6 +96,37 @@ class ModalsCompoment extends Component {
         }
     }
 
+    submitRemove = (e)=>{
+        e.preventDefault();
+        this.props.setModalsLoading(true);
+        let dirs=[],items = [];
+        this.props.selected.map((value)=>{
+            if(value.type==="dir"){
+                dirs.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);
+            }else{
+                items.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);
+            }
+        });
+        axios.post('/File/Delete', {
+            action: 'delete',
+            items: items,
+            dirs:dirs, 
+            newPath:this.state.selectedPath === "//"?"/":this.state.selectedPath,
+        })
+        .then( (response)=> {
+            if(response.data.result.success){
+                this.onClose();
+                this.props.refreshFileList(); 
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+            }
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+        });
+        this.props.setModalsLoading(false);
+    }
+
     submitMove = (e)=>{
         e.preventDefault();
         this.props.setModalsLoading(true);
@@ -305,6 +336,35 @@ class ModalsCompoment extends Component {
                         </Button>
                         <div className={classes.wrapper}>
                             <Button onClick={this.submitMove} color="primary" disabled={this.state.selectedPath==="" || this.props.modalsLoading }>
+                                确定
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>
+                    </DialogActions>
+                
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.remove}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">删除对象</DialogTitle>
+                    
+                    <DialogContent>
+                        <DialogContentText>
+                            确定要删除{(this.props.selected.length === 1)&& 
+                                <strong> {this.props.selected[0].name} </strong>
+                            }{(this.props.selected.length > 1)&& 
+                                <span>这{this.props.selected.length}个对象</span>
+                            }吗？
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            取消
+                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button onClick={this.submitRemove} color="primary" disabled={this.props.modalsLoading }>
                                 确定
                                 {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Button>

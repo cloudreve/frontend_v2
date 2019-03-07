@@ -95,6 +95,12 @@ export const openMoveDialog = () => {
     }
 }
 
+export const openRemoveDialog = () => {
+    return {
+        type: 'OPEN_REMOVE_DIALOG',
+    }
+}
+
 export const closeAllModals = () => {
     return {
         type: 'CLOSE_ALL_MODALS',

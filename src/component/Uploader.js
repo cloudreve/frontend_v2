@@ -87,8 +87,11 @@ class UploaderCompoment extends Component {
                             this.fileList["updateStatus"](file);
                         },
                         'UploadComplete': (up, file)=>{
-                            this.fileList["setComplete"](file[0]);
-                            this.props.refreshFileList(); 
+                            if(file[0].status === 5){
+                                this.fileList["setComplete"](file[0]);
+                                this.props.refreshFileList(); 
+                            }
+                            
                         },
                         'FileUploaded': function (up, file, info) {
                            

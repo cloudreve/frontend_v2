@@ -8,6 +8,7 @@ import {
     openCreateFolderDialog,
     openRenameDialog,
     openMoveDialog,
+    openRemoveDialog,
  } from "../../actions/index"
 
 
@@ -65,6 +66,9 @@ const mapDispatchToProps = dispatch => {
         openMoveDialog:()=>{
             dispatch(openMoveDialog())
         },
+        openRemoveDialog:()=>{
+            dispatch(openRemoveDialog())
+        },
     }
 }
 
@@ -77,7 +81,7 @@ class ContextMenuCompoment extends Component {
     }
 
     componentWillReceiveProps = (nextProps)=>{
-        if(nextProps.menuType!=="none"){
+        if(nextProps.menuType!=="none" && nextProps.menuOpen===true){
             this.Y=window.event.clientY;
             this.X=window.event.clientX;
         }
@@ -170,7 +174,7 @@ class ContextMenuCompoment extends Component {
                             <Typography variant="inherit">移动</Typography>
                         </MenuItem>
                         <Divider/>
-                        <MenuItem className={classes.propover}>
+                        <MenuItem className={classes.propover} onClick={()=>this.props.openRemoveDialog()}>
                             <ListItemIcon>
                                 <DeleteIcon/>
                             </ListItemIcon>

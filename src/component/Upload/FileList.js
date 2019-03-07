@@ -86,10 +86,13 @@ class FileList extends Component {
         var filesNow = this.state.files;
         var fileID = filesNow.findIndex((f) => { return f.id === file.id });
         if (fileID !== -1) {
-            filesNow[fileID] = file;
-            this.setState({
-                files: filesNow,
-            });
+            if(filesNow[fileID].status!==4){
+                filesNow[fileID] = file;
+                this.setState({
+                    files: filesNow,
+                });
+            }
+            
         }
     }
 

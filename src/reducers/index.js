@@ -172,6 +172,15 @@ const cloudreveApp = (state = [], action) => {
                     contextOpen:false,
                 }),
             });
+        case 'OPEN_REMOVE_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        remove:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
         case 'OPEN_MOVE_DIALOG':
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
@@ -188,6 +197,7 @@ const cloudreveApp = (state = [], action) => {
                         createNewFolder:false,
                         rename:false,
                         move:false,
+                        remove:false,
                     }),
                 }),
             });
