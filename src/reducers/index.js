@@ -151,7 +151,8 @@ const cloudreveApp = (state = [], action) => {
                         isMultiple:false,
                         withFolder:false,
                         withFile:false,
-                    }
+                    },
+                    keywords:null,
                 }),
             });
         case 'OPEN_CREATE_FOLDER_DIALOG':
@@ -231,6 +232,27 @@ const cloudreveApp = (state = [], action) => {
                         withFolder:false,
                         withFile:false, 
                     }
+                }),
+            });
+        case 'SEARCH_MY_FILE':
+            return Object.assign({}, state, {
+                navigator: Object.assign({}, state.navigator, {
+                    path: "/搜索结果",
+                    refresh:!state.navigator.refresh,
+                }),
+                viewUpdate:Object.assign({}, state.viewUpdate, {
+                    contextOpen:false,
+                    navigatorError:false,
+                    navigatorLoading:true,
+                }),
+                explorer:Object.assign({}, state.explorer, {
+                    selected:[],
+                    selectProps: {
+                        isMultiple:false,
+                        withFolder:false,
+                        withFile:false, 
+                    },
+                    keywords:action.keywords,
                 }),
             });
         default:

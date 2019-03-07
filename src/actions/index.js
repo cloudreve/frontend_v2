@@ -129,3 +129,10 @@ export const refreshFileList = () => {
         type: 'REFRESH_FILE_LIST',
     }
 }
+
+export const searchMyFile = (keywords) => {
+    return {
+        type: 'SEARCH_MY_FILE',
+        keywords: keywords,
+    }
+}

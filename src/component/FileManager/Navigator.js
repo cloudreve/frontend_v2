@@ -36,6 +36,7 @@ const mapStateToProps = state => {
       refresh: state.navigator.refresh,
       drawerDesktopOpen:state.viewUpdate.open,
       viewMethod:state.viewUpdate.explorerViewMethod,
+      keywords:state.explorer.keywords,
       sortMethod:state.viewUpdate.sortMethod,
     }
 }
@@ -117,6 +118,7 @@ const styles = theme => ({
 
 class NavigatorCompoment extends Component {
     
+    keywords = null;
 
     state = {
         hidden:false,
@@ -143,7 +145,9 @@ class NavigatorCompoment extends Component {
             folders:path!==null?path.substr(1).split("/"):this.props.path.substr(1).split("/"),
         });
         var newPath = path!==null?path:this.props.path;
-        axios.post('/File/ListFile', {
+        var apiURL = this.keywords===null?'/File/ListFile':'/File/SearchFile';
+        newPath = this.keywords===null?newPath:this.keywords;
+        axios.post(apiURL, {
             action: 'list',
             path: newPath
         })
@@ -159,18 +163,21 @@ class NavigatorCompoment extends Component {
         this.checkOverFlow(); 
     }
 
-    redresh = () => {
+    redresh = (path) => {
         this.props.setNavigatorLoadingStatus(true);
         this.props.setNavigatorError(false,"error");
-        this.renderPath();
+        this.renderPath(path);
     }
 
     componentWillReceiveProps = (nextProps)=>{
+        if(this.props.keywords!==nextProps.keywords){
+            this.keywords=nextProps.keywords
+        }
         if(this.props.path !== nextProps.path){
             this.renderPath(nextProps.path);
         }
         if(this.props.refresh !== nextProps.refresh){
-            this.redresh(); 
+            this.redresh(nextProps.path); 
         }
 
     }

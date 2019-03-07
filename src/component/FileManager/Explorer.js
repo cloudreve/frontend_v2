@@ -16,9 +16,9 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper'
 import EmptyIcon from "@material-ui/icons/Unarchive"
+import SadIcon from "@material-ui/icons/SentimentVeryDissatisfied"
 import classNames from 'classnames';
-import { trackWindowScroll }
-  from 'react-lazy-load-image-component';
+
 
 const styles = theme => ({
     paper: {
@@ -89,6 +89,7 @@ const mapStateToProps = state => {
         loading:state.viewUpdate.navigatorLoading,
         navigatorError:state.viewUpdate.navigatorError,
         navigatorErrorMsg:state.viewUpdate.navigatorErrorMsg,
+        keywords:state.explorer.keywords,
     }
 }
 
@@ -108,9 +109,12 @@ class ExplorerCompoment extends Component {
     
     contextMenu = (e) => {
         e.preventDefault();
-        if(!this.props.loading){
-            this.props.changeContextMenu("empty",true);
+        if(this.props.keywords===null){
+            if(!this.props.loading){
+                this.props.changeContextMenu("empty",true);
+            }
         }
+        
         
     }
 
@@ -141,7 +145,7 @@ class ExplorerCompoment extends Component {
                         <CircularProgress />
                     </div>
                 }
-                {(this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
+                {(this.props.keywords===null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
                     <div className={classes.emptyContainer}>
                        <EmptyIcon className={classes.emptyIcon}/> 
                        <div className={classes.emptyInfoBig}>拖拽文件至此</div>
@@ -149,7 +153,14 @@ class ExplorerCompoment extends Component {
 
                     </div>
                 }
-                {(this.props.viewMethod!=="list" &&this.props.dirList.length!==0&&!this.props.loading)&&
+                 {(this.props.keywords!==null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
+                    <div className={classes.emptyContainer}>
+                       <SadIcon className={classes.emptyIcon}/> 
+                       <div className={classes.emptyInfoBig}>什么都没有找到</div>
+
+                    </div>
+                }
+                {(this.props.viewMethod!=="list" &&(this.props.dirList.length!==0||this.props.fileList.length!==0)&&!this.props.loading)&&
                     <div>
                         {(this.props.dirList.length!==0 && !this.props.loading)&&
                             <div>

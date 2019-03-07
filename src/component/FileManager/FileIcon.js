@@ -251,7 +251,7 @@ class FileIconCompoment extends Component {
                             [classes.hide]:this.state.loading,
                             [classes.picPreview]:!this.state.loading,
                         })}
-                        src={window.apiURL.imgThumb+"?isImg=true&path="+encodeURIComponent(this.props.path==="/"?this.props.path+this.props.file.name:this.props.path+"/"+this.props.file.name)}
+                        src={window.apiURL.imgThumb+"?isImg=true&path="+encodeURIComponent(this.props.file.path==="/"?this.props.file.path+this.props.file.name:this.props.file.path+"/"+this.props.file.name)}
                         afterLoad = {()=>this.setState({loading:false})}
                         beforeLoad = {()=>this.setState({loading:true})}
                         />  

@@ -45,7 +45,8 @@ const defaultStatus = {
             isMultiple:false,
             withFolder:false,
             withFile:false,
-        }
+        },
+        keywords:null,
     }
 };
 
