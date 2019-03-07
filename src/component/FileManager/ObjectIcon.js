@@ -10,15 +10,17 @@ import {
     navitateTo,
 } from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
-
 import Folder from "./Folder"
 import FileIcon from "./FileIcon"
 import SmallIcon from "./SmallIcon"
+import TableItem from "./TableRow"
+import classNames from 'classnames';
 
 const styles = theme => ({
     container: {
         padding: "7px",
     },
+    
 })
 
 const mapStateToProps = state => {
@@ -107,14 +109,28 @@ class ObjectCompoment extends Component {
             return value === this.props.file;
         })) !== -1;
 
+        if(this.props.viewMethod === "list"){
+            return (
+                <TableItem
+                    contextMenu={this.contextMenu}
+                    handleClick={this.handleClick} 
+                    handleDoubleClick = {this.handleDoubleClick.bind(this)}
+                file={this.props.file}/>
+            );
+        }
+
         return (
-            <div className={classes.container}>
+            <div 
+            className={classNames({
+                [classes.container]: this.props.viewMethod!=="list",
+            })}
+            >
                 <div
                     onContextMenu={this.contextMenu}
                     onClick={this.handleClick} 
                     onDoubleClick = {this.handleDoubleClick.bind(this)}
                 >
-                    {(this.props.file.type==="dir") &&
+                    {(this.props.file.type==="dir" &&this.props.viewMethod !== "list") &&
                         <Folder folder={this.props.file}/>
                     }
                     {((this.props.file.type==="file") && this.props.viewMethod == "icon") &&
