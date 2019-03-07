@@ -46,6 +46,10 @@ const defaultStatus = {
             withFolder:false,
             withFile:false,
         },
+        imgPreview:{
+            first:null,
+            other:[],
+        },
         keywords:null,
     }
 };

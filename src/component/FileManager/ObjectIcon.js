@@ -8,6 +8,7 @@ import {
     removeSelectedTarget,
     setNavigatorLoadingStatus,
     navitateTo,
+    showImgPreivew,
 } from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
 import Folder from "./Folder"
@@ -15,7 +16,7 @@ import FileIcon from "./FileIcon"
 import SmallIcon from "./SmallIcon"
 import TableItem from "./TableRow"
 import classNames from 'classnames';
-
+import {imgPreviewSuffix} from "../../config"
 const styles = theme => ({
     container: {
         padding: "7px",
@@ -50,6 +51,9 @@ const mapDispatchToProps = dispatch => {
         },
         navitateTo:path => {
             dispatch(navitateTo(path))
+        },
+        showImgPreivew:(first,other)=>{
+            dispatch(showImgPreivew(first,other))
         }
     }
 }
@@ -93,6 +97,10 @@ class ObjectCompoment extends Component {
         if(this.props.file.type==="dir"){
             this.enterFolder();
             return;
+        }
+        let fileType =this.props.file.name.split(".").pop().toLowerCase();
+        if (imgPreviewSuffix.indexOf(fileType)!==-1){
+            this.props.showImgPreivew(this.props.file);
         }
         
     }

@@ -18,6 +18,7 @@ import PdfIcon from "@material-ui/icons/PictureAsPdf"
 import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText} from 'mdi-material-ui'
 import FileShowIcon from "@material-ui/icons/InsertDriveFile"
 import {sizeToString} from "../../untils/index"
+import {mediaType} from "../../config"
 
 const styles = theme => ({
     selected: {
@@ -112,16 +113,6 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-const mediaType = {
-    audio:["mp3","flac","ape","wav","acc","ogg"],
-    video:["mp4","flv","avi","wmv","mkv","rm","rmvb","mov","ogv"],
-    image:["bmp","iff","png","gif","jpg","jpge","psd","svg","webp"],
-    pdf:["pdf"],
-    word:["doc","docx"],
-    ppt:["ppt","pptx"],
-    excel:["xls","xlsx","csv"],
-    text:["txt","md","html"],
-}
 
 class TableRowCompoment extends Component {
 

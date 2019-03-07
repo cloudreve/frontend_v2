@@ -18,7 +18,7 @@ import Paper from '@material-ui/core/Paper'
 import EmptyIcon from "@material-ui/icons/Unarchive"
 import SadIcon from "@material-ui/icons/SentimentVeryDissatisfied"
 import classNames from 'classnames';
-
+import ImgPreivew from "./ImgPreview"
 
 const styles = theme => ({
     paper: {
@@ -131,6 +131,7 @@ class ExplorerCompoment extends Component {
             }, classes.button)}
             >
                 <ContextMenu/>
+                <ImgPreivew/>
                 {this.props.navigatorError&&
                     <Paper  elevation={1} className={classes.errorBox}>
                     <Typography variant="h5" component="h3">

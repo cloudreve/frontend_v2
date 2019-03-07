@@ -17,7 +17,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText} from 'mdi-material-ui'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import ContentLoader from 'react-content-loader'
-
+import {mediaType} from "../../config"
 
 const styles = theme => ({
     container: {
@@ -176,17 +176,6 @@ const mapDispatchToProps = dispatch => {
     return {
 
     }
-}
-
-const mediaType = {
-    audio:["mp3","flac","ape","wav","acc","ogg"],
-    video:["mp4","flv","avi","wmv","mkv","rm","rmvb","mov","ogv"],
-    image:["bmp","iff","png","gif","jpg","jpge","psd","svg","webp"],
-    pdf:["pdf"],
-    word:["doc","docx"],
-    ppt:["ppt","pptx"],
-    excel:["xls","xlsx","csv"],
-    text:["txt","md","html"],
 }
 
 class FileIconCompoment extends Component {

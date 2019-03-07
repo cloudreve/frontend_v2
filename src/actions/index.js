@@ -136,3 +136,10 @@ export const searchMyFile = (keywords) => {
         keywords: keywords,
     }
 }
+
+export const showImgPreivew = (first) => {
+    return {
+        type: 'SHOW_IMG_PREIVEW',
+        first: first,
+    }
+}

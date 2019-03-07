@@ -255,6 +255,15 @@ const cloudreveApp = (state = [], action) => {
                     keywords:action.keywords,
                 }),
             });
+        case 'SHOW_IMG_PREIVEW':
+            return Object.assign({}, state, {
+                explorer:Object.assign({}, state.explorer, {
+                    imgPreview: {
+                        first:action.first,
+                        other:state.explorer.fileList,
+                    },
+                }),
+            });
         default:
             return state
     }

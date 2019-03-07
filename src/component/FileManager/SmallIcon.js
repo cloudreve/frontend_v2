@@ -15,6 +15,8 @@ import AudioIcon from '@material-ui/icons/Audiotrack'
 import PdfIcon from "@material-ui/icons/PictureAsPdf"
 import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText} from 'mdi-material-ui'
 import FileShowIcon from "@material-ui/icons/InsertDriveFile"
+import {mediaType} from "../../config"
+
 const styles = theme => ({
     container: {
         padding: "7px",
@@ -144,17 +146,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
     }
-}
-
-const mediaType = {
-    audio:["mp3","flac","ape","wav","acc","ogg"],
-    video:["mp4","flv","avi","wmv","mkv","rm","rmvb","mov","ogv"],
-    image:["bmp","iff","png","gif","jpg","jpge","psd","svg","webp"],
-    pdf:["pdf"],
-    word:["doc","docx"],
-    ppt:["ppt","pptx"],
-    excel:["xls","xlsx","csv"],
-    text:["txt","md","html"],
 }
 
 class SmallIconCompoment extends Component {
