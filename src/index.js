@@ -27,6 +27,7 @@ const defaultStatus = {
             rename:false,
             move:false,
             remove:false,
+            share:false,
         },
         snackbar:{
             toggle:false,

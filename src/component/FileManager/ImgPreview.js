@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { withStyles } from '@material-ui/core/styles';
 import { 
-    toggleSnackbar,
+    showImgPreivew,
 }from "../../actions/index"
 import {imgPreviewSuffix} from "../../config"
 import PhotoSwipe from'react-photoswipe';
@@ -22,9 +22,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleSnackbar:(vertical,horizontal,msg,color)=>{
-            dispatch(toggleSnackbar(vertical,horizontal,msg,color))
-        },
+        showImgPreivew:(first)=>{
+            dispatch(showImgPreivew(first))
+        }
     }
 }
 
@@ -48,24 +48,32 @@ class ImgPreviewCompoment extends Component {
 
     componentWillReceiveProps = (nextProps)=>{
         let items = [];
-        if(this.props.first!==nextProps.first){
+        if(nextProps.first!==null){
             if(!this.state.loaded){
                 this.setState({
                     loaded:true,
                 })
             }
+            var firstOne;
             nextProps.other.map((value)=>{
                 let fileType =value.name.split(".").pop().toLowerCase();
+                
                 if(imgPreviewSuffix.indexOf(fileType)!==-1){
-                    items.push({
+                    let newImg = {
                         h:0,
                         w:0,
                         title:value.name,
                         src:window.apiURL.preview+"?action=preview&path="+encodeURIComponent(value.path==="/"?value.path+value.name:value.path+"/"+value.name),
-                    });
+                    };
+                    if((value.path===nextProps.first.path)&&(value.name==nextProps.first.name)){
+                        firstOne = newImg;
+                    }else{
+                        items.push(newImg);
+                    }
+                    
                 };
             });
-            console.log(items);
+            items.unshift(firstOne);
             this.setState({
                 items:items,
                 open:true,
@@ -75,7 +83,11 @@ class ImgPreviewCompoment extends Component {
     }
 
     handleClose=()=>{
-
+        this.props.showImgPreivew(null);
+        this.setState({
+            loaded:true,
+            open:false,
+        });
     }
 
     setSize = (ps,index,item)=>{

@@ -191,6 +191,15 @@ const cloudreveApp = (state = [], action) => {
                     contextOpen:false,
                 }),
             });
+        case 'OPEN_SHARE_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        share:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
         case 'CLOSE_ALL_MODALS': 
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
@@ -199,6 +208,7 @@ const cloudreveApp = (state = [], action) => {
                         rename:false,
                         move:false,
                         remove:false,
+                        share:false,
                     }),
                 }),
             });

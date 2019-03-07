@@ -101,6 +101,12 @@ export const openRemoveDialog = () => {
     }
 }
 
+export const openShareDialog = () => {
+    return {
+        type: 'OPEN_SHARE_DIALOG',
+    }
+}
+
 export const closeAllModals = () => {
     return {
         type: 'CLOSE_ALL_MODALS',

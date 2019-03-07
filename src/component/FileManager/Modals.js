@@ -17,7 +17,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios'
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
     wrapper: {
@@ -34,6 +37,12 @@ const styles = theme => ({
     },
     contentFix:{
         padding: "10px 24px 0px 24px",
+    },
+    shareUrl:{
+        minWidth:"400px",
+    },
+    widthAnimation:{
+
     },
 })
 
@@ -73,6 +82,9 @@ class ModalsCompoment extends Component {
         newName:"",
         selectedPath:"",
         selectedPathName:"",
+        secretShare:false,
+        sharePwd:"",
+        shareUrl:"",
     } 
 
     handleInputChange = (e)=>{
@@ -94,6 +106,30 @@ class ModalsCompoment extends Component {
             });
             return; 
         }
+    }
+
+    submitShare = e => {
+        e.preventDefault();
+        this.props.setModalsLoading(true);
+        axios.post('/File/Share', {
+            action: 'share',
+            item: this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name,
+            shareType:this.state.secretShare?"private":"public",
+            pwd:this.state.sharePwd
+        })
+        .then( (response)=> {
+            if(response.data.result!==""){
+                this.setState({
+                    shareUrl:response.data.result,
+                });
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+            }
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+        });
+        this.props.setModalsLoading(false);
     }
 
     submitRemove = (e)=>{
@@ -233,10 +269,17 @@ class ModalsCompoment extends Component {
             newName:"",
             selectedPath:"",
             selectedPathName:"",
+            secretShare:false,
+            sharePwd:"",
+            shareUrl:"",
         });
         this.newNameSuffix = "";
         this.props.closeAllModals();
     }
+
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
 
     render() {
         
@@ -369,6 +412,71 @@ class ModalsCompoment extends Component {
                                 {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Button>
                         </div>
+                    </DialogActions>
+                
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.share}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                className={classes.widthAnimation}
+                >
+                <DialogTitle id="form-dialog-title">创建分享链接</DialogTitle>
+                    
+                    <DialogContent>
+                        <DialogContentText>
+                            获取用于共享的链接
+                        </DialogContentText>
+                        {this.state.shareUrl===""&&
+                            <form
+                            onSubmit = {this.submitShare}
+                            >
+                            <FormControlLabel
+                            control={    
+                            <Checkbox
+                                checked={this.state.secretShare}
+                                onChange={this.handleChange('secretShare')}
+                                name="secretShare"
+                                value="false"
+                            />}
+                            label="使用密码保护链接"/>
+                            {this.state.secretShare&&
+                            <FormControl margin="nonw" fullWidth>
+                            <TextField
+                                id="sharePwd"
+                                onChange={this.handleInputChange}
+                                label="分享密码"
+                                type="password"
+                                margin="none"
+                                autoFocus
+                                value={this.state.sharePwd}
+                                required
+                            /></FormControl>}
+                            </form>
+                        }
+                    {this.state.shareUrl!==""&&
+                        <TextField
+                        id="shareUrl"
+                        label="分享链接"
+                        autoFocus
+                        fullWidth
+                        className={classes.shareUrl}
+                        value={this.state.shareUrl}
+                        />
+ 
+                    }
+                        
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            {this.state.shareUrl===""?"取消":"关闭"}
+                        </Button>
+                        {this.state.shareUrl===""&&<div className={classes.wrapper}>
+                            <Button onClick={this.submitShare} color="primary" disabled={this.props.modalsLoading||(this.state.secretShare&&this.state.sharePwd==="") }>
+                                确定
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>}
                     </DialogActions>
                 
                 </Dialog>

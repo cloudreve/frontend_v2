@@ -9,6 +9,7 @@ import {
     openRenameDialog,
     openMoveDialog,
     openRemoveDialog,
+    openShareDialog,
  } from "../../actions/index"
 
 
@@ -27,6 +28,7 @@ import ShareIcon from '@material-ui/icons/Share'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { DiscAlert } from 'mdi-material-ui';
 
 const styles = theme => ({
     propover:{
@@ -69,6 +71,9 @@ const mapDispatchToProps = dispatch => {
         openRemoveDialog:()=>{
             dispatch(openRemoveDialog())
         },
+        openShareDialog:()=>{
+            dispatch(openShareDialog())
+        }
     }
 }
 
@@ -151,7 +156,7 @@ class ContextMenuCompoment extends Component {
                         }
 
                         {(!this.props.isMultiple)&&
-                            <MenuItem>
+                            <MenuItem onClick={()=>this.props.openShareDialog()}>
                                 <ListItemIcon>
                                     <ShareIcon/>
                                 </ListItemIcon>
