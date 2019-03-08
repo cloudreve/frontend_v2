@@ -107,6 +107,12 @@ export const openShareDialog = () => {
     }
 }
 
+export const openMusicDialog = () => {
+    return {
+        type: 'OPEN_MUSIC_DIALOG',
+    }
+}
+
 export const closeAllModals = () => {
     return {
         type: 'CLOSE_ALL_MODALS',

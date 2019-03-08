@@ -10,8 +10,10 @@ import {
     openMoveDialog,
     openRemoveDialog,
     openShareDialog,
+    showImgPreivew,
+    openMusicDialog,
  } from "../../actions/index"
-
+import {isPreviewable} from "../../config"
 
 import { withStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -28,7 +30,7 @@ import ShareIcon from '@material-ui/icons/Share'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { DiscAlert } from 'mdi-material-ui';
+import OpenIcon from '@material-ui/icons/OpenInNew'
 
 const styles = theme => ({
     propover:{
@@ -73,6 +75,12 @@ const mapDispatchToProps = dispatch => {
         },
         openShareDialog:()=>{
             dispatch(openShareDialog())
+        },
+        showImgPreivew:(first)=>{
+            dispatch(showImgPreivew(first))
+        },
+        openMusicDialog:()=>{
+            dispatch(openMusicDialog())
         }
     }
 }
@@ -92,8 +100,33 @@ class ContextMenuCompoment extends Component {
         }
     }
 
+    openDownload = ()=>{
+        this.props.changeContextMenu("file",false);
+        let downloadPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
+        window.open(window.apiURL.download+"?action=download&path="+encodeURIComponent(downloadPath));
+
+    }
+
     enterFolder = () => {
         this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.selected[0].name:this.props.path+"/"+this.props.selected[0].name);
+    }
+
+    openPreview = ()=>{
+        this.props.changeContextMenu("file",false);
+        let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
+        switch(isPreviewable(this.props.selected[0].name)){
+            case 'img':
+                this.props.showImgPreivew(this.props.selected[0]);
+                return;
+            case 'msDoc':
+                window.open(window.apiURL.docPreiview+"/?path="+encodeURI(previewPath));  
+                return;
+            case 'audio':
+                this.props.openMusicDialog();
+                return;
+            default:
+                return;
+        }
     }
 
     render() {
@@ -130,7 +163,7 @@ class ContextMenuCompoment extends Component {
                                 <ListItemIcon>
                                     <DownloadIcon/>
                                 </ListItemIcon>
-                                <Typography variant="inherit">云端下载</Typography>
+                                <Typography variant="inherit">离线下载</Typography>
                             </MenuItem>
                         }
                         
@@ -152,6 +185,26 @@ class ContextMenuCompoment extends Component {
                                     <OpenFolderIcon/>
                                 </ListItemIcon>
                                 <Typography variant="inherit">进入</Typography>
+                            </MenuItem>
+                        }
+                        {(!this.props.isMultiple&&this.props.withFile&&isPreviewable(this.props.selected[0].name))&&
+                            <div>
+                                <MenuItem onClick={()=>this.openPreview()}>
+                                    <ListItemIcon>
+                                        <OpenIcon/>
+                                    </ListItemIcon>
+                                    <Typography variant="inherit">打开</Typography>
+                                </MenuItem>
+                                <Divider/>
+                             </div>
+                        }
+
+                        {(!this.props.isMultiple&&this.props.withFile)&&
+                            <MenuItem onClick={()=>this.openDownload()}>
+                                <ListItemIcon>
+                                    <DownloadIcon/>
+                                </ListItemIcon>
+                                <Typography variant="inherit">下载</Typography>
                             </MenuItem>
                         }
 

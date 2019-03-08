@@ -200,6 +200,15 @@ const cloudreveApp = (state = [], action) => {
                     contextOpen:false,
                 }),
             });
+        case 'OPEN_MUSIC_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        music:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
         case 'CLOSE_ALL_MODALS': 
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
@@ -209,6 +218,7 @@ const cloudreveApp = (state = [], action) => {
                         move:false,
                         remove:false,
                         share:false,
+                        music:false,
                     }),
                 }),
             });

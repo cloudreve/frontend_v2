@@ -28,6 +28,7 @@ const defaultStatus = {
             move:false,
             remove:false,
             share:false,
+            music:false,
         },
         snackbar:{
             toggle:false,

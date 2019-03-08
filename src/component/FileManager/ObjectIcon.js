@@ -52,8 +52,8 @@ const mapDispatchToProps = dispatch => {
         navitateTo:path => {
             dispatch(navitateTo(path))
         },
-        showImgPreivew:(first,other)=>{
-            dispatch(showImgPreivew(first,other))
+        showImgPreivew:(first)=>{
+            dispatch(showImgPreivew(first))
         }
     }
 }

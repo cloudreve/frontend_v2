@@ -285,6 +285,8 @@ class ModalsCompoment extends Component {
         
         const { classes} = this.props;
 
+        const previewApi = window.apiURL.preview;
+
         return (
             <div>
                 <Dialog
@@ -413,7 +415,6 @@ class ModalsCompoment extends Component {
                             </Button>
                         </div>
                     </DialogActions>
-                
                 </Dialog>
                 <Dialog
                 open={this.props.modalsStatus.share}
@@ -479,6 +480,28 @@ class ModalsCompoment extends Component {
                         </div>}
                     </DialogActions>
                 
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.music}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">音频播放</DialogTitle>
+                    
+                    <DialogContent>
+                        <DialogContentText>
+                            {(this.props.selected.length!==0)&&
+                                <audio controls src={previewApi+"?action=preview&path="+(this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name)}></audio>
+                            }
+                           
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            关闭
+                        </Button>
+                    
+                    </DialogActions>
                 </Dialog>
             </div>
         );
