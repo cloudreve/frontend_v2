@@ -5,6 +5,12 @@ export const navitateTo = path => {
     }
 }
 
+export const navitateUp = () => {
+    return {
+        type: 'NAVIGATOR_UP',
+    }
+}
+
 export const drawerToggleAction = open => {
     return {
         type: 'DRAWER_TOGGLE',
@@ -112,6 +118,19 @@ export const openMusicDialog = () => {
         type: 'OPEN_MUSIC_DIALOG',
     }
 }
+
+export const openRemoteDownloadDialog = ()=>{
+    return {
+        type:'OPEN_REMOTE_DOWNLOAD_DIALOG',
+    }
+}
+
+export const openTorrentDownloadDialog = ()=>{
+    return {
+        type:'OPEN_TORRENT_DOWNLOAD_DIALOG',
+    }
+}
+
 
 export const closeAllModals = () => {
     return {

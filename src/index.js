@@ -29,6 +29,8 @@ const defaultStatus = {
             remove:false,
             share:false,
             music:false,
+            remoteDownload:false,
+            torrentDownload:false,
         },
         snackbar:{
             toggle:false,

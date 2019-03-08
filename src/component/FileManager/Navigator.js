@@ -18,14 +18,24 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
+import RenameIcon from '@material-ui/icons/BorderColor'
+import DeleteIcon from '@material-ui/icons/Delete'
+import ShareIcon from '@material-ui/icons/Share'
+import NewFolderIcon from '@material-ui/icons/CreateNewFolder'
+import RefreshIcon from '@material-ui/icons/Refresh'
+
 import {
     navitateTo,
+    navitateUp,
     changeViewMethod,
     changeSortMethod,
     setNavigatorError,
     updateFileList,
     setNavigatorLoadingStatus,
-    refreshFileList
+    refreshFileList,
+    setSelectedTarget,
+    openCreateFolderDialog,
+    openShareDialog,
 } from "../../actions/index"
 import axios from 'axios'
 import {setCookie} from "../../untils/index"
@@ -46,6 +56,9 @@ const mapDispatchToProps = dispatch => {
         navigateToPath: path => {
             dispatch(navitateTo(path))
         },
+        navitateUp:()=>{
+            dispatch(navitateUp())
+        },
         changeView:method=>{
             dispatch(changeViewMethod(method))
         },
@@ -63,7 +76,16 @@ const mapDispatchToProps = dispatch => {
         },
         refreshFileList:()=>{
             dispatch(refreshFileList())
-        }
+        },
+        setSelectedTarget:(target)=>{
+            dispatch(setSelectedTarget(target))
+        },
+        openCreateFolderDialog:()=>{
+            dispatch(openCreateFolderDialog())
+        },
+        openShareDialog:()=>{
+            dispatch(openShareDialog())
+        },
     }
 }
 
@@ -234,9 +256,33 @@ class NavigatorCompoment extends Component {
         this.setState({ anchorSort: e.currentTarget });
     }
 
-    add = () => {
-        this.props.navigateToPath("/"+this.state.folders.join("/")+"/ss");
+    performAction = e => {
+        this.handleClose();
+        if(e==="refresh"){
+            this.redresh();
+            return;
+        }
+        let presentPath = this.props.path.split("/");
+        let newTarget = [{
+            type:"dir",
+            name:presentPath.pop(),
+            path:presentPath.length===1?"/":presentPath.join("/"),
+        }];
+        //this.props.navitateUp();
+        switch (e) {
+            case "share":
+                this.props.setSelectedTarget(newTarget);
+                this.props.openShareDialog();
+                break;
+            case "newfolder":
+                this.props.openCreateFolderDialog();
+                break;
+            default:
+                break;
+        }
+
     }
+
 
     toggleViewMethod = () => {
         this.props.changeView(this.props.viewMethod==="icon"?"list":(this.props.viewMethod==="list"?"smallIcon":"icon"));
@@ -269,9 +315,26 @@ class NavigatorCompoment extends Component {
             onClose={this.handleClose}
             disableAutoFocusItem={true}
             >
-                <MenuItem onClick={this.add}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                <MenuItem onClick={()=>this.performAction("refresh")}>
+                <ListItemIcon><RefreshIcon/></ListItemIcon>
+                    刷新
+                </MenuItem>
+                {(this.props.keywords===null)&&
+                    <div>
+                        <Divider/>
+                        <MenuItem onClick={()=>this.performAction("share")}>
+                            <ListItemIcon><ShareIcon/></ListItemIcon>
+                            分享
+                        </MenuItem>
+
+                        <MenuItem onClick={()=>this.performAction("newfolder")}>
+                            <ListItemIcon><NewFolderIcon/></ListItemIcon>
+                            创建文件夹
+                        </MenuItem>
+                        
+                    </div>
+                }
+                
             </Menu>);
 
         return (

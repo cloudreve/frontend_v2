@@ -12,8 +12,11 @@ import {
     openShareDialog,
     showImgPreivew,
     openMusicDialog,
+    toggleSnackbar,
+    openRemoteDownloadDialog,
+    openTorrentDownloadDialog,
  } from "../../actions/index"
-import {isPreviewable} from "../../config"
+import {isPreviewable,isTorrent} from "../../config"
 
 import { withStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -31,6 +34,7 @@ import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
 import DeleteIcon from '@material-ui/icons/Delete'
 import OpenIcon from '@material-ui/icons/OpenInNew'
+import {MagnetOn} from 'mdi-material-ui'
 
 const styles = theme => ({
     propover:{
@@ -81,6 +85,15 @@ const mapDispatchToProps = dispatch => {
         },
         openMusicDialog:()=>{
             dispatch(openMusicDialog())
+        },
+        toggleSnackbar:(vertical,horizontal,msg,color)=>{
+            dispatch(toggleSnackbar(vertical,horizontal,msg,color))
+        },
+        openRemoteDownloadDialog:()=>{
+            dispatch(openRemoteDownloadDialog())
+        },
+        openTorrentDownloadDialog:()=>{
+            dispatch(openTorrentDownloadDialog())
         }
     }
 }
@@ -111,6 +124,16 @@ class ContextMenuCompoment extends Component {
         this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.selected[0].name:this.props.path+"/"+this.props.selected[0].name);
     }
 
+    clickUpload = () => {
+        this.props.changeContextMenu("empty",false);
+        let uploadButton = document.getElementsByClassName("uploadForm")[0];
+        if (document.body.contains(uploadButton)){
+            uploadButton.click();
+        }else{
+            this.props.toggleSnackbar("top","right","上传组件还未加载完成","warning");
+        }
+    }
+
     openPreview = ()=>{
         this.props.changeContextMenu("file",false);
         let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
@@ -123,6 +146,9 @@ class ContextMenuCompoment extends Component {
                 return;
             case 'audio':
                 this.props.openMusicDialog();
+                return;
+            case 'open':
+                window.open(window.apiURL.preview+"/?action=preview&path="+encodeURI(previewPath));  
                 return;
             default:
                 return;
@@ -152,14 +178,14 @@ class ContextMenuCompoment extends Component {
                 >
                 {this.props.menuType==="empty"&&
                     <MenuList>
-                        <MenuItem>
+                        <MenuItem onClick={this.clickUpload}>
                             <ListItemIcon>
                                 <UploadIcon/>
                             </ListItemIcon>
                             <Typography variant="inherit">上传文件</Typography>
                         </MenuItem>
                         {window.uploadConfig.allowRemoteDownload==="1"&&
-                            <MenuItem>
+                            <MenuItem onClick={()=>this.props.openRemoteDownloadDialog()}>
                                 <ListItemIcon>
                                     <DownloadIcon/>
                                 </ListItemIcon>
@@ -205,6 +231,15 @@ class ContextMenuCompoment extends Component {
                                     <DownloadIcon/>
                                 </ListItemIcon>
                                 <Typography variant="inherit">下载</Typography>
+                            </MenuItem>
+                        }
+
+                        {(!this.props.isMultiple&&this.props.withFile&&isTorrent(this.props.selected[0].name))&&
+                            <MenuItem onClick={()=>this.props.openTorrentDownloadDialog()}>
+                                <ListItemIcon>
+                                    <MagnetOn/>
+                                </ListItemIcon>
+                                <Typography variant="inherit">创建离线下载任务</Typography>
                             </MenuItem>
                         }
 

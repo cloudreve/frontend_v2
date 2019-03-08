@@ -14,7 +14,7 @@ import PdfIcon from "@material-ui/icons/PictureAsPdf"
 import Divider from "@material-ui/core/Divider"
 import FileShowIcon from "@material-ui/icons/InsertDriveFile"
 import Tooltip from '@material-ui/core/Tooltip';
-import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText} from 'mdi-material-ui'
+import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText,MagnetOn,ZipBox,WindowRestore,Android} from 'mdi-material-ui'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import ContentLoader from 'react-content-loader'
 import {mediaType} from "../../config"
@@ -157,6 +157,34 @@ const styles = theme => ({
         color:"#424242",
         fontSize: "50px",
     },
+    iconTorrent :  {
+        color:"#5c6bc0",
+    },
+    iconTorrentBig:{    
+        color:"#5c6bc0",
+        fontSize: "50px",
+    },
+    iconZip :  {
+        color:"#f9a825",
+    },
+    iconZipBig:{    
+        color:"#f9a825",
+        fontSize: "50px",
+    },
+    iconAndroid :  {
+        color:"#8bc34a",
+    },
+    iconAndroidBig:{    
+        color:"#8bc34a",
+        fontSize: "50px",
+    },
+    iconExe :  {
+        color:"#1a237e",
+    },
+    iconExeBig:{    
+        color:"#1a237e",
+        fontSize: "50px",
+    },
     hide:{
         display:"none",
     },
@@ -219,6 +247,18 @@ class FileIconCompoment extends Component {
         }else if(mediaType["text"].indexOf(fileType)!==-1){
             icon = (<ScriptText className={classes.iconText}/>);
             iconBig = (<ScriptText className={classes.iconTextBig}/>);  
+        }else if(mediaType["torrent"].indexOf(fileType)!==-1){
+            icon = (<MagnetOn className={classes.iconTorrent}/>);
+            iconBig = (<MagnetOn className={classes.iconTorrentBig}/>);  
+        }else if(mediaType["zip"].indexOf(fileType)!==-1){
+            icon = (<ZipBox className={classes.iconZip}/>);
+            iconBig = (<ZipBox className={classes.iconZipBig}/>);  
+        }else if(mediaType["excute"].indexOf(fileType)!==-1){
+            icon = (<WindowRestore className={classes.iconExe}/>);
+            iconBig = (<WindowRestore className={classes.iconExeBig}/>);  
+        }else if(mediaType["android"].indexOf(fileType)!==-1){
+            icon = (<Android className={classes.iconAndroid}/>);
+            iconBig = (<Android className={classes.iconAndroidBig}/>);  
         }else{
             icon = (<FileShowIcon className={classes.iconText}/>);
             iconBig = (<FileShowIcon className={classes.iconTextBig}/>);  

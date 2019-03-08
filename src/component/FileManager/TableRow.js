@@ -15,7 +15,7 @@ import ImageIcon from '@material-ui/icons/PhotoSizeSelectActual'
 import VideoIcon from '@material-ui/icons/Videocam'
 import AudioIcon from '@material-ui/icons/Audiotrack'
 import PdfIcon from "@material-ui/icons/PictureAsPdf"
-import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText} from 'mdi-material-ui'
+import {FileWordBox,FilePowerpointBox,FileExcelBox,ScriptText,MagnetOn,ZipBox,WindowRestore,Android} from 'mdi-material-ui'
 import FileShowIcon from "@material-ui/icons/InsertDriveFile"
 import {sizeToString} from "../../untils/index"
 import {mediaType} from "../../config"
@@ -49,9 +49,9 @@ const styles = theme => ({
         marginRight: "20px",
     },
     iconAudio :  {
-        verticalAlign: "middle",
         color:"#651fff",
         marginRight: "20px",
+        verticalAlign: "middle",
     },
     iconPdf :  {
         verticalAlign: "middle",
@@ -82,6 +82,26 @@ const styles = theme => ({
         verticalAlign: "middle",
         color:"#424242",
         marginRight: "20px",
+    },
+    iconTorrent :  {
+        color:"#5c6bc0",
+        marginRight: "20px",
+        verticalAlign: "middle",
+    },
+    iconZip :  {
+        color:"#f9a825",
+        marginRight: "20px",
+        verticalAlign: "middle",
+    },
+    iconAndroid :  {
+        color:"#8bc34a",
+        marginRight: "20px",
+        verticalAlign: "middle",
+    },
+    iconExe :  {
+        color:"#1a237e",
+        marginRight: "20px",
+        verticalAlign: "middle",
     },
     folderNameSelected: {
         color: theme.palette.primary.dark,
@@ -145,6 +165,14 @@ class TableRowCompoment extends Component {
                 icon = (<FileExcelBox className={classes.iconExcel}/>);
             }else if(mediaType["text"].indexOf(fileType)!==-1){
                 icon = (<ScriptText className={classes.iconText}/>);
+            }else if(mediaType["torrent"].indexOf(fileType)!==-1){
+                icon = (<MagnetOn className={classes.iconTorrent}/>); 
+            }else if(mediaType["zip"].indexOf(fileType)!==-1){
+                icon = (<ZipBox className={classes.iconZip}/>);
+            }else if(mediaType["excute"].indexOf(fileType)!==-1){
+                icon = (<WindowRestore className={classes.iconExe}/>);
+            }else if(mediaType["android"].indexOf(fileType)!==-1){
+                icon = (<Android className={classes.iconAndroid}/>);
             }else{
                 icon = (<FileShowIcon className={classes.iconText}/>);
             }

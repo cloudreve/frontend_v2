@@ -11,6 +11,7 @@ import NewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import VideoIcon from '@material-ui/icons/VideoLibrary';
 import MusicIcon from '@material-ui/icons/LibraryMusic';
 import ImageIcon from '@material-ui/icons/Collections';
+import AddIcon from '@material-ui/icons/Add';
 import DocIcon from '@material-ui/icons/FileCopy';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -23,7 +24,7 @@ import OpenFolderIcon from '@material-ui/icons/FolderOpen'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
 import DeleteIcon from '@material-ui/icons/Delete'
-
+import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -45,6 +46,8 @@ import {
     setSelectedTarget,
     navitateTo,
     openCreateFolderDialog,
+    changeContextMenu,
+    searchMyFile
 } from "../actions/index"
 import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
@@ -77,7 +80,13 @@ const mapDispatchToProps = dispatch => {
         },
         openCreateFolderDialog:()=>{
             dispatch(openCreateFolderDialog())
-        }
+        },
+        changeContextMenu:(type,open)=>{
+            dispatch(changeContextMenu(type,open))
+        },
+        searchMyFile:(keywords)=>{
+            dispatch(searchMyFile(keywords));
+        },
     }
 }
 
@@ -158,6 +167,20 @@ const styles = theme => ({
             display: 'flex',
             },
       },
+    extendedIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    addButton:{
+        marginLeft: "30px",
+        marginTop: "25px",
+        marginBottom: "15px",
+    },
+    fabButton:{
+        borderRadius:"100px",
+    },
+    badgeFix:{
+        right:"10px",
+    }
 });
 class NavbarCompoment extends Component {
 
@@ -183,7 +206,8 @@ class NavbarCompoment extends Component {
 
     clickUpload = () => {
         if (this.state.queued === 0) {
-            document.getElementsByClassName("uploadForm")[0].click();
+            //document.getElementsByClassName("uploadForm")[0].click();
+            this.props.changeContextMenu("empty",true);
         } else {
             this.UploaderRef.current.getWrappedInstance().openFileList();
         }
@@ -199,14 +223,34 @@ class NavbarCompoment extends Component {
         }
     }
 
+    filterFile = (type)=>{
+        this.props.searchMyFile("{filterType:"+type+"}")
+    }
+
     render() {
         const { classes } = this.props;
 
         const drawer = (
             <div id="container">
-
-                <List>
-                    <ListItem button key="上传文件" ref="s" onClick={this.clickUpload} disabled={this.props.keywords!==null}>
+                <div className={classes.addButton}>
+            <Badge badgeContent={this.state.queued} classes={{ badge: classes.badgeFix }} invisible={this.state.queued === 0} color="secondary">
+                <Button
+                 disabled={this.props.keywords!==null}
+                 variant="outlined"
+                 size="large"
+                 color="primary" 
+                 onClick = {this.clickUpload}
+                 className={classes.fabButton}
+                 >
+                    <AddIcon className={classes.extendedIcon} /> 新建项目
+                    
+                         
+                </Button>
+                  </Badge>
+                  </div>
+                <List> 
+                    <Divider/>
+                    {/* <ListItem button key="上传文件" ref="s" onClick={this.clickUpload} disabled={this.props.keywords!==null}>
 
                         <ListItemIcon>
                             <Badge badgeContent={this.state.queued} className={classes.badge} invisible={this.state.queued === 0} color="secondary">
@@ -224,7 +268,7 @@ class NavbarCompoment extends Component {
                             </Badge>
                         </ListItemIcon>
                         <ListItemText primary="新建目录" />
-                    </ListItem>
+                    </ListItem> */}
 
                     <ListItem button id="pickfiles" className={classes.hiddenButton}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
@@ -232,9 +276,8 @@ class NavbarCompoment extends Component {
                     </ListItem>
                 </List>
 
-                <Divider />
 
-                <ListItem button key="视频" >
+                <ListItem button key="视频" onClick={()=>this.filterFile("video")}>
                     <ListItemIcon>
                         <Badge className={classes.badge} invisible={1} color="secondary">
                             <VideoIcon />
@@ -243,7 +286,7 @@ class NavbarCompoment extends Component {
                     <ListItemText primary="视频" />
                 </ListItem>
 
-                <ListItem button key="图片" >
+                <ListItem button key="图片" onClick={()=>this.filterFile("image")}>
                     <ListItemIcon>
                         <Badge className={classes.badge} invisible={1} color="secondary">
                             <ImageIcon />
@@ -252,7 +295,7 @@ class NavbarCompoment extends Component {
                     <ListItemText primary="图片" />
                 </ListItem>
 
-                <ListItem button key="音频" >
+                <ListItem button key="音频" onClick={()=>this.filterFile("audio")}>
                     <ListItemIcon>
                         <Badge className={classes.badge} invisible={1} color="secondary">
                             <MusicIcon />
@@ -261,7 +304,7 @@ class NavbarCompoment extends Component {
                     <ListItemText primary="音频" />
                 </ListItem>
 
-                <ListItem button key="文档" >
+                <ListItem button key="文档" onClick={()=>this.filterFile("doc")}>
                     <ListItemIcon>
                         <Badge className={classes.badge} invisible={1} color="secondary">
                             <DocIcon />
@@ -270,7 +313,6 @@ class NavbarCompoment extends Component {
                     <ListItemText primary="文档" />
                 </ListItem>
 
-                <Divider />
 
                 <ListItem button key="我的分享"  onClick={this.handleShareClick}>
                     <ListItemIcon>
@@ -298,8 +340,7 @@ class NavbarCompoment extends Component {
                         </ListItem>
                     </List>
                 </Collapse>
-
-                <Divider />
+                <Divider/>
 
                 <List>
 

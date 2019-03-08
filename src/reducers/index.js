@@ -11,6 +11,28 @@ const checkSelectedProps = (state)=>{
     return [isMultiple,withFolder,withFile];
 }
 
+const doNavigate = (path,state)=>{
+    return Object.assign({}, state, {
+        navigator:Object.assign({}, state.navigator, {
+            path: path
+        }),
+        viewUpdate:Object.assign({}, state.viewUpdate, {
+            contextOpen:false,
+            navigatorError:false,
+            navigatorLoading:true,
+        }),
+        explorer:Object.assign({}, state.explorer, {
+            selected:[],
+            selectProps: {
+                isMultiple:false,
+                withFolder:false,
+                withFile:false,
+            },
+            keywords:null,
+        }),
+    });
+}
+
 const cloudreveApp = (state = [], action) => {
     switch (action.type) {
         case 'DRAWER_TOGGLE':
@@ -136,25 +158,12 @@ const cloudreveApp = (state = [], action) => {
                 }),
             });
         case 'NAVIGATOR_TO':
-            return Object.assign({}, state, {
-                navigator:Object.assign({}, state.navigator, {
-                    path: action.path
-                }),
-                viewUpdate:Object.assign({}, state.viewUpdate, {
-                    contextOpen:false,
-                    navigatorError:false,
-                    navigatorLoading:true,
-                }),
-                explorer:Object.assign({}, state.explorer, {
-                    selected:[],
-                    selectProps: {
-                        isMultiple:false,
-                        withFolder:false,
-                        withFile:false,
-                    },
-                    keywords:null,
-                }),
-            });
+            return doNavigate(action.path,state);
+        case 'NAVIGATOR_UP':
+            let pathSplit = state.navigator.path.split("/");
+            pathSplit.pop();
+            let newPath = pathSplit.length===1?"/":pathSplit.join("/");
+            return doNavigate(newPath,state);
         case 'OPEN_CREATE_FOLDER_DIALOG':
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
@@ -209,6 +218,24 @@ const cloudreveApp = (state = [], action) => {
                     contextOpen:false,
                 }),
             });
+        case 'OPEN_REMOTE_DOWNLOAD_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        remoteDownload:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
+        case 'OPEN_TORRENT_DOWNLOAD_DIALOG':
+            return Object.assign({}, state, {
+                viewUpdate: Object.assign({}, state.viewUpdate, {
+                    modals: Object.assign({}, state.viewUpdate.modals, {
+                        torrentDownload:true,
+                    }),
+                    contextOpen:false,
+                }),
+            });
         case 'CLOSE_ALL_MODALS': 
             return Object.assign({}, state, {
                 viewUpdate: Object.assign({}, state.viewUpdate, {
@@ -219,6 +246,8 @@ const cloudreveApp = (state = [], action) => {
                         remove:false,
                         share:false,
                         music:false,
+                        remoteDownload:false,
+                        torrentDownload:false,
                     }),
                 }),
             });

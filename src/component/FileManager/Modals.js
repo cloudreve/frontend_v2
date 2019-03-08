@@ -85,6 +85,8 @@ class ModalsCompoment extends Component {
         secretShare:false,
         sharePwd:"",
         shareUrl:"",
+        downloadURL:"",
+        remoteDownloadPathSelect:false,
     } 
 
     handleInputChange = (e)=>{
@@ -125,14 +127,15 @@ class ModalsCompoment extends Component {
             }else{
                 this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
             }
+            this.props.setModalsLoading(false);
         })
         .catch((error) =>{
             this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.props.setModalsLoading(false);
         });
-        this.props.setModalsLoading(false);
     }
 
-    submitRemove = (e)=>{
+    submitRemove = e =>{
         e.preventDefault();
         this.props.setModalsLoading(true);
         let dirs=[],items = [];
@@ -156,14 +159,16 @@ class ModalsCompoment extends Component {
             }else{
                 this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
             }
+            this.props.setModalsLoading(false);
         })
         .catch((error) =>{
             this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.props.setModalsLoading(false);
+
         });
-        this.props.setModalsLoading(false);
     }
 
-    submitMove = (e)=>{
+    submitMove = e =>{
         e.preventDefault();
         this.props.setModalsLoading(true);
         let dirs=[],items = [];
@@ -187,14 +192,15 @@ class ModalsCompoment extends Component {
             }else{
                 this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
             }
+            this.props.setModalsLoading(false);
         })
         .catch((error) =>{
             this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.props.setModalsLoading(false);
         });
-        this.props.setModalsLoading(false);
     }
 
-    submitRename = (e)=>{
+    submitRename = e =>{
         e.preventDefault();
         this.props.setModalsLoading(true); 
         let newName = this.state.newName+(this.newNameSuffix===""?"":"."+this.newNameSuffix);
@@ -218,15 +224,18 @@ class ModalsCompoment extends Component {
                 }else{
                     this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
                 }
+                this.props.setModalsLoading(false);
+
             })
             .catch((error) =>{
                 this.props.toggleSnackbar("top","right",error.message ,"error");
-            });
             this.props.setModalsLoading(false);
+
+            });
         }
     }
 
-    submitCreateNewFolder = (e)=>{
+    submitCreateNewFolder = e =>{
         e.preventDefault();
         this.props.setModalsLoading(true); 
         if(this.props.dirList.findIndex((value,index)=>{
@@ -246,13 +255,62 @@ class ModalsCompoment extends Component {
                 }else{
                     this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
                 }
+                this.props.setModalsLoading(false);
+
             })
             .catch((error) =>{
+            this.props.setModalsLoading(false);
+
                 this.props.toggleSnackbar("top","right",error.message ,"error");
             });
-            this.props.setModalsLoading(false);
         }
         //this.props.toggleSnackbar();
+    }
+
+    submitTorrentDownload = e =>{
+        e.preventDefault();
+        this.props.setModalsLoading(true);
+        axios.post('/RemoteDownload/AddTorrent', {
+            action: "torrentDownload",
+            id: this.props.selected[0].id,
+            savePath: this.state.selectedPath,
+        })
+        .then( (response)=> {
+            if(response.data.result.success){
+                this.props.toggleSnackbar("top","right","任务已创建","success");
+                this.onClose();
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+            }
+            this.props.setModalsLoading(false);
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.props.setModalsLoading(false);
+        });
+    }
+
+    submitDownload = e=>{
+        e.preventDefault();
+        this.props.setModalsLoading(true);
+        axios.post('/RemoteDownload/addUrl', {
+            action: 'remoteDownload',
+            url: this.state.downloadURL,
+            path: this.state.selectedPath,
+        })
+        .then( (response)=> {
+            if(response.data.result.success){
+                this.props.toggleSnackbar("top","right","任务已创建","success");
+                this.onClose();
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
+            }
+            this.props.setModalsLoading(false);
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.props.setModalsLoading(false);
+        });
     }
 
     setMoveTarget = (folder) =>{
@@ -260,6 +318,13 @@ class ModalsCompoment extends Component {
         this.setState({
             selectedPath:path,
             selectedPathName:folder.name,
+        });
+    }
+
+    remoteDownloadNext = ()=>{
+        this.props.closeAllModals();
+        this.setState({
+            remoteDownloadPathSelect:true,
         });
     }
 
@@ -271,7 +336,9 @@ class ModalsCompoment extends Component {
             selectedPathName:"",
             secretShare:false,
             sharePwd:"",
+            downloadURL:"",
             shareUrl:"",
+            remoteDownloadPathSelect:false,
         });
         this.newNameSuffix = "";
         this.props.closeAllModals();
@@ -502,6 +569,88 @@ class ModalsCompoment extends Component {
                         </Button>
                     
                     </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.remoteDownload}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                fullWidth
+                >
+                <DialogTitle id="form-dialog-title">新建离线下载任务</DialogTitle>
+                    
+                    <DialogContent>
+                        <DialogContentText>
+                           <TextField
+                           label="文件地址"
+                           autoFocus
+                           fullWidth
+                           id="downloadURL"
+                           onChange={this.handleInputChange}
+                           placeholder="输入文件下载地址，支持 HTTP(s)/FTP/磁力链"
+                           ></TextField>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            关闭
+                        </Button>
+                        <Button onClick={this.remoteDownloadNext} color="primary" disabled={this.props.modalsLoading||(this.state.downloadURL==="") }>
+                                下一步
+                        </Button>
+                    
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.remoteDownloadPathSelect}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">选择存储位置</DialogTitle>
+                <PathSelector presentPath={this.props.path} selected={this.props.selected} onSelect ={ this.setMoveTarget}/>
+
+                {this.state.selectedPath!==""&&<DialogContent className={classes.contentFix}>
+                    <DialogContentText >
+                        下载至 <strong>{this.state.selectedPathName}</strong>
+                    </DialogContentText>
+                </DialogContent>}
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            取消
+                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button onClick={this.submitDownload} color="primary" disabled={this.state.selectedPath==="" || this.props.modalsLoading }>
+                                创建任务
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>
+                    </DialogActions>
+                
+                </Dialog>
+                <Dialog
+                open={this.props.modalsStatus.torrentDownload}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">选择存储位置</DialogTitle>
+                <PathSelector presentPath={this.props.path} selected={this.props.selected} onSelect ={ this.setMoveTarget}/>
+
+                {this.state.selectedPath!==""&&<DialogContent className={classes.contentFix}>
+                    <DialogContentText >
+                        下载至 <strong>{this.state.selectedPathName}</strong>
+                    </DialogContentText>
+                </DialogContent>}
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            取消
+                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button onClick={this.submitTorrentDownload} color="primary" disabled={this.state.selectedPath==="" || this.props.modalsLoading }>
+                                创建任务
+                                {this.props.modalsLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </Button>
+                        </div>
+                    </DialogActions>
+                
                 </Dialog>
             </div>
         );
