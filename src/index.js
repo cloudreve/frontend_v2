@@ -9,7 +9,7 @@ import cloureveApp from './reducers'
 
 const defaultStatus = {
     navigator:{
-        path:"/",
+        path:window.path,
         refresh:true,
     },
     viewUpdate:{

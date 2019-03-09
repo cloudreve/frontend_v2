@@ -18,12 +18,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import RenameIcon from '@material-ui/icons/BorderColor'
-import DeleteIcon from '@material-ui/icons/Delete'
 import ShareIcon from '@material-ui/icons/Share'
 import NewFolderIcon from '@material-ui/icons/CreateNewFolder'
 import RefreshIcon from '@material-ui/icons/Refresh'
-
 import {
     navitateTo,
     navitateUp,
@@ -38,7 +35,7 @@ import {
     openShareDialog,
 } from "../../actions/index"
 import axios from 'axios'
-import {setCookie} from "../../untils/index"
+import {setCookie,setGetParameter} from "../../untils/index"
 
 const mapStateToProps = state => {
     return {
@@ -178,6 +175,9 @@ class NavigatorCompoment extends Component {
             this.props.setNavigatorLoadingStatus(false);
             let pathTemp = (null?path.substr(1).split("/"):this.props.path.substr(1).split("/")).join(",");
             setCookie("path_tmp",encodeURIComponent(pathTemp),1);
+            if(this.keywords===null){
+                setGetParameter("path",encodeURIComponent(newPath));
+            }
         })
         .catch((error) =>{
             this.props.setNavigatorError(true,error); 
