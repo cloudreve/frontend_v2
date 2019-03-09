@@ -313,6 +313,12 @@ const cloudreveApp = (state = [], action) => {
                     },
                 }),
             });
+        case 'REFRESH_STORAGE':
+            return Object.assign({}, state, {
+                viewUpdate:Object.assign({}, state.viewUpdate, {
+                    storageRefresh:!state.viewUpdate.storageRefresh,
+                }),
+            });
         default:
             return state
     }

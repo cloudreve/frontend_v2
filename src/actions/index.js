@@ -174,3 +174,9 @@ export const showImgPreivew = (first) => {
         first: first,
     }
 }
+
+export const refreshStorage = () => {
+    return {
+        type: 'REFRESH_STORAGE',
+    }
+}

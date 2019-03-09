@@ -75,6 +75,9 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:"none",
         }
+    },
+    flexFix:{
+        minWidth: 0,
     }
 })
 
@@ -162,7 +165,7 @@ class ExplorerCompoment extends Component {
                     </div>
                 }
                 {(this.props.viewMethod!=="list" &&(this.props.dirList.length!==0||this.props.fileList.length!==0)&&!this.props.loading)&&
-                    <div>
+                    <div className={classes.flexFix}>
                         {(this.props.dirList.length!==0 && !this.props.loading)&&
                             <div>
                                 <Typography className={classes.typeHeader}>文件夹</Typography>

@@ -6,6 +6,7 @@ import {
     toggleSnackbar,
     setModalsLoading,
     refreshFileList,
+    refreshStorage,
 } from "../../actions/index"
 import PathSelector from "./PathSelector"
 import { withStyles } from '@material-ui/core/styles';
@@ -70,6 +71,9 @@ const mapDispatchToProps = dispatch => {
         },
         refreshFileList:()=>{
             dispatch(refreshFileList())
+        },
+        refreshStorage:()=>{
+            dispatch(refreshStorage())
         }
     }
 }
@@ -160,6 +164,7 @@ class ModalsCompoment extends Component {
                 this.props.toggleSnackbar("top","right",response.data.result.error,"warning");
             }
             this.props.setModalsLoading(false);
+            this.props.refreshStorage();
         })
         .catch((error) =>{
             this.props.toggleSnackbar("top","right",error.message ,"error");

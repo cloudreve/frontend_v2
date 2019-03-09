@@ -3,6 +3,7 @@ import scriptLoader from '../loader/index.js'
 import { connect } from 'react-redux'
 import {
     refreshFileList,
+    refreshStorage
 } from "../actions/index"
 import FileList from "./Upload/FileList.js"
 
@@ -17,6 +18,9 @@ const mapDispatchToProps = dispatch => {
     return {
         refreshFileList:()=>{
             dispatch(refreshFileList())
+        },
+        refreshStorage:()=>{
+            dispatch(refreshStorage())
         }
     }
 }
@@ -90,6 +94,7 @@ class UploaderCompoment extends Component {
                             if(file[0].status === 5){
                                 this.fileList["setComplete"](file[0]);
                                 this.props.refreshFileList(); 
+                                this.props.refreshStorage();
                             }
                             
                         },

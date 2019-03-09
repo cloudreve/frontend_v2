@@ -22,6 +22,7 @@ const defaultStatus = {
         navigatorError:false,
         navigatorErrorMsg:null,
         modalsLoading:false,
+        storageRefresh:false,
         modals:{
             createNewFolder:false,
             rename:false,

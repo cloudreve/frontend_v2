@@ -52,6 +52,7 @@ import {
 import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
 import SezrchBar from "./SearchBar"
+import StorageBar from "./StorageBar"
 
 const drawerWidth = 240;
 
@@ -171,7 +172,7 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     },
     addButton:{
-        marginLeft: "30px",
+        marginLeft: "40px",
         marginTop: "25px",
         marginBottom: "15px",
     },
@@ -180,7 +181,25 @@ const styles = theme => ({
     },
     badgeFix:{
         right:"10px",
-    }
+    },
+    iconFix:{
+        marginLeft: "16px",
+    },
+    dividerFix:{
+        marginTop: "8px",
+    },
+    iconVideo:{
+        color:"#f44336",
+    },
+    iconImg:{
+        color:"#4caf50",
+    },
+    iconAudio:{
+        color:"#673ab7",
+    },
+    iconDoc:{
+        color:"#2196f3",
+    },
 });
 class NavbarCompoment extends Component {
 
@@ -278,47 +297,37 @@ class NavbarCompoment extends Component {
 
 
                 <ListItem button key="视频" onClick={()=>this.filterFile("video")}>
-                    <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                            <VideoIcon />
-                        </Badge>
+                    <ListItemIcon>     
+                            <VideoIcon className={[classes.iconFix,classes.iconVideo]}/>
                     </ListItemIcon>
                     <ListItemText primary="视频" />
                 </ListItem>
 
                 <ListItem button key="图片" onClick={()=>this.filterFile("image")}>
-                    <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                            <ImageIcon />
-                        </Badge>
+                    <ListItemIcon>      
+                        <ImageIcon className={[classes.iconFix,classes.iconImg]} />
                     </ListItemIcon>
                     <ListItemText primary="图片" />
                 </ListItem>
 
                 <ListItem button key="音频" onClick={()=>this.filterFile("audio")}>
                     <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                            <MusicIcon />
-                        </Badge>
+                            <MusicIcon className={[classes.iconFix,classes.iconAudio]} />
                     </ListItemIcon>
                     <ListItemText primary="音频" />
                 </ListItem>
 
                 <ListItem button key="文档" onClick={()=>this.filterFile("doc")}>
                     <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                            <DocIcon />
-                        </Badge>
+                            <DocIcon className={[classes.iconFix,classes.iconDoc]} />
                     </ListItemIcon>
                     <ListItemText primary="文档" />
                 </ListItem>
 
-
+                    <Divider className={classes.dividerFix}/>
                 <ListItem button key="我的分享"  onClick={this.handleShareClick}>
                     <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                            <ShareIcon />
-                        </Badge>
+                            <ShareIcon className={classes.iconFix} />
                     </ListItemIcon>
                     <ListItemText inset primary="我的分享" />
                     {this.state.shareOpen ? <ExpandLess /> : <ExpandMore />}
@@ -328,20 +337,20 @@ class NavbarCompoment extends Component {
                     <List component="div" disablePadding>
                         <ListItem button className={classes.nested}>
                             <ListItemIcon>
-                                <LockIcon />
+                                <LockIcon className={classes.iconFix} />
                             </ListItemIcon>
                             <ListItemText inset primary="私密分享" />
                         </ListItem>
                         <ListItem button className={classes.nested}>
                             <ListItemIcon>
-                                <EyeIcon />
+                                <EyeIcon className={classes.iconFix} />
                             </ListItemIcon>
                             <ListItemText inset primary="公开分享" />
                         </ListItem>
                     </List>
                 </Collapse>
                 <Divider/>
-
+                <StorageBar></StorageBar>
                 <List>
 
                 </List></div>

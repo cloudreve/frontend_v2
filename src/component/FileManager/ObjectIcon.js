@@ -21,7 +21,9 @@ const styles = theme => ({
     container: {
         padding: "7px",
     },
-    
+    fixFlex:{
+        minWidth:0,
+    }
 })
 
 const mapStateToProps = state => {
@@ -134,6 +136,7 @@ class ObjectCompoment extends Component {
             })}
             >
                 <div
+                    className={classes.fixFlex}
                     onContextMenu={this.contextMenu}
                     onClick={this.handleClick} 
                     onDoubleClick = {this.handleDoubleClick.bind(this)}

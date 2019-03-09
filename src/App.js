@@ -9,8 +9,6 @@ import FileManager from "./component/FileManager/FileManager.js"
 import AlertBar from "./component/Snackbar"
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import pink from '@material-ui/core/colors/pink';
-import blue from '@material-ui/core/colors/blue';
 
 const theme = createMuiTheme(
 	{
@@ -39,6 +37,7 @@ const styles = theme => ({
 	content: {
 		flexGrow: 1,
 		padding: theme.spacing.unit * 0,
+		minWidth: 0,
 	},
 	toolbar: theme.mixins.toolbar,
 });
