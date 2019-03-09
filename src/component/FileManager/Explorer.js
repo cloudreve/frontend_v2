@@ -31,10 +31,20 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         padding:"10px",
+        overflowY: "auto",
+        height: "calc(100vh - 112px)",
+        [theme.breakpoints.down('sm')]: {
+            height: "calc(100vh - 56px)",
+        },
     },
     rootTable:{
         padding:"0px",
         backgroundColor:theme.palette.background.paper.white,
+        overflowY: "auto",
+        height: "calc(100vh - 112px)",
+        [theme.breakpoints.down('sm')]: {
+            height: "calc(100vh - 56px)",
+        },
     },
     typeHeader:{
         margin: "10px 25px",

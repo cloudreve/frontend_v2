@@ -19,7 +19,6 @@ import ShareIcon from '@material-ui/icons/Share';
 import LockIcon from '@material-ui/icons/Lock';
 import EyeIcon from '@material-ui/icons/RemoveRedEye';
 import BackIcon from '@material-ui/icons/ArrowBack';
-
 import OpenFolderIcon from '@material-ui/icons/FolderOpen'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
@@ -53,6 +52,7 @@ import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
 import SezrchBar from "./SearchBar"
 import StorageBar from "./StorageBar"
+import UserAvatar from "./UserAvatar"
 
 const drawerWidth = 240;
 
@@ -88,6 +88,7 @@ const mapDispatchToProps = dispatch => {
         searchMyFile:(keywords)=>{
             dispatch(searchMyFile(keywords));
         },
+        
     }
 }
 
@@ -269,26 +270,6 @@ class NavbarCompoment extends Component {
                   </div>
                 <List> 
                     <Divider/>
-                    {/* <ListItem button key="上传文件" ref="s" onClick={this.clickUpload} disabled={this.props.keywords!==null}>
-
-                        <ListItemIcon>
-                            <Badge badgeContent={this.state.queued} className={classes.badge} invisible={this.state.queued === 0} color="secondary">
-                                <UploadIcon />
-                            </Badge>
-                        </ListItemIcon>
-
-                        <ListItemText primary="上传文件" />
-                    </ListItem>
-
-                    <ListItem button key="新建目录" onClick={this.props.openCreateFolderDialog } disabled={this.props.keywords!==null}>
-                        <ListItemIcon>
-                        <Badge className={classes.badge} invisible={1} color="secondary">
-                                <NewFolderIcon />
-                            </Badge>
-                        </ListItemIcon>
-                        <ListItemText primary="新建目录" />
-                    </ListItem> */}
-
                     <ListItem button id="pickfiles" className={classes.hiddenButton}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText />
@@ -455,7 +436,10 @@ class NavbarCompoment extends Component {
                                 </Grow>
                                 
                             </div>
-                        } 
+                        }
+                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
+                            <UserAvatar/>
+                        }
                     </Toolbar>
                 </AppBar>
                 {this.loadUploader()}
