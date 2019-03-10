@@ -11,8 +11,14 @@ import Chip from '@material-ui/core/Chip';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
-
-import {LogoutVariant,HomeAccount,DesktopMacDashboard} from 'mdi-material-ui'
+import {
+    LogoutVariant,
+    HomeAccount,
+    DesktopMacDashboard,
+    AccountCircle,
+    AccountArrowRight,
+    AccountPlus
+} from 'mdi-material-ui'
 import {
 
 }from "../actions/index"
@@ -56,6 +62,9 @@ const styles = theme => ({
     },
     badge:{
         marginTop:"10px",
+    },
+    visitorMenu:{
+        width:200,
     }
 })
 
@@ -87,7 +96,11 @@ class UserAvatarCompoment extends Component {
             <div className={classes.mobileHidden}>
                 <Grow in={(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))}>
                         <IconButton color="inherit" onClick={this.showUserInfo}>
-                        <Avatar  src={"/Member/Avatar/"+window.userInfo.uid+"/s"} className={classes.avatar} />
+                        {window.userInfo.uid===-1&&
+                            <AccountCircle/>
+                        }
+                        {window.userInfo.uid!==-1&&<Avatar  src={"/Member/Avatar/"+window.userInfo.uid+"/s"} className={classes.avatar} />}
+                        
                         </IconButton>
                 </Grow>
                 <Popover 
@@ -103,6 +116,21 @@ class UserAvatarCompoment extends Component {
                     horizontal: 'right',
                 }}
                 >
+                {window.userInfo.uid===-1&&
+                     <div className={classes.visitorMenu}>
+                     <Divider/>
+                     <MenuItem onClick={()=>this.openURL("/Login")}>
+                             <ListItemIcon><AccountArrowRight/></ListItemIcon>
+                                 登录
+                         </MenuItem>
+                     <MenuItem onClick={()=>this.openURL("/Signup")}>
+                         <ListItemIcon><AccountPlus/></ListItemIcon>
+                             注册
+                     </MenuItem>
+                   </div>
+                }
+                {window.userInfo.uid!==-1&&
+                <div>
                     <div className={classes.header}>
                         <div className={classes.largeAvatarContainer}>
                             <Avatar className={classes.largeAvatar} src={"/Member/Avatar/"+window.userInfo.uid+"/l"} />
@@ -134,7 +162,7 @@ class UserAvatarCompoment extends Component {
                             <ListItemIcon><LogoutVariant/></ListItemIcon>
                                 退出
                         </MenuItem>
-                    </div>
+                    </div></div>}
                 </Popover>
             </div>
         );

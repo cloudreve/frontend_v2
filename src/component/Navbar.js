@@ -29,6 +29,7 @@ import Drawer from '@material-ui/core/Drawer';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
+import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -61,7 +62,10 @@ import SezrchBar from "./SearchBar"
 import StorageBar from "./StorageBar"
 import UserAvatar from "./UserAvatar"
 import UserInfo from "./UserInfo"
-
+import {
+    AccountArrowRight,
+    AccountPlus
+} from 'mdi-material-ui'
 const drawerWidth = 240;
 const drawerWidthMobile = 270;
 
@@ -224,6 +228,31 @@ const styles = theme => ({
     iconDoc:{
         color:"#2196f3",
     },
+    folderShareIcon:{
+        verticalAlign: "sub",
+        marginRight: "5px",
+    },
+    shareInfoContainer:{
+        display:"flex",
+        marginTop: "15px",
+        marginBottom: "20px",
+        marginLeft: "28px",
+        textDecoration:"none",
+    },
+    shareAvatar:{
+        width:"40px",
+        height:"40px",
+    },
+    stickFooter:{
+        bottom: "0px",
+        position: "absolute",
+        backgroundColor:theme.palette.background.paper,
+        width: "100%",
+    },
+    ownerInfo:{
+        marginLeft: "10px",
+        width: "150px",
+    }
 });
 class NavbarCompoment extends Component {
 
@@ -344,7 +373,7 @@ class NavbarCompoment extends Component {
                            </Badge>
                            </div>
                 }
-                {!window.isHomePage&&
+                {(!window.isHomePage&&(window.userInfo.uid!==-1))&&
                 <div>
                     <ListItem button key="我的文件" onClick={()=>window.location.href="/"}>
                     <ListItemIcon>     
@@ -392,16 +421,15 @@ class NavbarCompoment extends Component {
                     <ListItemText primary="文档" />
                 </ListItem> <Divider className={classes.dividerFix}/></div>}
 
-                   
-                <ListItem button key="我的分享"  onClick={this.handleShareClick}>
-                    <ListItemIcon>
-                            <ShareIcon className={classes.iconFix} />
-                    </ListItemIcon>
-                    <ListItemText inset primary="我的分享" />
-                    {this.state.shareOpen ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-
-                <Collapse in={this.state.shareOpen} timeout="auto" unmountOnExit>
+                {window.userInfo.uid!==-1&&<div>
+                    <ListItem button key="我的分享"  onClick={this.handleShareClick}>
+                        <ListItemIcon>
+                                <ShareIcon className={classes.iconFix} />
+                        </ListItemIcon>
+                        <ListItemText inset primary="我的分享" />
+                        {this.state.shareOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={this.state.shareOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.nested}>
                             <ListItemIcon>
@@ -417,11 +445,47 @@ class NavbarCompoment extends Component {
                         </ListItem>
                     </List>
                 </Collapse>
-                <Divider/>
-                    <StorageBar></StorageBar>
-                <List>
-
-                </List></div>
+                {!window.isSharePage&&
+                    <div>
+                    <Divider/>
+                        <StorageBar></StorageBar>
+                        </div>
+                }
+                
+                    </div>
+                }
+                {window.userInfo.uid===-1&&
+                <div>
+                    <ListItem button key="登录" onClick={()=>window.location.href="/Login"}>
+                        <ListItemIcon>
+                                <AccountArrowRight className={classes.iconFix} />
+                        </ListItemIcon>
+                        <ListItemText primary="登录" />
+                    </ListItem>
+                    <ListItem button key="注册" onClick={()=>window.location.href="/Signup"}>
+                    <ListItemIcon>
+                            <AccountPlus className={classes.iconFix} />
+                    </ListItemIcon>
+                    <ListItemText primary="注册" />
+                </ListItem>
+                </div>
+                }
+                {window.isSharePage&&
+                    <div className={classes.stickFooter}>
+                        <Divider/>
+                        <a className={classes.shareInfoContainer} href={"/Profile/"+window.shareInfo.ownerUid}>
+                            <Avatar src={"/Member/Avatar/"+window.shareInfo.ownerUid+"/l"} className={classes.shareAvatar}/><div className={classes.ownerInfo}>
+                            <Typography noWrap>{window. shareInfo.ownerNick}</Typography>
+                            <Typography noWrap variant="caption" color="textSecondary">分享于{window.shareInfo.shareDate }</Typography>
+                        </div>
+                        </a>
+                        
+                    </div>
+                }
+                 
+                
+                
+                </div>
         );
         const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
         return (
@@ -459,7 +523,7 @@ class NavbarCompoment extends Component {
                         }
                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            {window.siteInfo.mainTitle}
+                            {window.isSharePage&&<FolderShared className={classes.folderShareIcon}/>}{window.siteInfo.mainTitle}
         				</Typography>
                         }
 
