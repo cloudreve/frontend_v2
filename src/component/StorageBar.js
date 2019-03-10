@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -40,9 +40,7 @@ const styles = theme => ({
     storageContainer:{
         display:"flex",
         marginTop: "15px",
-        [theme.breakpoints.down('xs')]: {
-            display:"none",
-        },
+   
         marginBottom: "20px",
     },
     detail:{
@@ -108,21 +106,37 @@ class StorageBarCompoment extends Component {
 
     render() {
         const { classes} = this.props;
-        return (
-            <div className={classes.stickFooter}><Divider/>  
-        <div className={classes.storageContainer}>
-            <StorageIcon className={classes.iconFix} />    
-            <div className={classes.detail}>
-                存储空间
-                <LinearProgress className={classes.bar} color="secondary" variant="determinate" value={this.state.percent} />
-                <div className={classes.info}>
-                <Tooltip title={"已使用"+((this.state.used===null)?" -- ":this.state.used)+"，共"+((this.state.total===null)?" -- ":this.state.total)} placement="top">
-                <Typography variant="caption" noWrap color="textSecondary">已使用{(this.state.used===null)?" -- ":this.state.used}，共{(this.state.total===null)?" -- ":this.state.total}</Typography></Tooltip>
+        if(!window.isMobile){
+            return (
+                <div className={classes.stickFooter}><Divider/>  
+            <div className={classes.storageContainer}>
+                <StorageIcon className={classes.iconFix} />    
+                <div className={classes.detail}>
+                    存储空间
+                    <LinearProgress className={classes.bar} color="secondary" variant="determinate" value={this.state.percent} />
+                    <div className={classes.info}>
+                    <Tooltip title={"已使用"+((this.state.used===null)?" -- ":this.state.used)+"，共"+((this.state.total===null)?" -- ":this.state.total)} placement="top">
+                    <Typography variant="caption" noWrap color="textSecondary">已使用{(this.state.used===null)?" -- ":this.state.used}，共{(this.state.total===null)?" -- ":this.state.total}</Typography></Tooltip>
+                    </div>
                 </div>
             </div>
-        </div>
-              </div>
-        );
+                  </div>
+            );
+        }else{
+            return (
+                <div className={classes.storageContainer}>
+                <StorageIcon className={classes.iconFix} />    
+                <div className={classes.detail}>
+                    存储空间
+                    <LinearProgress className={classes.bar} color="secondary" variant="determinate" value={this.state.percent} />
+                    <div className={classes.info}>
+                    <Tooltip title={"已使用"+((this.state.used===null)?" -- ":this.state.used)+"，共"+((this.state.total===null)?" -- ":this.state.total)} placement="top">
+                    <Typography variant="caption" noWrap color="textSecondary">已使用{(this.state.used===null)?" -- ":this.state.used}，共{(this.state.total===null)?" -- ":this.state.total}</Typography></Tooltip>
+                    </div>
+                </div>
+            </div>
+            );
+        }
     }
 }
 

@@ -60,7 +60,6 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-
 class ObjectCompoment extends Component {
 
     state = {
@@ -92,7 +91,13 @@ class ObjectCompoment extends Component {
     } 
 
     handleClick=(e)=> {
-        this.selectFile(e);
+        if(window.isMobile){
+            this.selectFile(e);
+            this.handleDoubleClick();
+        }else{
+            this.selectFile(e);
+        }
+        
     }
 
     handleDoubleClick() {

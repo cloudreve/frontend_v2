@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
-
-import NewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import VideoIcon from '@material-ui/icons/VideoLibrary';
 import MusicIcon from '@material-ui/icons/LibraryMusic';
 import ImageIcon from '@material-ui/icons/Collections';
@@ -26,6 +24,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
@@ -35,7 +34,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
-
 import Badge from '@material-ui/core/Badge';
 import Grow from '@material-ui/core/Grow';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -53,8 +51,10 @@ import {sizeToString} from "../untils/index"
 import SezrchBar from "./SearchBar"
 import StorageBar from "./StorageBar"
 import UserAvatar from "./UserAvatar"
+import UserInfo from "./UserInfo"
 
 const drawerWidth = 240;
+const drawerWidthMobile = 270;
 
 const mapStateToProps = state => {
     return {
@@ -95,6 +95,9 @@ const mapDispatchToProps = dispatch => {
 const styles = theme => ({
     appBar: {
         marginLeft: drawerWidth,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: drawerWidthMobile,
+        },
         zIndex: theme.zIndex.drawer + 1,
         transition:" background-color 250ms" ,
     },
@@ -127,7 +130,7 @@ const styles = theme => ({
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper:{
-        width:drawerWidth,
+        width:drawerWidthMobile,
     },
     drawerOpen: {
         width: drawerWidth,
@@ -164,10 +167,10 @@ const styles = theme => ({
         paddingLeft: theme.spacing.unit * 4,
     },
       sectionForFile:{
-            display: 'none',
-            [theme.breakpoints.up('md')]: {
+
+
             display: 'flex',
-            },
+
       },
     extendedIcon: {
         marginRight: theme.spacing.unit,
@@ -252,6 +255,9 @@ class NavbarCompoment extends Component {
 
         const drawer = (
             <div id="container">
+                {window.isMobile&&
+                    <UserInfo/>
+                }
                 <div className={classes.addButton}>
             <Badge badgeContent={this.state.queued} classes={{ badge: classes.badgeFix }} invisible={this.state.queued === 0} color="secondary">
                 <Button
@@ -331,16 +337,17 @@ class NavbarCompoment extends Component {
                     </List>
                 </Collapse>
                 <Divider/>
-                <StorageBar></StorageBar>
+                    <StorageBar></StorageBar>
                 <List>
 
                 </List></div>
         );
-
+        const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
         return (
             <div>
                 <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?"primary":"default"}> 
                     <Toolbar>
+                    {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
@@ -349,6 +356,7 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>
+                    }
                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
@@ -370,17 +378,17 @@ class NavbarCompoment extends Component {
                         }
                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            Cloudreve
+                            {window.siteInfo.mainTitle}
         				</Typography>
                         }
 
-                        {(!this.props.isMultiple&&this.props.withFile)&&
+                        {(!this.props.isMultiple&&this.props.withFile&&!window.isMobile)&&
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.props.selected[0].name} ({sizeToString(this.props.selected[0].size)}) 
         				</Typography>
                         }
 
-                        {(this.props.selected.length >1)&&
+                        {(this.props.selected.length >1&&!window.isMobile)&&
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.props.selected.length}个对象
         				</Typography>
@@ -445,7 +453,7 @@ class NavbarCompoment extends Component {
                 {this.loadUploader()}
 
                     <Hidden smUp implementation="css">
-                        <Drawer
+                        <SwipeableDrawer
                             container={this.props.container}
                             variant="temporary"
                             classes={{
@@ -454,12 +462,14 @@ class NavbarCompoment extends Component {
                             anchor="left"
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            onOpen={()=>this.setState(state => ({ mobileOpen: true}))}
+                            disableDiscovery={iOS} 
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
                             {drawer}
-                        </Drawer>
+                        </SwipeableDrawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
                         <Drawer

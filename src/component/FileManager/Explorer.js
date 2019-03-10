@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 
-import {navitateTo,changeContextMenu} from "../../actions/index"
+import {navitateTo,changeContextMenu,navitateUp} from "../../actions/index"
 import ObjectIcon from "./ObjectIcon"
 import ContextMenu from "./ContextMenu"
 import Table from '@material-ui/core/Table';
@@ -19,6 +19,8 @@ import EmptyIcon from "@material-ui/icons/Unarchive"
 import SadIcon from "@material-ui/icons/SentimentVeryDissatisfied"
 import classNames from 'classnames';
 import ImgPreivew from "./ImgPreview"
+import Button from '@material-ui/core/Button';
+import UpIcon from '@material-ui/icons/ArrowUpward'
 
 const styles = theme => ({
     paper: {
@@ -88,6 +90,11 @@ const styles = theme => ({
     },
     flexFix:{
         minWidth: 0,
+    },
+    upButton:{
+        marginLeft: "20px",
+        marginTop: "10px",
+        marginBottom: "10px",
     }
 })
 
@@ -114,6 +121,9 @@ const mapDispatchToProps = dispatch => {
         
         changeContextMenu: (type,open) => {
             dispatch(changeContextMenu(type,open))
+        },
+        navitateUp:()=>{
+            dispatch(navitateUp())
         }
     }
 }
@@ -159,6 +169,13 @@ class ExplorerCompoment extends Component {
                         <CircularProgress />
                     </div>
                 }
+
+                        {(window.isMobile&&this.props.path!=="/"&&!this.props.loading)&&
+                            <Button variant="outlined" className={classes.upButton} onClick={()=>this.props.navitateUp()}>
+                                <UpIcon/>回到上级目录
+                            </Button>
+                        }
+
                 {(this.props.keywords===null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
                     <div className={classes.emptyContainer}>
                        <EmptyIcon className={classes.emptyIcon}/> 
@@ -176,6 +193,7 @@ class ExplorerCompoment extends Component {
                 }
                 {(this.props.viewMethod!=="list" &&(this.props.dirList.length!==0||this.props.fileList.length!==0)&&!this.props.loading)&&
                     <div className={classes.flexFix}>
+                        
                         {(this.props.dirList.length!==0 && !this.props.loading)&&
                             <div>
                                 <Typography className={classes.typeHeader}>文件夹</Typography>
