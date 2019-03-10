@@ -3,7 +3,7 @@ export const msDocPreviewSuffix = ["ppt","pptx","pps","doc","docx","xlsx","xls"]
 export const audioPreviewSuffix = ["mp3","ogg"];
 export const videoPreviewSuffix = ["mp4"];
 export const directOpenPreviewSuffix = ["pdf"];
-
+export const editSuffix = ["md","html","sql","go","py","js","json","c","cpp","css","txt"];
 export const mediaType = {
     audio:["mp3","flac","ape","wav","acc","ogg"],
     video:["mp4","flv","avi","wmv","mkv","rm","rmvb","mov","ogv"],
@@ -30,6 +30,8 @@ export const isPreviewable = name=>{
         return "open";
     }else if(videoPreviewSuffix.indexOf(suffix)!==-1){
         return "video";
+    }else if(editSuffix.indexOf(suffix)!==-1){
+        return "edit";
     }
     return false;
 }

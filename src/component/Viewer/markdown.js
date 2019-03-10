@@ -6,6 +6,7 @@ import {
 } from "../../actions/index"
 import axios from 'axios'
 import { connect } from 'react-redux'
+import {editSuffix} from "../../config"
 const styles = theme => ({
     layout: {
         width: 'auto',
@@ -32,6 +33,18 @@ const mapDispatchToProps = dispatch => {
         },
     }
 }
+const codeSuffix = {
+    "html":"text/html",
+    "sql":"text/html",
+    "go":"go",
+    "py":"python",
+    "js":"javascript",
+    "json":"text/json",
+    "c":"clike",
+    "cpp":"clike",
+    "css":"css",
+    "txt":"text/html"
+};
 class MarkdownViewerCompoment extends Component {
 
     state = {
@@ -63,22 +76,36 @@ class MarkdownViewerCompoment extends Component {
     }
 
     componentDidMount = ()=>{
-        var editor = window.editormd("editormd", {
-            path : "/static/js/mdeditor/lib/",
-            height: 740,
-            tex : true,
-            toolbarIcons : function() {
-                return  [
-                    "undo", "redo", "|", 
-                    "bold", "del", "italic", "quote", "|", 
-                    "h1", "h2", "h3", "h4", "h5", "h6", "|", 
-                    "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
-                    "goto-line", "watch", "clear", "search", "|",
-                    "help", "info"
-                ]; 
-            },
-        });
+        let suffix = window.fileInfo.name.split(".").pop().toLowerCase();
+        if(suffix == "md"){
+            var editor = window.editormd("editormd", {
+                path : "/static/js/mdeditor/lib/",
+                height: 740,
+                tex : true,
+                toolbarIcons : function() {
+                    return  [
+                        "undo", "redo", "|", 
+                        "bold", "del", "italic", "quote", "|", 
+                        "h1", "h2", "h3", "h4", "h5", "h6", "|", 
+                        "list-ul", "list-ol", "hr", "|",
+                        "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+                        "goto-line", "watch", "clear", "search", "|",
+                        "help", "info"
+                    ]; 
+                },
+            });
+        }else if(editSuffix.indexOf(suffix)!==-1){
+            var editor = window.editormd("editormd", {
+                path : "/static/js/mdeditor/lib/",
+                height: 740,
+                watch            : false,
+                toolbar          : false,
+                codeFold         : true,
+                searchReplace    : true,
+                placeholder      : "Enjoy coding!",
+                mode:codeSuffix[suffix],
+            });
+        }
 
         axios.get(window.fileInfo.url)
         .then( (response)=> {

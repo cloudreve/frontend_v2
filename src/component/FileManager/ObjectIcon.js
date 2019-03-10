@@ -9,6 +9,7 @@ import {
     setNavigatorLoadingStatus,
     navitateTo,
     showImgPreivew,
+    openMusicDialog
 } from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
 import Folder from "./Folder"
@@ -16,7 +17,7 @@ import FileIcon from "./FileIcon"
 import SmallIcon from "./SmallIcon"
 import TableItem from "./TableRow"
 import classNames from 'classnames';
-import {imgPreviewSuffix} from "../../config"
+import {imgPreviewSuffix,isPreviewable} from "../../config"
 const styles = theme => ({
     container: {
         padding: "7px",
@@ -56,6 +57,9 @@ const mapDispatchToProps = dispatch => {
         },
         showImgPreivew:(first)=>{
             dispatch(showImgPreivew(first))
+        },
+        openMusicDialog:()=>{
+            dispatch(openMusicDialog())
         }
     }
 }
@@ -105,9 +109,29 @@ class ObjectCompoment extends Component {
             this.enterFolder();
             return;
         }
-        let fileType =this.props.file.name.split(".").pop().toLowerCase();
-        if (imgPreviewSuffix.indexOf(fileType)!==-1){
-            this.props.showImgPreivew(this.props.file);
+        let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
+        switch(isPreviewable(this.props.selected[0].name)){
+            case 'img':
+                this.props.showImgPreivew(this.props.selected[0]);
+                return;
+            case 'msDoc':
+                window.open(window.apiURL.docPreiview+"/?path="+encodeURIComponent(previewPath));  
+                return;
+            case 'audio':
+                this.props.openMusicDialog();
+                return;
+            case 'open':
+                window.open(window.apiURL.preview+"/?action=preview&path="+encodeURIComponent(previewPath));  
+                return;
+            case 'video':
+                window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
+                return;
+            case 'edit':
+                window.location.href=("/Viewer/Markdown?path="+encodeURIComponent(previewPath));  
+                return;
+            default:
+                window.open(window.apiURL.download+"?action=download&path="+encodeURIComponent(previewPath));
+                return;
         }
         
     }

@@ -153,6 +153,9 @@ class ContextMenuCompoment extends Component {
             case 'video':
                 window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
                 return;
+            case 'edit':
+                window.location.href=("/Viewer/Markdown?path="+encodeURIComponent(previewPath));  
+                return;
             default:
                 return;
         }
