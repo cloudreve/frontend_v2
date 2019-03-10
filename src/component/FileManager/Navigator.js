@@ -171,7 +171,7 @@ class NavigatorCompoment extends Component {
             folders:path!==null?path.substr(1).split("/"):this.props.path.substr(1).split("/"),
         });
         var newPath = path!==null?path:this.props.path;
-        var apiURL = this.keywords===null?'/File/ListFile':'/File/SearchFile';
+        var apiURL = this.keywords===null?window.apiURL.listFile:'/File/SearchFile';
         newPath = this.keywords===null?newPath:this.keywords;
         axios.post(apiURL, {
             action: 'list',
@@ -326,7 +326,7 @@ class NavigatorCompoment extends Component {
                 <ListItemIcon><RefreshIcon/></ListItemIcon>
                     刷新
                 </MenuItem>
-                {(this.props.keywords===null)&&
+                {(this.props.keywords===null&&window.isHomePage)&&
                     <div>
                         <Divider/>
                         <MenuItem onClick={()=>this.performAction("share")}>

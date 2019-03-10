@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
-
+import {allowSharePreview} from "../../untils/index"
 import ImageIcon from '@material-ui/icons/PhotoSizeSelectActual'
 import VideoIcon from '@material-ui/icons/Videocam'
 import AudioIcon from '@material-ui/icons/Audiotrack'
@@ -273,7 +273,7 @@ class FileIconCompoment extends Component {
                         [classes.notSelected]: !isSelected,
                     }, classes.button)}
                 >
-                {(this.props.file.pic!==""&& this.props.file.pic!==" ")&&
+                {(this.props.file.pic!==""&& this.props.file.pic!==" "&&allowSharePreview())&&
                     <div className={classes.preview}> 
                     <LazyLoadImage
                         className = {classNames({
@@ -298,13 +298,13 @@ class FileIconCompoment extends Component {
                 
                     </div>
                 }
-                {(this.props.file.pic===""|| this.props.file.pic===" ")&&
+                {(this.props.file.pic===""|| this.props.file.pic===" "||!allowSharePreview())&&
                     <div className={classes.previewIcon}>
                         {iconBig}
                     </div>
                    
             } 
-            {(this.props.file.pic===""|| this.props.file.pic===" ")&& <Divider/> }
+            {(this.props.file.pic===""|| this.props.file.pic===" "||!allowSharePreview())&& <Divider/> }
                     <div className={classes.fileInfo}>
                         <div className={classNames(classes.icon, {
                             [classes.iconSelected]: isSelected,

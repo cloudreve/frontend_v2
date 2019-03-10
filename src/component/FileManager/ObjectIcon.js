@@ -9,7 +9,8 @@ import {
     setNavigatorLoadingStatus,
     navitateTo,
     showImgPreivew,
-    openMusicDialog
+    openMusicDialog,
+    toggleSnackbar
 } from "../../actions/index"
 import { withStyles } from '@material-ui/core/styles';
 import Folder from "./Folder"
@@ -18,6 +19,7 @@ import SmallIcon from "./SmallIcon"
 import TableItem from "./TableRow"
 import classNames from 'classnames';
 import {imgPreviewSuffix,isPreviewable} from "../../config"
+import {allowSharePreview} from "../../untils/index"
 const styles = theme => ({
     container: {
         padding: "7px",
@@ -60,7 +62,10 @@ const mapDispatchToProps = dispatch => {
         },
         openMusicDialog:()=>{
             dispatch(openMusicDialog())
-        }
+        },
+        toggleSnackbar:(vertical,horizontal,msg,color)=>{
+            dispatch(toggleSnackbar(vertical,horizontal,msg,color))
+        },
     }
 }
 
@@ -109,6 +114,10 @@ class ObjectCompoment extends Component {
             this.enterFolder();
             return;
         }
+        if(!allowSharePreview()){
+            this.props.toggleSnackbar("top","right","未登录用户无法预览","warning");
+            return;
+        }
         let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
         switch(isPreviewable(this.props.selected[0].name)){
             case 'img':
@@ -124,9 +133,17 @@ class ObjectCompoment extends Component {
                 window.open(window.apiURL.preview+"/?action=preview&path="+encodeURIComponent(previewPath));  
                 return;
             case 'video':
+                if(window.isSharePage){
+                    window.location.href=("/Viewer/Video?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
+                    return;
+                }
                 window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
                 return;
             case 'edit':
+                if(window.isSharePage){
+                    window.location.href=("/Viewer/Markdown?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
+                    return;
+                }
                 window.location.href=("/Viewer/Markdown?path="+encodeURIComponent(previewPath));  
                 return;
             default:

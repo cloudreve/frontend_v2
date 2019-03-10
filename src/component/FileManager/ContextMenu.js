@@ -17,7 +17,7 @@ import {
     openTorrentDownloadDialog,
  } from "../../actions/index"
 import {isPreviewable,isTorrent} from "../../config"
-
+import {allowSharePreview} from "../../untils/index"
 import { withStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -114,6 +114,11 @@ class ContextMenuCompoment extends Component {
     }
 
     openDownload = ()=>{
+        if(!allowSharePreview()){
+            this.props.toggleSnackbar("top","right","未登录用户无法预览","warning");
+            this.props.changeContextMenu("file",false);
+            return;
+        }
         this.props.changeContextMenu("file",false);
         let downloadPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
         window.open(window.apiURL.download+"?action=download&path="+encodeURIComponent(downloadPath));
@@ -135,6 +140,11 @@ class ContextMenuCompoment extends Component {
     }
 
     openPreview = ()=>{
+        if(!allowSharePreview()){
+            this.props.toggleSnackbar("top","right","未登录用户无法预览","warning");
+            this.props.changeContextMenu("file",false);
+            return;
+        }
         this.props.changeContextMenu("file",false);
         let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
         switch(isPreviewable(this.props.selected[0].name)){
@@ -151,9 +161,17 @@ class ContextMenuCompoment extends Component {
                 window.open(window.apiURL.preview+"/?action=preview&path="+encodeURIComponent(previewPath));  
                 return;
             case 'video':
-                window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
+                if(window.isSharePage){
+                    window.location.href=("/Viewer/Video?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
+                    return;
+                }
+                window.location.href=("/Viewer/Video?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
                 return;
             case 'edit':
+                if(window.isSharePage){
+                    window.location.href=("/Viewer/Markdown?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
+                    return;
+                }
                 window.location.href=("/Viewer/Markdown?path="+encodeURIComponent(previewPath));  
                 return;
             default:
@@ -240,7 +258,7 @@ class ContextMenuCompoment extends Component {
                             </MenuItem>
                         }
 
-                        {(!this.props.isMultiple&&(window.uploadConfig.allowTorrentDownload==="1")&&this.props.withFile&&isTorrent(this.props.selected[0].name))&&
+                        {(!this.props.isMultiple&&window.isHomePage&&(window.uploadConfig.allowTorrentDownload==="1")&&this.props.withFile&&isTorrent(this.props.selected[0].name))&&
                             <MenuItem onClick={()=>this.props.openTorrentDownloadDialog()}>
                                 <ListItemIcon>
                                     <MagnetOn/>
@@ -249,7 +267,7 @@ class ContextMenuCompoment extends Component {
                             </MenuItem>
                         }
 
-                        {(!this.props.isMultiple)&&
+                        {(!this.props.isMultiple &&window.isHomePage)&&
                             <MenuItem onClick={()=>this.props.openShareDialog()}>
                                 <ListItemIcon>
                                     <ShareIcon/>
@@ -258,7 +276,7 @@ class ContextMenuCompoment extends Component {
                             </MenuItem>
                         }
                         
-                        {(!this.props.isMultiple)&&
+                        {(!this.props.isMultiple&&window.isHomePage)&&
                             <MenuItem onClick={()=>this.props.openRenameDialog() }>
                                 <ListItemIcon>
                                     <RenameIcon/>
@@ -266,19 +284,22 @@ class ContextMenuCompoment extends Component {
                                 <Typography variant="inherit">重命名</Typography>
                             </MenuItem>
                         }
-                        <MenuItem onClick={()=>this.props.openMoveDialog() }>
-                            <ListItemIcon>
-                                <MoveIcon/>
-                            </ListItemIcon>
-                            <Typography variant="inherit">移动</Typography>
-                        </MenuItem>
-                        <Divider/>
-                        <MenuItem className={classes.propover} onClick={()=>this.props.openRemoveDialog()}>
-                            <ListItemIcon>
-                                <DeleteIcon/>
-                            </ListItemIcon>
-                            <Typography variant="inherit">删除</Typography>
-                        </MenuItem>
+                        {window.isHomePage&&<div>
+                            <MenuItem onClick={()=>this.props.openMoveDialog() }>
+                                <ListItemIcon>
+                                    <MoveIcon/>
+                                </ListItemIcon>
+                                <Typography variant="inherit">移动</Typography>
+                            </MenuItem>
+                            <Divider/>
+                            <MenuItem className={classes.propover} onClick={()=>this.props.openRemoveDialog()}>
+                                <ListItemIcon>
+                                    <DeleteIcon/>
+                                </ListItemIcon>
+                                <Typography variant="inherit">删除</Typography>
+                            </MenuItem>
+                        </div>}
+                        
 
 
                     </MenuList>

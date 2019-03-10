@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
+import FolderShareApp from "./folderShare.app"
 import cloureveApp from '../reducers'
-import MarkdownApp from "./markdown.app"
 const defaultStatus = {
     navigator:{
         path:window.path,
@@ -44,11 +44,11 @@ const defaultStatus = {
         fileSave:false,
         dirList:[
         ],
-        selected:[{path:"/",name:window.fileInfo.name,type:"file"}],
+        selected:[],
         selectProps:{
             isMultiple:false,
             withFolder:false,
-            withFile:true,
+            withFile:false,
         },
         imgPreview:{
             first:null,
@@ -61,6 +61,6 @@ const defaultStatus = {
 let store = createStore(cloureveApp,defaultStatus)
 ReactDOM.render(
     <Provider store={store}>
-        <MarkdownApp/>
+        <FolderShareApp/>
     </Provider>
 , document.getElementById('root'));

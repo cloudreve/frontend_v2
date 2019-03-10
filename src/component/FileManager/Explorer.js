@@ -132,7 +132,7 @@ class ExplorerCompoment extends Component {
     
     contextMenu = (e) => {
         e.preventDefault();
-        if(this.props.keywords===null){
+        if(this.props.keywords===null&&!window.isSharePage){
             if(!this.props.loading){
                 this.props.changeContextMenu("empty",true);
             }
@@ -176,7 +176,7 @@ class ExplorerCompoment extends Component {
                             </Button>
                         }
 
-                {(this.props.keywords===null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
+                {(this.props.keywords===null&&window.isHomePage&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
                     <div className={classes.emptyContainer}>
                        <EmptyIcon className={classes.emptyIcon}/> 
                        <div className={classes.emptyInfoBig}>拖拽文件至此</div>
@@ -184,7 +184,7 @@ class ExplorerCompoment extends Component {
 
                     </div>
                 }
-                 {(this.props.keywords!==null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)&&
+                 {((this.props.keywords!==null&&this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError)||(this.props.dirList.length===0&&this.props.fileList.length===0&&!this.props.loading&&!this.props.navigatorError&&window.isSharePage))&&
                     <div className={classes.emptyContainer}>
                        <SadIcon className={classes.emptyIcon}/> 
                        <div className={classes.emptyInfoBig}>什么都没有找到</div>
