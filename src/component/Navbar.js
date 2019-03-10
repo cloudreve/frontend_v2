@@ -17,6 +17,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import LockIcon from '@material-ui/icons/Lock';
 import EyeIcon from '@material-ui/icons/RemoveRedEye';
 import BackIcon from '@material-ui/icons/ArrowBack';
+import OpenIcon from '@material-ui/icons/OpenInNew'
+import DownloadIcon from '@material-ui/icons/CloudDownload'
 import OpenFolderIcon from '@material-ui/icons/FolderOpen'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
@@ -39,7 +41,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Badge from '@material-ui/core/Badge';
 import Grow from '@material-ui/core/Grow';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import {isPreviewable,isTorrent} from "../config"
+import {MagnetOn} from 'mdi-material-ui'
 import {
     drawerToggleAction,
     setSelectedTarget,
@@ -47,7 +50,9 @@ import {
     openCreateFolderDialog,
     changeContextMenu,
     searchMyFile,
-    saveFile
+    saveFile,
+    openMusicDialog,
+    showImgPreivew,
 } from "../actions/index"
 import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
@@ -93,8 +98,13 @@ const mapDispatchToProps = dispatch => {
         },
         saveFile:()=>{
             dispatch(saveFile())
-        }
-        
+        },
+        openMusicDialog:()=>{
+            dispatch(openMusicDialog())
+        },
+        showImgPreivew:(first)=>{
+            dispatch(showImgPreivew(first))
+        },
     }
 }
 
@@ -254,6 +264,38 @@ class NavbarCompoment extends Component {
 
     filterFile = (type)=>{
         this.props.searchMyFile("{filterType:"+type+"}")
+    }
+
+    openPreview = ()=>{
+        this.props.changeContextMenu("file",false);
+        let previewPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
+        switch(isPreviewable(this.props.selected[0].name)){
+            case 'img':
+                this.props.showImgPreivew(this.props.selected[0]);
+                return;
+            case 'msDoc':
+                window.open(window.apiURL.docPreiview+"/?path="+encodeURIComponent(previewPath));  
+                return;
+            case 'audio':
+                this.props.openMusicDialog();
+                return;
+            case 'open':
+                window.open(window.apiURL.preview+"/?action=preview&path="+encodeURIComponent(previewPath));  
+                return;
+            case 'video':
+                window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
+                return;
+            case 'edit':
+                window.location.href=("/Viewer/Markdown?path="+encodeURIComponent(previewPath));  
+                return;
+            default:
+                return;
+        }
+    }
+
+    openDownload = ()=>{
+        let downloadPath = this.props.selected[0].path === "/" ? this.props.selected[0].path+this.props.selected[0].name:this.props.selected[0].path+"/"+this.props.selected[0].name;
+        window.open(window.apiURL.download+"?action=download&path="+encodeURIComponent(downloadPath));
     }
 
     render() {
@@ -416,7 +458,7 @@ class NavbarCompoment extends Component {
                             <SezrchBar/>
                         }
                         <div className={classes.grow} />
-                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) && !window.isHomePage && window.userInfo.uid!==-1)&&
+                        {((this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile)) && !window.isHomePage && window.userInfo.uid!==-1)&&
                             <div className={classes.sectionForFile}>
                                 <Tooltip title="保存">
                                     <IconButton color="inherit" onClick={()=>this.props.saveFile()}>
@@ -427,6 +469,28 @@ class NavbarCompoment extends Component {
                         }
                         {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) && window.isHomePage)&&
                             <div className={classes.sectionForFile}>
+                                {(!this.props.isMultiple&&this.props.withFile&&isPreviewable(this.props.selected[0].name))&&
+                                    <Grow in={(!this.props.isMultiple&&this.props.withFile&&isPreviewable(this.props.selected[0].name))}>
+                                        <Tooltip title="打开">
+                                            <IconButton color="inherit"
+                                            onClick = {()=>this.openPreview()}
+                                            >
+                                                <OpenIcon/>
+                                            </IconButton> 
+                                        </Tooltip>
+                                    </Grow>
+                                }
+                                {(!this.props.isMultiple&&this.props.withFile)&&
+                                    <Grow in={(!this.props.isMultiple&&this.props.withFile)}>
+                                        <Tooltip title="下载">
+                                            <IconButton color="inherit"
+                                            onClick = {()=>this.openDownload()}
+                                            >
+                                                <DownloadIcon/>
+                                            </IconButton> 
+                                        </Tooltip>
+                                    </Grow>
+                                }
                                 {(!this.props.isMultiple && this.props.withFolder)&&
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>
                                         <Tooltip title="进入目录">

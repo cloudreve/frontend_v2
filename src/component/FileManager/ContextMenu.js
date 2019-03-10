@@ -240,7 +240,7 @@ class ContextMenuCompoment extends Component {
                             </MenuItem>
                         }
 
-                        {(!this.props.isMultiple&&this.props.withFile&&isTorrent(this.props.selected[0].name))&&
+                        {(!this.props.isMultiple&&(window.uploadConfig.allowTorrentDownload==="1")&&this.props.withFile&&isTorrent(this.props.selected[0].name))&&
                             <MenuItem onClick={()=>this.props.openTorrentDownloadDialog()}>
                                 <ListItemIcon>
                                     <MagnetOn/>
