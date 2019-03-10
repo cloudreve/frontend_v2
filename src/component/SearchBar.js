@@ -136,6 +136,7 @@ class SearchBarCompoment extends Component {
                             <Paper
                             square={true}
                             >
+                            {window.isHomePage&&
                             <MenuItem onClick={this.searchMyFile}>
                                 <ListItemIcon className={classes.icon}>
                                     <FileIcon />
@@ -144,6 +145,8 @@ class SearchBarCompoment extends Component {
                                         在我的文件中搜索 <strong>{this.state.input}</strong>
                                     </Typography>} />
                             </MenuItem>
+                            }
+                            
                             <MenuItem >
                                 <ListItemIcon className={classes.icon}>
                                     <ShareIcon />

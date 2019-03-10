@@ -1,6 +1,7 @@
 export const imgPreviewSuffix = ["bmp","png","gif","jpg","jpge","svg","webp"];
 export const msDocPreviewSuffix = ["ppt","pptx","pps","doc","docx","xlsx","xls"];
 export const audioPreviewSuffix = ["mp3","ogg"];
+export const videoPreviewSuffix = ["mp4"];
 export const directOpenPreviewSuffix = ["pdf"];
 
 export const mediaType = {
@@ -27,6 +28,8 @@ export const isPreviewable = name=>{
         return "audio";
     }else if(directOpenPreviewSuffix.indexOf(suffix)!==-1){
         return "open";
+    }else if(videoPreviewSuffix.indexOf(suffix)!==-1){
+        return "video";
     }
     return false;
 }

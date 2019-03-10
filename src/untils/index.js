@@ -35,5 +35,8 @@ export const setGetParameter = (paramName, paramValue) =>{
     else
         url += "&" + paramName + "=" + paramValue;
     }
+    if(url===window.location.href){
+        return;
+    }
     window.history.pushState(null, null, url);
 }

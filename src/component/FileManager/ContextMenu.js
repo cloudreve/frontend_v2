@@ -142,13 +142,16 @@ class ContextMenuCompoment extends Component {
                 this.props.showImgPreivew(this.props.selected[0]);
                 return;
             case 'msDoc':
-                window.open(window.apiURL.docPreiview+"/?path="+encodeURI(previewPath));  
+                window.open(window.apiURL.docPreiview+"/?path="+encodeURIComponent(previewPath));  
                 return;
             case 'audio':
                 this.props.openMusicDialog();
                 return;
             case 'open':
-                window.open(window.apiURL.preview+"/?action=preview&path="+encodeURI(previewPath));  
+                window.open(window.apiURL.preview+"/?action=preview&path="+encodeURIComponent(previewPath));  
+                return;
+            case 'video':
+                window.location.href=("/Viewer/Video?path="+encodeURIComponent(previewPath));  
                 return;
             default:
                 return;

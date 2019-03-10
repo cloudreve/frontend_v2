@@ -32,6 +32,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UploadIcon from '@material-ui/icons/CloudUpload';
+import FolderShared from '@material-ui/icons/FolderShared';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import Badge from '@material-ui/core/Badge';
@@ -241,7 +242,7 @@ class NavbarCompoment extends Component {
     }
 
     loadUploader() {
-        if (true) {
+        if (window.isHomePage) {
             return (<Uploader queueChange={queued => this.updateQueueStatus(queued)} ref={this.UploaderRef} />)
         }
     }
@@ -258,31 +259,44 @@ class NavbarCompoment extends Component {
                 {window.isMobile&&
                     <UserInfo/>
                 }
-                <div className={classes.addButton}>
-            <Badge badgeContent={this.state.queued} classes={{ badge: classes.badgeFix }} invisible={this.state.queued === 0} color="secondary">
-                <Button
-                 disabled={this.props.keywords!==null}
-                 variant="outlined"
-                 size="large"
-                 color="primary" 
-                 onClick = {this.clickUpload}
-                 className={classes.fabButton}
-                 >
-                    <AddIcon className={classes.extendedIcon} /> 新建项目
-                    
-                         
-                </Button>
-                  </Badge>
-                  </div>
-                <List> 
+                {window.isHomePage&&
+                     <div className={classes.addButton}>
+                     <Badge badgeContent={this.state.queued} classes={{ badge: classes.badgeFix }} invisible={this.state.queued === 0} color="secondary">
+                         <Button
+                          disabled={this.props.keywords!==null}
+                          variant="outlined"
+                          size="large"
+                          color="primary" 
+                          onClick = {this.clickUpload}
+                          className={classes.fabButton}
+                          >
+                             <AddIcon className={classes.extendedIcon} /> 新建项目
+                             
+                                  
+                         </Button>
+                           </Badge>
+                           </div>
+                }
+                {!window.isHomePage&&
+                <div>
+                    <ListItem button key="我的文件" onClick={()=>window.location.href="/"}>
+                    <ListItemIcon>     
+                            <FolderShared className={classes.iconFix}/>
+                    </ListItemIcon>
+                    <ListItemText primary="我的文件" />
+                    </ListItem>
+                    <Divider/>
+                </div>
+                }
+
+                {window.isHomePage&&<div>
+                    <List> 
                     <Divider/>
                     <ListItem button id="pickfiles" className={classes.hiddenButton}>
                         <ListItemIcon><UploadIcon /></ListItemIcon>
                         <ListItemText />
                     </ListItem>
                 </List>
-
-
                 <ListItem button key="视频" onClick={()=>this.filterFile("video")}>
                     <ListItemIcon>     
                             <VideoIcon className={[classes.iconFix,classes.iconVideo]}/>
@@ -309,9 +323,9 @@ class NavbarCompoment extends Component {
                             <DocIcon className={[classes.iconFix,classes.iconDoc]} />
                     </ListItemIcon>
                     <ListItemText primary="文档" />
-                </ListItem>
+                </ListItem> <Divider className={classes.dividerFix}/></div>}
 
-                    <Divider className={classes.dividerFix}/>
+                   
                 <ListItem button key="我的分享"  onClick={this.handleShareClick}>
                     <ListItemIcon>
                             <ShareIcon className={classes.iconFix} />

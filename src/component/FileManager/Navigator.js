@@ -157,6 +157,13 @@ class NavigatorCompoment extends Component {
 
     componentDidMount = ()=>{
         this.renderPath();
+        window.onpopstate = (event)=>{
+            var url = new URL(window.location.href);
+            var c = url.searchParams.get("path");
+            if(c!==null&&c!==this.props.path){
+                this.props.navigateToPath(c);
+            }
+        };
     }
 
     renderPath = (path=null)=>{
