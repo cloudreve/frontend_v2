@@ -33,6 +33,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import FolderShared from '@material-ui/icons/FolderShared';
+import SaveIcon from '@material-ui/icons/Save';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import Badge from '@material-ui/core/Badge';
@@ -45,7 +46,8 @@ import {
     navitateTo,
     openCreateFolderDialog,
     changeContextMenu,
-    searchMyFile
+    searchMyFile,
+    saveFile
 } from "../actions/index"
 import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
@@ -89,6 +91,9 @@ const mapDispatchToProps = dispatch => {
         searchMyFile:(keywords)=>{
             dispatch(searchMyFile(keywords));
         },
+        saveFile:()=>{
+            dispatch(saveFile())
+        }
         
     }
 }
@@ -361,7 +366,7 @@ class NavbarCompoment extends Component {
             <div>
                 <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?"primary":"default"}> 
                     <Toolbar>
-                    {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
+                    {((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage)&&
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
@@ -371,7 +376,7 @@ class NavbarCompoment extends Component {
                             <MenuIcon />
                         </IconButton>
                     }
-                        {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&<IconButton
+                        {((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage)&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
@@ -379,7 +384,7 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>}
-                        {(this.props.selected.length >1 || (!this.props.isMultiple&&this.props.withFile))&&
+                        {(this.props.selected.length >1 || (!this.props.isMultiple&&this.props.withFile) && window.isHomePage)&&
                             <Grow in={(this.props.selected.length >1) || (!this.props.isMultiple&&this.props.withFile)}>
                                 <IconButton
                                     color="inherit"
@@ -398,7 +403,7 @@ class NavbarCompoment extends Component {
 
                         {(!this.props.isMultiple&&this.props.withFile&&!window.isMobile)&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            {this.props.selected[0].name} ({sizeToString(this.props.selected[0].size)}) 
+                            {this.props.selected[0].name} {window.isHomePage&&"("+sizeToString(this.props.selected[0].size)+")"} 
         				</Typography>
                         }
 
@@ -411,7 +416,16 @@ class NavbarCompoment extends Component {
                             <SezrchBar/>
                         }
                         <div className={classes.grow} />
-                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile))&&
+                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) && !window.isHomePage && window.userInfo.uid!==-1)&&
+                            <div className={classes.sectionForFile}>
+                                <Tooltip title="保存">
+                                    <IconButton color="inherit" onClick={()=>this.props.saveFile()}>
+                                        <SaveIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                        }
+                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) && window.isHomePage)&&
                             <div className={classes.sectionForFile}>
                                 {(!this.props.isMultiple && this.props.withFolder)&&
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>

@@ -180,3 +180,9 @@ export const refreshStorage = () => {
         type: 'REFRESH_STORAGE',
     }
 }
+
+export const saveFile = () => {
+    return {
+        type: 'SAVE_FILE',
+    }
+}

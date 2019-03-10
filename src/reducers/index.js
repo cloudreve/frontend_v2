@@ -319,6 +319,12 @@ const cloudreveApp = (state = [], action) => {
                     storageRefresh:!state.viewUpdate.storageRefresh,
                 }),
             });
+        case 'SAVE_FILE':
+            return Object.assign({}, state, {
+                explorer:Object.assign({}, state.explorer, {
+                    fileSave:!state.explorer.fileSave,
+                }),
+            });
         default:
             return state
     }

@@ -91,6 +91,7 @@ module.exports = {
     // Finally, this is your app's code:
     index:paths.appIndexJs,
     video:'./src/pages/video.js',
+    markdown:'./src/pages/markdown.js',
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
@@ -340,6 +341,12 @@ module.exports = {
       chunks:['video'],
       filename:"video.html",
       template: './public/video.html',
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks:['markdown'],
+      filename:"markdown.html",
+      template: './public/markdown.html',
     }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
