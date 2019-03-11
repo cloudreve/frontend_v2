@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { withTheme } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
 import VideoIcon from '@material-ui/icons/VideoLibrary';
@@ -59,7 +60,7 @@ import {
     openShareDialog,
     openRenameDialog,
 } from "../actions/index"
-import {allowSharePreview,checkGetParameters} from "../untils/index"
+import {allowSharePreview,checkGetParameters,changeThemeColor} from "../untils/index"
 import Uploader from "./Uploader.js"
 import {sizeToString} from "../untils/index"
 import SezrchBar from "./SearchBar"
@@ -270,7 +271,15 @@ class NavbarCompoment extends Component {
         this.UploaderRef = React.createRef();
     }
 
+    componentDidMount=()=>{
+        changeThemeColor((this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?this.props.theme.palette.primary.main:this.props.theme.palette.background.default);
+    }
 
+    componentWillReceiveProps = (nextProps)=>{
+        if((this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))!==(nextProps.selected.length <=1 && ! (!nextProps.isMultiple&&nextProps.withFile))){
+            changeThemeColor(!(this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?this.props.theme.palette.primary.main:this.props.theme.palette.background.default);
+        }
+    }
 
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
@@ -680,11 +689,12 @@ class NavbarCompoment extends Component {
 }
 NavbarCompoment.propTypes = {
     classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
 };
 
 const Navbar = connect(
     mapStateToProps,
     mapDispatchToProps
-  )( withStyles(styles)(NavbarCompoment))
+  )( withTheme()(withStyles(styles)(NavbarCompoment)))
   
 export default Navbar

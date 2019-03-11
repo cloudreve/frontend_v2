@@ -64,3 +64,8 @@ export const checkGetParameters= field=>{
         return true;
     return false
 }
+
+export const changeThemeColor = color=>{
+    var metaThemeColor = window.document.querySelector("meta[name=theme-color]");
+    metaThemeColor.setAttribute("content", color);
+}
