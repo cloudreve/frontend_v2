@@ -190,6 +190,9 @@ const styles = theme => ({
     },
     loadingAnimation:{
         borderRadius: "6px 6px 0 0",
+    },
+    shareFix:{
+        marginLeft: "20px",
     }
 })
 
@@ -208,6 +211,9 @@ const mapDispatchToProps = dispatch => {
 
 class FileIconCompoment extends Component {
 
+    static defaultProps = {
+        share: false,
+    }
 
     state={
         loading:false,
@@ -306,14 +312,15 @@ class FileIconCompoment extends Component {
             } 
             {(this.props.file.pic===""|| this.props.file.pic===" "||!allowSharePreview())&& <Divider/> }
                     <div className={classes.fileInfo}>
-                        <div className={classNames(classes.icon, {
+                        {!this.props.share&&<div className={classNames(classes.icon, {
                             [classes.iconSelected]: isSelected,
                             [classes.iconNotSelected]: !isSelected,
-                        })}>{icon}</div>
+                        })}>{icon}</div>}
                         <Tooltip title={this.props.file.name} aria-label={this.props.file.name}>
                             <Typography className={classNames(classes.folderName, {
                                 [classes.folderNameSelected]: isSelected,
                                 [classes.folderNameNotSelected]: !isSelected,
+                                [classes.shareFix]:this.props.share,
                             })}>{this.props.file.name}</Typography>
                         </Tooltip>
                     </div>

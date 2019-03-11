@@ -93,6 +93,7 @@ module.exports = {
     video:'./src/pages/video.js',
     markdown:'./src/pages/markdown.js',
     folderShare:'./src/pages/folderShare.js',
+    fileShare:'./src/pages/fileShare.js',
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
@@ -354,6 +355,12 @@ module.exports = {
       chunks:['folderShare'],
       filename:"folderShare.html",
       template: './public/folderShare.html',
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks:['fileShare'],
+      filename:"fileShare.html",
+      template: './public/fileShare.html',
     }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:

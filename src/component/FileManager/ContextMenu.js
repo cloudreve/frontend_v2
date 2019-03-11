@@ -165,7 +165,7 @@ class ContextMenuCompoment extends Component {
                     window.location.href=("/Viewer/Video?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
                     return;
                 }
-                window.location.href=("/Viewer/Video?share=true&shareKey="+window.shareInfo.shareId+"&path="+encodeURIComponent(previewPath));  
+                window.location.href=("/Viewer/Video?&path="+encodeURIComponent(previewPath));  
                 return;
             case 'edit':
                 if(window.isSharePage){

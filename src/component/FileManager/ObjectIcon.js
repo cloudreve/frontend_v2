@@ -102,7 +102,10 @@ class ObjectCompoment extends Component {
     handleClick=(e)=> {
         if(window.isMobile){
             this.selectFile(e);
-            this.handleDoubleClick();
+            if(this.props.file.type==="dir"){
+                this.enterFolder();
+                return;
+            }
         }else{
             this.selectFile(e);
         }

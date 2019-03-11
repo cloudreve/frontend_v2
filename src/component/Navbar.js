@@ -53,7 +53,11 @@ import {
     saveFile,
     openMusicDialog,
     showImgPreivew,
-    toggleSnackbar
+    toggleSnackbar,
+    openMoveDialog,
+    openRemoveDialog,
+    openShareDialog,
+    openRenameDialog,
 } from "../actions/index"
 import {allowSharePreview,checkGetParameters} from "../untils/index"
 import Uploader from "./Uploader.js"
@@ -112,6 +116,18 @@ const mapDispatchToProps = dispatch => {
         },
         toggleSnackbar:(vertical,horizontal,msg,color)=>{
             dispatch(toggleSnackbar(vertical,horizontal,msg,color))
+        },
+        openRenameDialog:()=>{
+            dispatch(openRenameDialog())
+        },
+        openMoveDialog:()=>{
+            dispatch(openMoveDialog())
+        },
+        openRemoveDialog:()=>{
+            dispatch(openRemoveDialog())
+        },
+        openShareDialog:()=>{
+            dispatch(openShareDialog())
         },
     }
 }
@@ -215,18 +231,6 @@ const styles = theme => ({
     },
     dividerFix:{
         marginTop: "8px",
-    },
-    iconVideo:{
-        color:"#f44336",
-    },
-    iconImg:{
-        color:"#4caf50",
-    },
-    iconAudio:{
-        color:"#673ab7",
-    },
-    iconDoc:{
-        color:"#2196f3",
     },
     folderShareIcon:{
         verticalAlign: "sub",
@@ -381,7 +385,6 @@ class NavbarCompoment extends Component {
                     </ListItemIcon>
                     <ListItemText primary="我的文件" />
                     </ListItem>
-                    <Divider/>
                 </div>
                 }
 
@@ -447,7 +450,6 @@ class NavbarCompoment extends Component {
                 </Collapse>
                 {!window.isSharePage&&
                     <div>
-                    <Divider/>
                         <StorageBar></StorageBar>
                         </div>
                 }
@@ -523,7 +525,7 @@ class NavbarCompoment extends Component {
                         }
                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            {window.isSharePage&&<FolderShared className={classes.folderShareIcon}/>}{window.siteInfo.mainTitle}
+                            {window.isSharePage&&window.pageId==""&&<FolderShared className={classes.folderShareIcon}/>}{window.siteInfo.mainTitle}
         				</Typography>
                         }
 
@@ -589,7 +591,7 @@ class NavbarCompoment extends Component {
                                 {(!this.props.isMultiple&&!window.isSharePage)&&
                                     <Grow in={(!this.props.isMultiple)}>
                                         <Tooltip title="分享">
-                                            <IconButton color="inherit">
+                                            <IconButton color="inherit" onClick={()=>this.props.openShareDialog()}>
                                                 <ShareIcon/>
                                             </IconButton>
                                         </Tooltip>
@@ -598,23 +600,24 @@ class NavbarCompoment extends Component {
                                 {(!this.props.isMultiple&&!window.isSharePage)&&
                                     <Grow in={(!this.props.isMultiple)}>
                                         <Tooltip title="重命名">
-                                            <IconButton color="inherit">
+                                            <IconButton color="inherit" onClick={()=>this.props.openRenameDialog()}>
                                                 <RenameIcon/>
                                             </IconButton>
                                         </Tooltip>
                                     </Grow>
                                 }
                                 {!window.isSharePage&&<div>
-                                    <Grow in={(this.props.selected.length!==0)}>
+                                    {!window.isMobile&&<Grow in={(this.props.selected.length!==0)&&!window.isMobile}>
                                     <Tooltip title="移动">
-                                        <IconButton color="inherit">
+                                        <IconButton color="inherit" onClick={()=>this.props.openMoveDialog()}>
                                             <MoveIcon/>
                                         </IconButton>
                                     </Tooltip>
-                                    </Grow>
+                                    </Grow>}
+                                    
                                     <Grow in={(this.props.selected.length!==0)}>
                                         <Tooltip title="删除">
-                                            <IconButton color="inherit">
+                                            <IconButton color="inherit" onClick={()=>this.props.openRemoveDialog()}>
                                                 <DeleteIcon/>
                                             </IconButton>
                                         </Tooltip>

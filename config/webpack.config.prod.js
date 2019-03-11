@@ -110,6 +110,8 @@ module.exports = {
   entry: {
     index:paths.appIndexJs,
     video:'./src/pages/video.js',
+    markdown:'./src/pages/markdown.js',
+    folderShare:'./src/pages/folderShare.js',
   },
   output: {
     // The build folder.
@@ -443,6 +445,42 @@ module.exports = {
       chunks:['video'],
       filename:"video.html",
       template: './public/video.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks:['markdown'],
+      filename:"markdown.html",
+      template: './public/markdown.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks:['folderShare'],
+      filename:"folderShare.html",
+      template: './public/folderShare.html',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
