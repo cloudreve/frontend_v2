@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
+import SettingIcon from '@material-ui/icons/Settings'
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -94,14 +95,21 @@ class UserAvatarCompoment extends Component {
         const { classes} = this.props;
         return (
             <div className={classes.mobileHidden}>
-                <Grow in={(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))}>
+                
+                <Grow in={((this.props.selected.length <=1) && !(!this.props.isMultiple&&this.props.withFile))}>
+                       <div>
+                       {(window.userInfo.uid!==-1)&&<IconButton onClick={()=>window.location.href="/Member/Setting"} color="inherit" 
+                        >
+                            <SettingIcon/>
+                        </IconButton>}
+                      
                         <IconButton color="inherit" onClick={this.showUserInfo}>
                         {window.userInfo.uid===-1&&
                             <AccountCircle/>
                         }
                         {window.userInfo.uid!==-1&&<Avatar  src={"/Member/Avatar/"+window.userInfo.uid+"/s"} className={classes.avatar} />}
                         
-                        </IconButton>
+                        </IconButton> </div>
                 </Grow>
                 <Popover 
                 open = {this.state.anchorEl!==null}
