@@ -9,6 +9,9 @@ import GroupIcon from '@material-ui/icons/Group'
 import DateIcon from '@material-ui/icons/DateRange'
 import EmailIcon from '@material-ui/icons/Email'
 import HomeIcon from '@material-ui/icons/Home'
+import LinkIcon from '@material-ui/icons/Phonelink'
+import InputIcon from '@material-ui/icons/Input'
+import SecurityIcon from '@material-ui/icons/Security'
 import NickIcon from '@material-ui/icons/PermContactCalendar'
 import LockIcon from '@material-ui/icons/Lock'
 import VerifyIcon from '@material-ui/icons/VpnKey'
@@ -20,6 +23,8 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
 import FingerprintIcon from '@material-ui/icons/Fingerprint'
 import List from '@material-ui/core/List';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -109,6 +114,13 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
         borderRadius: "50%",
         marginRight: "6px",
+    },
+    themeBlock:{
+        height: "20px",
+        width: "20px",
+    },
+    paddingBottom:{
+        marginBottom:"30px",
     }
 })
 const mapStateToProps = state => {
@@ -138,11 +150,17 @@ class UserSettingCompoment extends Component {
         loading:"",
         oldPwd:"",
         newPwd:"",
+        webdavPwd:"",
         newPwdRepeat:"",
         homePage:window.userInfo.homePage,
         nick:window.userInfo.nick,
         twoFactor:false,
         authCode:"",
+        changeTheme:false,
+        chosenTheme:null,
+        showWebDavUrl:false,
+        showWebDavUserName:false,
+        changeWebDavPwd:false,
     }
 
     handleClose = () => {
@@ -152,6 +170,10 @@ class UserSettingCompoment extends Component {
             changePassword:false,
             loading:"",
             twoFactor:false,
+            changeTheme:false,
+            showWebDavUrl:false,
+            showWebDavUserName:false,
+            changeWebDavPwd:false,
         });
     };
 
@@ -273,6 +295,58 @@ class UserSettingCompoment extends Component {
         });
     }
 
+    changeTheme = ()=>{
+        this.setState({
+            loading:"changeTheme",
+        });
+        axios.post('/Member/ChangeThemeColor', {
+            theme:this.state.chosenTheme,
+        }).then( (response)=> {
+            if(response.data.error==="1"){
+                this.props.toggleSnackbar("top","right",response.data.msg ,"error");
+                this.setState({
+                    loading:"",
+                });
+            }else{
+                window.location.reload();
+            }
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.setState({
+                loading:"",
+            });
+        });
+    }
+
+    changheWebdavPwd = ()=>{
+        this.setState({
+            loading:"changheWebdavPwd",
+        });
+        axios.post('/Member/setWebdavPwd', {
+            pwd: this.state.webdavPwd,
+        }).then( (response)=> {
+            if(response.data.error==="1"){
+                this.props.toggleSnackbar("top","right",response.data.msg ,"error");
+                this.setState({
+                    loading:"",
+                });
+            }else{
+                this.props.toggleSnackbar("top","right",response.data.msg ,"success");
+                this.setState({
+                    loading:"",
+                    changeWebDavPwd:false,
+                });
+            }
+        })
+        .catch((error) =>{
+            this.props.toggleSnackbar("top","right",error.message ,"error");
+            this.setState({
+                loading:"",
+            });
+        });
+    }
+
     twoFactor = ()=>{
         this.setState({
             loading:"twoFactor",
@@ -300,6 +374,8 @@ class UserSettingCompoment extends Component {
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     };
+
+    handleAlignment = (event, chosenTheme) => this.setState({ chosenTheme });
 
     render() {
         const { classes } = this.props;
@@ -406,7 +482,7 @@ class UserSettingCompoment extends Component {
                     <Typography className={classes.sectionTitle} variant="subtitle2">个性化</Typography>
                 <Paper>    
                     <List className={classes.desenList}>
-                        <ListItem button>
+                        <ListItem button onClick={()=>this.setState({changeTheme:true})}>
                            <ListItemIcon className={classes.iconFix}><ColorIcon/></ListItemIcon>
                             <ListItemText primary="主题配色" />
                             
@@ -417,6 +493,40 @@ class UserSettingCompoment extends Component {
                         </ListItem>
                         </List>
                     </Paper>
+                    {window.userInfo.webdav==="1"&&<div>
+                    <Typography className={classes.sectionTitle} variant="subtitle2">WebDAV</Typography>
+                <Paper>    
+                    <List className={classes.desenList}>
+                        <ListItem button onClick={()=>this.setState({showWebDavUrl:true})}>
+                            <ListItemIcon className={classes.iconFix}><LinkIcon/></ListItemIcon>
+                                <ListItemText primary="连接地址" />
+                                
+                                <ListItemSecondaryAction className={classes.flexContainer}>
+                                <RightIcon className={classes.rightIcon}/>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider/>
+                        <ListItem button onClick={()=>this.setState({showWebDavUserName:true})}>
+                            <ListItemIcon className={classes.iconFix}><InputIcon/></ListItemIcon>
+                                <ListItemText primary="用户名" />
+                                
+                                <ListItemSecondaryAction className={classes.flexContainer}>
+                                <RightIcon className={classes.rightIcon}/>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider/>
+                        <ListItem button onClick={()=>this.setState({changeWebDavPwd:true})}>
+                            <ListItemIcon className={classes.iconFix}><SecurityIcon/></ListItemIcon>
+                                <ListItemText primary="登录密码" />
+                                
+                                <ListItemSecondaryAction className={classes.flexContainer}>
+                                <RightIcon className={classes.rightIcon}/>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                        </List>
+                    </Paper>
+                    </div>}
+                    <div className={classes.paddingBottom}></div>
 
                 </div>
                 <Dialog
@@ -557,6 +667,98 @@ class UserSettingCompoment extends Component {
                     </Button>
                     <Button onClick={this.twoFactor} color="primary" disabled={this.state.loading==="twoFactor"||this.state.authCode===""}>
                         开启二步验证
+                    </Button>
+                </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.changeTheme}
+                onClose={this.handleClose}
+                >
+                <DialogTitle>更改主题配色</DialogTitle>
+                <DialogContent>
+                    <ToggleButtonGroup value={this.state.chosenTheme} exclusive onChange={this.handleAlignment}>
+                        {Object.keys(window.colorThemeOptions).map((value,key)=>(
+                            <ToggleButton value={value} key={key}>
+                                <div 
+                                className={classes.themeBlock}
+                                style={{backgroundColor:value}}
+                                ></div>
+                            </ToggleButton>
+                        ))}
+                    </ToggleButtonGroup>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="default">
+                        取消
+                    </Button>
+                    <Button onClick={this.changeTheme} color="primary" disabled={this.state.loading==="changeTheme"||this.state.chosenTheme===null}>
+                        保存
+                    </Button>
+                </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.showWebDavUrl}
+                onClose={this.handleClose}
+                >
+                <DialogTitle>WebDAV连接地址</DialogTitle>
+                <DialogContent>
+                <TextField
+                    id="standard-name"
+                    className={classes.textField}
+                    value={window.siteUrl+"WebDav/Api/uid/"+window.userInfo.uid}
+                    margin="normal"
+                    autoFocus
+                />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="default">
+                        关闭
+                    </Button>
+                </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.showWebDavUserName}
+                onClose={this.handleClose}
+                >
+                <DialogTitle>WebDAV用户名</DialogTitle>
+                <DialogContent>
+                <TextField
+                    id="standard-name"
+                    className={classes.textField}
+                    value={window.userInfo.email}
+                    margin="normal"
+                    autoFocus
+                />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="default">
+                        关闭
+                    </Button>
+                </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.changeWebDavPwd}
+                onClose={this.handleClose}
+                >
+                <DialogTitle>修改/设置WebDAV密码</DialogTitle>
+                <DialogContent>
+                <TextField
+                    id="standard-name"
+                    className={classes.textField}
+                    value={this.state.webdavPwd}
+                    margin="normal"
+                    type="password"
+                    onChange={this.handleChange('webdavPwd')}
+                    autoFocus
+                    fullWidth
+                />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="default">
+                        取消
+                    </Button>
+                    <Button onClick={this.changheWebdavPwd} color="primary" disabled={this.state.loading==="changheWebdavPwd"||this.state.webdavPwd===""}>
+                        保存
                     </Button>
                 </DialogActions>
                 </Dialog>

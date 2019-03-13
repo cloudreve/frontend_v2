@@ -11,6 +11,7 @@ let loaded = false;
 
 const mapStateToProps = state => {
     return {
+        path:state.navigator.path,
     }
 }
 
@@ -76,13 +77,14 @@ class UploaderCompoment extends Component {
                         'FilesAdded':({up, files})=>{
                             this.fileList["openFileList"]();
                             window.plupload.each(files, (files)=> {
+                                window.pathCache[files.id] = this.props.path;
                                 this.fileList["enQueue"](files);
                            })
+                           console.log(window.pathCache);
                         },
                             
                         
                         'BeforeUpload': function (up, file) {
-
                         },
                         "QueueChanged":(up=>{
                             this.setState({queued:up.total.queued});
@@ -91,6 +93,9 @@ class UploaderCompoment extends Component {
                             this.fileList["updateStatus"](file);
                         },
                         'UploadComplete': (up, file)=>{
+                            if(file.length===0){
+                                return 
+                            }
                             if(file[0].status === 5){
                                 this.fileList["setComplete"](file[0]);
                                 this.props.refreshFileList(); 
