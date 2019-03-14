@@ -35,17 +35,23 @@ const styles = theme => ({
         padding:"10px",
         overflowY: "auto",
         height: "calc(100vh - 112px)",
+        [theme.breakpoints.up('sm')]: {
+            overflowY: "auto",
+            height: "calc(100vh - 112px)",
+        },
         [theme.breakpoints.down('sm')]: {
-            height: "calc(100vh - 56px)",
+            height: "100%",
         },
     },
     rootTable:{
         padding:"0px",
         backgroundColor:theme.palette.background.paper.white,
-        overflowY: "auto",
-        height: "calc(100vh - 112px)",
+        [theme.breakpoints.up('sm')]: {
+            overflowY: "auto",
+            height: "calc(100vh - 112px)",
+        },
         [theme.breakpoints.down('sm')]: {
-            height: "calc(100vh - 56px)",
+            height: "100%",
         },
     },
     typeHeader:{

@@ -266,7 +266,6 @@ class NavbarCompoment extends Component {
         this.state = {
             mobileOpen: false,
             queued: 0,
-            shareOpen:0,
         };
         this.UploaderRef = React.createRef();
     }
@@ -284,10 +283,6 @@ class NavbarCompoment extends Component {
     handleDrawerToggle = () => {
         this.setState(state => ({ mobileOpen: !state.mobileOpen }));
     };
-
-    handleShareClick = () => {
-        this.setState(state => ({ shareOpen: !state.shareOpen }));
-    }
 
     clickUpload = () => {
         if (this.state.queued === 0) {
@@ -434,29 +429,12 @@ class NavbarCompoment extends Component {
                 </ListItem> <Divider className={classes.dividerFix}/></div>}
 
                 {window.userInfo.uid!==-1&&<div>
-                    <ListItem button key="我的分享"  onClick={this.handleShareClick}>
+                    <ListItem button key="我的分享"  onClick={()=>window.location.href="/Share/My"}>
                         <ListItemIcon>
                                 <ShareIcon className={classes.iconFix} />
                         </ListItemIcon>
                         <ListItemText inset primary="我的分享" />
-                        {this.state.shareOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
-                    <Collapse in={this.state.shareOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                            <ListItemIcon>
-                                <LockIcon className={classes.iconFix} />
-                            </ListItemIcon>
-                            <ListItemText inset primary="私密分享" />
-                        </ListItem>
-                        <ListItem button className={classes.nested}>
-                            <ListItemIcon>
-                                <EyeIcon className={classes.iconFix} />
-                            </ListItemIcon>
-                            <ListItemText inset primary="公开分享" />
-                        </ListItem>
-                    </List>
-                </Collapse>
                 {!window.isSharePage&&
                     <div>
                         <StorageBar></StorageBar>

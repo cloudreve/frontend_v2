@@ -109,6 +109,10 @@ class SearchBarCompoment extends Component {
         this.props.searchMyFile(this.input);
     }
 
+    searchShare = ()=>{
+        window.location.href="/Explore/Search/"+this.input;
+    }
+
     render() {
 
         const { classes} = this.props;
@@ -147,7 +151,7 @@ class SearchBarCompoment extends Component {
                             </MenuItem>
                             }
                             
-                            <MenuItem >
+                            <MenuItem onClick={this.searchShare}>
                                 <ListItemIcon className={classes.icon}>
                                     <ShareIcon />
                                 </ListItemIcon>
