@@ -338,6 +338,9 @@ class DownloadCompoment extends Component {
                                 case "error":
                                     return (<div>错误：{value.msg}</div>);
                                     break;
+                                case "success":
+                                    return (<div>成功</div>);
+                                    break;
                                 default:
                                     break;
                             }
