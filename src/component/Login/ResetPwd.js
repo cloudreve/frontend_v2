@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import KeyIcon from '@material-ui/icons/VpnKeyOutlined';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import { toggleSnackbar, } from "../../actions/index"
@@ -59,6 +59,10 @@ const mapStateToProps = state => {
     }
 }
 
+const sleep= (time)=> {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         toggleSnackbar: (vertical, horizontal, msg, color) => {
@@ -67,11 +71,10 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-class LoginFormCompoment extends Component {
+class ResetPwdCompoment extends Component {
 
     state={
         email:"",
-        pwd:"",
         captcha:"",
         loading:false,
         captchaUrl:"/captcha?initial",
@@ -88,27 +91,22 @@ class LoginFormCompoment extends Component {
         this.setState({
             loading:true,
         });
-        axios.post('/Member/Login',{
-            userMail:this.state.email,
-            userPass:this.state.pwd,
+        axios.post('/Member/ForgetPwd',{
+            regEmail:this.state.email,
             captchaCode:this.state.captcha,
         }).then( (response)=> {
             if(response.data.code!=="200"){
                 this.setState({
                     loading:false,
                 });
-                if(response.data.message=="tsp"){
-                    window.location.href="/Member/TwoStep";
-                }else{
-                    this.props.toggleSnackbar("top","right",response.data.message,"warning");
-                    this.refreshCaptcha();
-                }
+                this.props.toggleSnackbar("top","right",response.data.message,"warning");
+                this.refreshCaptcha();
             }else{
                 this.setState({
                     loading:false,
+                    email:"",
                 });
-                window.location.href="/Home";
-                this.props.toggleSnackbar("top","right","登录成功","success");
+                this.props.toggleSnackbar("top","right","密码重置邮件已发送，请注意查收","success");
             }
         })
         .catch((error) =>{
@@ -134,14 +132,14 @@ class LoginFormCompoment extends Component {
             <div className={classes.layout}>
                 <Paper className={classes.paper}>
                     <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
+                        <KeyIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        登录{window.siteInfo.mainTitle}
+                        找回密码
                     </Typography>
                     <form className={classes.form} onSubmit={this.login}>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">电子邮箱</InputLabel>
+                            <InputLabel htmlFor="email">注册邮箱</InputLabel>
                             <Input 
                             id="email" 
                             type="email" 
@@ -151,17 +149,7 @@ class LoginFormCompoment extends Component {
                             value={this.state.email}
                             autoFocus />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="password">密码</InputLabel>
-                            <Input 
-                            name="password" 
-                            onChange={this.handleChange("pwd")} 
-                            type="password" 
-                            id="password" 
-                            value={this.state.pwd}
-                            autoComplete />
-                        </FormControl>
-                        {window.captcha==="1"&&
+                        {window.findPwdCaptcha==="1"&&
                         <div className={classes.captchaContainer}>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="captcha">验证码</InputLabel>
@@ -186,12 +174,12 @@ class LoginFormCompoment extends Component {
                             disabled={this.state.loading}
                             className={classes.submit}
                         >
-                            登录
+                            发送密码重置邮件
                         </Button>  </form>                          <Divider/>
                         <div className={classes.link}>
                             <div>
-                                <Link href={"/Member/FindPwd"}>
-                                    忘记密码
+                                <Link href={"/Login"}>
+                                    返回登录
                                 </Link>
                             </div>
                             <div>
@@ -208,9 +196,9 @@ class LoginFormCompoment extends Component {
 
 }
 
-const LoginForm = connect(
+const ResetPwd = connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(styles)(LoginFormCompoment))
+)(withStyles(styles)(ResetPwdCompoment))
 
-export default LoginForm
+export default ResetPwd

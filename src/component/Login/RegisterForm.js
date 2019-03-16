@@ -7,12 +7,14 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import RegIcon from '@material-ui/icons/AssignmentIndOutlined';
+import EmailIcon from '@material-ui/icons/EmailOutlined';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import { toggleSnackbar, } from "../../actions/index"
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
+
 const styles = theme => ({
     layout: {
         width: 'auto',
@@ -35,6 +37,10 @@ const styles = theme => ({
     avatar: {
         margin: theme.spacing.unit,
         backgroundColor: theme.palette.secondary.main,
+    },
+    avatarSuccess:{
+        margin: theme.spacing.unit,
+        backgroundColor: theme.palette.primary.main,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -67,14 +73,20 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-class LoginFormCompoment extends Component {
+const sleep= (time)=> {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+class RegisterFormCompoment extends Component {
 
     state={
         email:"",
         pwd:"",
+        pwdRepeat:"",
         captcha:"",
         loading:false,
         captchaUrl:"/captcha?initial",
+        showStatue:"loginForm",
     }
 
     refreshCaptcha = ()=>{
@@ -83,32 +95,40 @@ class LoginFormCompoment extends Component {
         });
     }
 
-    login = e=>{
+    register = e=>{
         e.preventDefault();
+        if(this.state.pwdRepeat !== this.state.pwd){
+            this.props.toggleSnackbar("top","right","两次密码输入不一致","warning");
+            return;
+        }
         this.setState({
             loading:true,
         });
-        axios.post('/Member/Login',{
-            userMail:this.state.email,
-            userPass:this.state.pwd,
+        axios.post('/Member/Register',{
+            "username-reg":this.state.email,
+            "password-reg":this.state.pwd,
             captchaCode:this.state.captcha,
         }).then( (response)=> {
             if(response.data.code!=="200"){
                 this.setState({
                     loading:false,
                 });
-                if(response.data.message=="tsp"){
-                    window.location.href="/Member/TwoStep";
-                }else{
-                    this.props.toggleSnackbar("top","right",response.data.message,"warning");
-                    this.refreshCaptcha();
-                }
+                this.props.toggleSnackbar("top","right",response.data.message,"warning");
+                this.refreshCaptcha();
             }else{
-                this.setState({
-                    loading:false,
-                });
-                window.location.href="/Home";
-                this.props.toggleSnackbar("top","right","登录成功","success");
+                if(response.data.message=="ec"){
+                    this.setState({
+                        showStatue:"email",
+                    });
+                }else{
+                    this.props.toggleSnackbar("top","right","注册成功","success");
+                    sleep(1000).then(() => {
+                        window.location.href="/Home";
+                        this.setState({
+                            loading:false,
+                        });
+                    })
+                }
             }
         })
         .catch((error) =>{
@@ -132,14 +152,14 @@ class LoginFormCompoment extends Component {
 
         return (
             <div className={classes.layout}>
-                <Paper className={classes.paper}>
+                {this.state.showStatue==="loginForm"&&<Paper className={classes.paper}>
                     <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
+                        <RegIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        登录{window.siteInfo.mainTitle}
+                        注册{window.siteInfo.mainTitle}
                     </Typography>
-                    <form className={classes.form} onSubmit={this.login}>
+                    <form className={classes.form} onSubmit={this.register}>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">电子邮箱</InputLabel>
                             <Input 
@@ -161,7 +181,17 @@ class LoginFormCompoment extends Component {
                             value={this.state.pwd}
                             autoComplete />
                         </FormControl>
-                        {window.captcha==="1"&&
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="password">密码</InputLabel>
+                            <Input 
+                            name="pwdRepeat" 
+                            onChange={this.handleChange("pwdRepeat")} 
+                            type="password" 
+                            id="pwdRepeat" 
+                            value={this.state.pwdRepeat}
+                            autoComplete />
+                        </FormControl>
+                        {window.regCaptcha==="1"&&
                         <div className={classes.captchaContainer}>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="captcha">验证码</InputLabel>
@@ -186,31 +216,43 @@ class LoginFormCompoment extends Component {
                             disabled={this.state.loading}
                             className={classes.submit}
                         >
-                            登录
+                            注册账号
                         </Button>  </form>                          <Divider/>
                         <div className={classes.link}>
+                            <div>
+                                <Link href={"/Login"}>
+                                    返回登录
+                                </Link>
+                            </div>
                             <div>
                                 <Link href={"/Member/FindPwd"}>
                                     忘记密码
                                 </Link>
                             </div>
-                            <div>
-                                <Link href={"/SignUp"}>
-                                    注册账号
-                                </Link>
-                            </div>
                         </div>
                     
-                </Paper>
+                </Paper>}
+
+                {this.state.showStatue==="email"&&<Paper className={classes.paper}>
+                    <Avatar className={classes.avatarSuccess}>
+                        <EmailIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        邮件激活
+                    </Typography>
+                      <Typography style={{marginTop:"10px"}}>一封激活邮件已经发送至您的邮箱，请访问邮件中的链接以继续完成注册。</Typography>
+                    
+                </Paper>}
+
             </div>
         );
     }
 
 }
 
-const LoginForm = connect(
+const RegisterForm = connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(styles)(LoginFormCompoment))
+)(withStyles(styles)(RegisterFormCompoment))
 
-export default LoginForm
+export default RegisterForm

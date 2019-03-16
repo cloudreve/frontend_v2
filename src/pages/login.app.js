@@ -7,6 +7,11 @@ import AlertBar from "../component/Snackbar"
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LoginForm from "../component/Login/LoginForm"
 import TwoStep from "../component/Login/TwoStep"
+import RegisterForm from "../component/Login/RegisterForm"
+import EmailActivication from "../component/Login/EmailActivication"
+import ResetPwd from "../component/Login/ResetPwd"
+import ResetPwdForm from "../component/Login/ResetPwdForm"
+
 const theme = createMuiTheme(window.colorTheme);
 const styles = theme => ({
 
@@ -36,6 +41,10 @@ class LoginApp extends Component {
 							<div className={classes.toolbar} />
 							{window.pageId==="login"&&<LoginForm/>}
 							{window.pageId==="TwoStep"&&<TwoStep/>}
+							{window.pageId==="register"&&<RegisterForm/>}
+							{window.pageId==="emailActivate"&&<EmailActivication/>}
+							{window.pageId==="resetPwd"&&<ResetPwd/>}
+							{window.pageId==="resetPwdForm"&&<ResetPwdForm/>}
 						</main>
 					</div></MuiThemeProvider>
 			</React.Fragment>

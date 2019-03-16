@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import KeyIcon from '@material-ui/icons/VpnKeyOutlined';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import { toggleSnackbar, } from "../../actions/index"
@@ -59,6 +59,10 @@ const mapStateToProps = state => {
     }
 }
 
+const sleep= (time)=> {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         toggleSnackbar: (vertical, horizontal, msg, color) => {
@@ -67,48 +71,39 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-class LoginFormCompoment extends Component {
+class ResetPwdFormCompoment extends Component {
 
     state={
-        email:"",
         pwd:"",
-        captcha:"",
+        pwdRepeat:"",
         loading:false,
-        captchaUrl:"/captcha?initial",
-    }
-
-    refreshCaptcha = ()=>{
-        this.setState({
-            captchaUrl:"/captcha?"+Math.random(),
-        });
     }
 
     login = e=>{
         e.preventDefault();
+        if(this.state.pwdRepeat !== this.state.pwd){
+            this.props.toggleSnackbar("top","right","两次密码输入不一致","warning");
+            return;
+        }
         this.setState({
             loading:true,
         });
-        axios.post('/Member/Login',{
-            userMail:this.state.email,
-            userPass:this.state.pwd,
-            captchaCode:this.state.captcha,
+        axios.post('/Member/Reset',{
+            pwd:this.state.pwd,
+            key:window.resetKey,
         }).then( (response)=> {
             if(response.data.code!=="200"){
                 this.setState({
                     loading:false,
                 });
-                if(response.data.message=="tsp"){
-                    window.location.href="/Member/TwoStep";
-                }else{
-                    this.props.toggleSnackbar("top","right",response.data.message,"warning");
-                    this.refreshCaptcha();
-                }
+                this.props.toggleSnackbar("top","right",response.data.message,"warning");
             }else{
                 this.setState({
                     loading:false,
+                    pwd:"",
+                    pwdRepeat:"",
                 });
-                window.location.href="/Home";
-                this.props.toggleSnackbar("top","right","登录成功","success");
+                this.props.toggleSnackbar("top","right","密码重设成功","success");
             }
         })
         .catch((error) =>{
@@ -134,50 +129,34 @@ class LoginFormCompoment extends Component {
             <div className={classes.layout}>
                 <Paper className={classes.paper}>
                     <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
+                        <KeyIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        登录{window.siteInfo.mainTitle}
+                        找回密码
                     </Typography>
                     <form className={classes.form} onSubmit={this.login}>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">电子邮箱</InputLabel>
+                            <InputLabel htmlFor="email">新密码</InputLabel>
                             <Input 
-                            id="email" 
-                            type="email" 
-                            name="email" 
-                            onChange={this.handleChange("email")} 
+                            id="pwd" 
+                            type="password" 
+                            name="pwd" 
+                            onChange={this.handleChange("pwd")} 
                             autoComplete
-                            value={this.state.email}
+                            value={this.state.pwd}
                             autoFocus />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="password">密码</InputLabel>
+                            <InputLabel htmlFor="email">重复新密码</InputLabel>
                             <Input 
-                            name="password" 
-                            onChange={this.handleChange("pwd")} 
+                            id="pwdRepeat" 
                             type="password" 
-                            id="password" 
-                            value={this.state.pwd}
-                            autoComplete />
+                            name="pwdRepeat" 
+                            onChange={this.handleChange("pwdRepeat")} 
+                            autoComplete
+                            value={this.state.pwdRepeat}
+                            autoFocus />
                         </FormControl>
-                        {window.captcha==="1"&&
-                        <div className={classes.captchaContainer}>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="captcha">验证码</InputLabel>
-                                <Input 
-                                name="captcha" 
-                                onChange={this.handleChange("captcha")} 
-                                type="text" 
-                                id="captcha" 
-                                value={this.state.captcha}
-                                autoComplete />
-                               
-                            </FormControl> <div>
-                                <img src={this.state.captchaUrl} onClick={this.refreshCaptcha}></img>
-                            </div>
-                        </div>
-                        }
                         <Button
                             type="submit"
                             fullWidth
@@ -186,12 +165,12 @@ class LoginFormCompoment extends Component {
                             disabled={this.state.loading}
                             className={classes.submit}
                         >
-                            登录
+                            重设密码
                         </Button>  </form>                          <Divider/>
                         <div className={classes.link}>
                             <div>
-                                <Link href={"/Member/FindPwd"}>
-                                    忘记密码
+                                <Link href={"/Login"}>
+                                    返回登录
                                 </Link>
                             </div>
                             <div>
@@ -208,9 +187,9 @@ class LoginFormCompoment extends Component {
 
 }
 
-const LoginForm = connect(
+const ResetPwdForm = connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(styles)(LoginFormCompoment))
+)(withStyles(styles)(ResetPwdFormCompoment))
 
-export default LoginForm
+export default ResetPwdForm
