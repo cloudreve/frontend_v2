@@ -111,12 +111,15 @@ class ContextMenuCompoment extends Component {
     state={
     }
 
-    componentWillReceiveProps = (nextProps)=>{
-        if(nextProps.menuType!=="none" && nextProps.menuOpen===true){
-            this.Y=window.event.clientY;
-            this.X=window.event.clientX;
-        }
+    componentDidMount = ()=>{
+        window.document.addEventListener("mousemove",this.setPoint);
     }
+
+    setPoint = e=>{
+        this.Y=e.clientY;
+        this.X=e.clientX;
+    };
+
 
     openDownload = ()=>{
         if(!allowSharePreview()){
