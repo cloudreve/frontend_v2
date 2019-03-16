@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder'
 import classNames from 'classnames';
 import Tooltip from '@material-ui/core/Tooltip';
 import ImageIcon from '@material-ui/icons/PhotoSizeSelectActual'
@@ -186,47 +185,34 @@ class SmallIconCompoment extends Component {
 
         const { classes } = this.props;
 
-        let icon,iconBig;
+        let icon;
         let fileType =this.props.file.name.split(".").pop().toLowerCase();
         if (mediaType["image"].indexOf(fileType)!==-1){
             icon = (<ImageIcon className={classes.iconImg}/>);
-            iconBig = (<ImageIcon className={classes.iconImgBig}/>);
         }else if(mediaType["video"].indexOf(fileType)!==-1){
             icon = (<VideoIcon className={classes.iconVideo}/>);
-            iconBig = (<VideoIcon className={classes.iconVideoBig}/>); 
         }else if(mediaType["audio"].indexOf(fileType)!==-1){
             icon = (<AudioIcon className={classes.iconAudio}/>);
-            iconBig = (<AudioIcon className={classes.iconAudioBig}/>); 
         }else if(mediaType["pdf"].indexOf(fileType)!==-1){
             icon = (<PdfIcon className={classes.iconPdf}/>);
-            iconBig = (<PdfIcon className={classes.iconPdfBig}/>); 
         }else if(mediaType["word"].indexOf(fileType)!==-1){
             icon = (<FileWordBox className={classes.iconWord}/>);
-            iconBig = (<FileWordBox className={classes.iconWordBig}/>); 
         }else if(mediaType["ppt"].indexOf(fileType)!==-1){
             icon = (<FilePowerpointBox className={classes.iconPpt}/>);
-            iconBig = (<FilePowerpointBox className={classes.iconPptBig}/>); 
         }else if(mediaType["excel"].indexOf(fileType)!==-1){
             icon = (<FileExcelBox className={classes.iconExcel}/>);
-            iconBig = (<FileExcelBox className={classes.iconExcelBig}/>);  
         }else if(mediaType["text"].indexOf(fileType)!==-1){
             icon = (<ScriptText className={classes.iconText}/>);
-            iconBig = (<ScriptText className={classes.iconTextBig}/>);  
         }else if(mediaType["torrent"].indexOf(fileType)!==-1){
             icon = (<MagnetOn className={classes.iconTorrent}/>);
-            iconBig = (<MagnetOn className={classes.iconTorrentBig}/>);  
         }else if(mediaType["zip"].indexOf(fileType)!==-1){
             icon = (<ZipBox className={classes.iconZip}/>);
-            iconBig = (<ZipBox className={classes.iconZipBig}/>);  
         }else if(mediaType["excute"].indexOf(fileType)!==-1){
             icon = (<WindowRestore className={classes.iconExe}/>);
-            iconBig = (<WindowRestore className={classes.iconExeBig}/>);  
         }else if(mediaType["android"].indexOf(fileType)!==-1){
             icon = (<Android className={classes.iconAndroid}/>);
-            iconBig = (<Android className={classes.iconAndroidBig}/>);  
         }else{
             icon = (<FileShowIcon className={classes.iconText}/>);
-            iconBig = (<FileShowIcon className={classes.iconTextBig}/>);  
         }
 
 

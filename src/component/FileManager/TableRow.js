@@ -5,12 +5,10 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles';
 
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder'
 import classNames from 'classnames';
-import Tooltip from '@material-ui/core/Tooltip';
 import ImageIcon from '@material-ui/icons/PhotoSizeSelectActual'
 import VideoIcon from '@material-ui/icons/Videocam'
 import AudioIcon from '@material-ui/icons/Audiotrack'

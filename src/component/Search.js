@@ -5,19 +5,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
 import { toggleSnackbar,}from "../actions/index"
 import Typography from '@material-ui/core/Typography';
-import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import OpenIcon from '@material-ui/icons/OpenInNew';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
 import FolderIcon from '@material-ui/icons/Folder';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const styles = theme => ({

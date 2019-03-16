@@ -116,7 +116,7 @@ class RegisterFormCompoment extends Component {
                 this.props.toggleSnackbar("top","right",response.data.message,"warning");
                 this.refreshCaptcha();
             }else{
-                if(response.data.message=="ec"){
+                if(response.data.message==="ec"){
                     this.setState({
                         showStatue:"email",
                     });
@@ -204,7 +204,7 @@ class RegisterFormCompoment extends Component {
                                 autoComplete />
                                
                             </FormControl> <div>
-                                <img src={this.state.captchaUrl} onClick={this.refreshCaptcha}></img>
+                                <img alt="captcha" src={this.state.captchaUrl} onClick={this.refreshCaptcha}></img>
                             </div>
                         </div>
                         }

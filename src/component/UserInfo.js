@@ -64,8 +64,8 @@ class UserInfoCompoment extends Component {
             <div className={classes.userNav}>
                 <div className={classes.flexAvatar}>
                     <a href={"/Profile/"+window.userInfo.uid} className={classes.avatar}>
-                        {(window.userInfo.uid!==-1)&&<img src={"/Member/Avatar/"+window.userInfo.uid+"/l"} className={classes.avatarImg}></img>}
-                        {(window.userInfo.uid===-1)&&<img src={"/Member/Avatar/0/l"} className={classes.avatarImg}></img>}
+                        {(window.userInfo.uid!==-1)&&<img alt="avatar" src={"/Member/Avatar/"+window.userInfo.uid+"/l"} className={classes.avatarImg}></img>}
+                        {(window.userInfo.uid===-1)&&<img alt="avatar" src={"/Member/Avatar/0/l"} className={classes.avatarImg}></img>}
                     </a>
                 
                 </div>

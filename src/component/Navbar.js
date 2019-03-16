@@ -12,11 +12,7 @@ import MusicIcon from '@material-ui/icons/LibraryMusic';
 import ImageIcon from '@material-ui/icons/Collections';
 import AddIcon from '@material-ui/icons/Add';
 import DocIcon from '@material-ui/icons/FileCopy';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 import ShareIcon from '@material-ui/icons/Share';
-import LockIcon from '@material-ui/icons/Lock';
-import EyeIcon from '@material-ui/icons/RemoveRedEye';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import OpenIcon from '@material-ui/icons/OpenInNew'
 import DownloadIcon from '@material-ui/icons/CloudDownload'
@@ -25,7 +21,6 @@ import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import IconButton from '@material-ui/core/IconButton';
@@ -470,13 +465,12 @@ class NavbarCompoment extends Component {
                         <Divider/>
                         <a className={classes.shareInfoContainer} href={"/Profile/"+window.shareInfo.ownerUid}>
                             <Avatar src={"/Member/Avatar/"+window.shareInfo.ownerUid+"/l"} className={classes.shareAvatar}/><div className={classes.ownerInfo}>
-                            <Typography noWrap>{window. shareInfo.ownerNick}</Typography>
+                            <Typography noWrap>{window.shareInfo.ownerNick}</Typography>
                             <Typography noWrap variant="caption" color="textSecondary">分享于{window.shareInfo.shareDate }</Typography>
                         </div>
                         </a>
                         
-                    </div>
-                }
+                    </div>}
                  
                 
                 
@@ -487,7 +481,7 @@ class NavbarCompoment extends Component {
             <div>
                 <AppBar position="fixed" className={classes.appBar} color={(this.props.selected.length <=1 && ! (!this.props.isMultiple&&this.props.withFile))?"primary":"default"}> 
                     <Toolbar>
-                    {((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage&&!window.isSharePage)&&
+                    {(((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage)&&!window.isSharePage)&&
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
@@ -497,7 +491,7 @@ class NavbarCompoment extends Component {
                             <MenuIcon />
                         </IconButton>
                     }
-                        {((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage&&!window.isSharePage)&&<IconButton
+                        {(((this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))||!window.isHomePage)&&!window.isSharePage)&&<IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={()=>this.props.handleDesktopToggle(!this.props.desktopOpen)}
@@ -505,7 +499,7 @@ class NavbarCompoment extends Component {
                         >
                             <MenuIcon />
                         </IconButton>}
-                        {(this.props.selected.length >1 || (!this.props.isMultiple&&this.props.withFile) && (window.isHomePage||window.isSharePage))&&
+                        {((this.props.selected.length >1 || (!this.props.isMultiple&&this.props.withFile) )&& (window.isHomePage||window.isSharePage))&&
                             <Grow in={(this.props.selected.length >1) || (!this.props.isMultiple&&this.props.withFile)}>
                                 <IconButton
                                     color="inherit"
@@ -518,7 +512,7 @@ class NavbarCompoment extends Component {
                         }
                         {(this.props.selected.length <=1 && !(!this.props.isMultiple&&this.props.withFile))&&
                         <Typography variant="h6" color="inherit" noWrap>
-                            {window.isSharePage&&window.pageId==""&&<FolderShared className={classes.folderShareIcon}/>}{window.siteInfo.mainTitle}
+                            {window.isSharePage&&window.pageId===""&&<FolderShared className={classes.folderShareIcon}/>}{window.siteInfo.mainTitle}
         				</Typography>
                         }
 
@@ -546,7 +540,7 @@ class NavbarCompoment extends Component {
                                 </Tooltip>
                             </div>
                         }
-                        {(this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) && (window.isHomePage||window.isSharePage))&&
+                        {((this.props.selected.length>1 || (!this.props.isMultiple&&this.props.withFile) )&& (window.isHomePage||window.isSharePage))&&
                             <div className={classes.sectionForFile}>
                                 {(!this.props.isMultiple&&this.props.withFile&&isPreviewable(this.props.selected[0].name))&&
                                     <Grow in={(!this.props.isMultiple&&this.props.withFile&&isPreviewable(this.props.selected[0].name))}>
@@ -574,7 +568,7 @@ class NavbarCompoment extends Component {
                                     <Grow in={(!this.props.isMultiple && this.props.withFolder)}>
                                         <Tooltip title="进入目录">
                                             <IconButton color="inherit"
-                                                onClick = {()=>this.props.navitateTo(this.props.path=="/"?this.props.path+this.props.selected[0].name:this.props.path+"/"+this.props.selected[0].name) }
+                                                onClick = {()=>this.props.navitateTo(this.props.path==="/"?this.props.path+this.props.selected[0].name:this.props.path+"/"+this.props.selected[0].name) }
                                             >
                                                 <OpenFolderIcon/>
                                             </IconButton> 

@@ -1,6 +1,7 @@
 const checkSelectedProps = (state)=>{
     let isMultiple,withFolder,withFile=false;
     isMultiple = (state.selected.length>1);
+    // eslint-disable-next-line
     state.selected.map((value)=>{
         if(value.type==="dir"){
             withFolder = true;
@@ -77,6 +78,7 @@ const cloudreveApp = (state = [], action) => {
                 }),
             });
         case 'UPDATE_FILE_LIST':
+            // eslint-disable-next-line
             action.list.sort((a,b)=>{
                 switch (state.viewUpdate.sortMethod) {
                     case "sizePos":
@@ -96,10 +98,10 @@ const cloudreveApp = (state = [], action) => {
                 }
             })
             var dirList =  action.list.filter(function (x) {
-                return x .type === "dir";
+                return x.type === "dir";
             });
             var fileList =  action.list.filter(function (x) {
-                return x .type === "file";
+                return x.type === "file";
             });
             return Object.assign({}, state, {
                 explorer: Object.assign({}, state.explorer, {
@@ -124,11 +126,13 @@ const cloudreveApp = (state = [], action) => {
                 }),
             });
         case 'SET_SELECTED_TARGET':
+            // eslint-disable-next-line
             var newState =  Object.assign({}, state, {
                 explorer:Object.assign({}, state.explorer, {
                     selected: action.targets
                 }),
             });
+            // eslint-disable-next-line
             var selectedProps = checkSelectedProps(newState.explorer);
             return Object.assign({}, newState, {
                 explorer:Object.assign({}, newState.explorer, {
@@ -142,11 +146,13 @@ const cloudreveApp = (state = [], action) => {
         case 'RMOVE_SELECTED_TARGET':
             var oldSelected = state.explorer.selected.concat();
             oldSelected.splice(action.id,1);
+            // eslint-disable-next-line
             var newState =  Object.assign({}, state, {
                 explorer:Object.assign({}, state.explorer, {
                     selected: oldSelected
                 }),
             });
+            // eslint-disable-next-line
             var selectedProps = checkSelectedProps(newState.explorer);
             return Object.assign({}, newState, {
                 explorer:Object.assign({}, newState.explorer, {

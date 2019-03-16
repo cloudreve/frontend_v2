@@ -59,10 +59,6 @@ const mapStateToProps = state => {
     }
 }
 
-const sleep= (time)=> {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
 const mapDispatchToProps = dispatch => {
     return {
         toggleSnackbar: (vertical, horizontal, msg, color) => {

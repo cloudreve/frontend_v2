@@ -158,6 +158,7 @@ class ModalsCompoment extends Component {
         e.preventDefault();
         this.props.setModalsLoading(true);
         let dirs=[],items = [];
+        // eslint-disable-next-line
         this.props.selected.map((value)=>{
             if(value.type==="dir"){
                 dirs.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);
@@ -192,6 +193,7 @@ class ModalsCompoment extends Component {
         e.preventDefault();
         this.props.setModalsLoading(true);
         let dirs=[],items = [];
+        // eslint-disable-next-line
         this.props.selected.map((value)=>{
             if(value.type==="dir"){
                 dirs.push(value.path === "/" ? value.path+value.name:value.path+"/"+value.name);

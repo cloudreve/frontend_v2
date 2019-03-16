@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
 import EmailIcon from '@material-ui/icons/EmailOutlined';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -66,10 +64,6 @@ const mapDispatchToProps = dispatch => {
             dispatch(toggleSnackbar(vertical, horizontal, msg, color))
         },
     }
-}
-
-const sleep= (time)=> {
-  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 class EmailActivicationCompoment extends Component {

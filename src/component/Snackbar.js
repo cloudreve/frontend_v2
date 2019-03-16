@@ -121,8 +121,6 @@ class SnackbarCompoment extends Component {
     
     render() {
 
-        const { classes} = this.props;
-
         return (
             <Snackbar
             anchorOrigin={{

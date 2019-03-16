@@ -55,6 +55,7 @@ class ImgPreviewCompoment extends Component {
                 })
             }
             var firstOne;
+            // eslint-disable-next-line
             nextProps.other.map((value)=>{
                 let fileType =value.name.split(".").pop().toLowerCase();
                 
@@ -65,7 +66,7 @@ class ImgPreviewCompoment extends Component {
                         title:value.name,
                         src:window.apiURL.preview+"?action=preview&path="+encodeURIComponent(value.path==="/"?value.path+value.name:value.path+"/"+value.name),
                     };
-                    if((value.path===nextProps.first.path)&&(value.name==nextProps.first.name)){
+                    if((value.path===nextProps.first.path)&&(value.name===nextProps.first.name)){
                         firstOne = newImg;
                     }else{
                         items.push(newImg);
@@ -104,9 +105,6 @@ class ImgPreviewCompoment extends Component {
     }
 
     render() {
-
-        const { classes } = this.props;
-
         if(this.state.loaded){
             return (
                <div>

@@ -7,11 +7,9 @@ export const sizeToString = (bytes) => {
 }
 
 export const setCookie = (name,value,days)=>{
-    var expires = "";
     if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "") +"; path=/"; 
 }
@@ -58,9 +56,9 @@ export const allowSharePreview=()=>{
 
 export const checkGetParameters= field=>{
     var url = window.location.href;
-    if(url.indexOf('?' + field + '=') != -1)
+    if(url.indexOf('?' + field + '=') !== -1)
         return true;
-    else if(url.indexOf('&' + field + '=') != -1)
+    else if(url.indexOf('&' + field + '=') !== -1)
         return true;
     return false
 }

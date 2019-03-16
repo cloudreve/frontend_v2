@@ -643,7 +643,7 @@ class UserSettingCompoment extends Component {
                 <DialogTitle>启用二步验证</DialogTitle>
                 <DialogContent>
                     <div className={classes.flexContainerResponse}>
-                        <img src="/Member/EnableTwoFactor"></img>
+                        <img alt="qrcode" src="/Member/EnableTwoFactor"></img>
                         <div className={classes.desText}>
                         <Typography>请使用任意二步验证APP或者支持二步验证的密码管理软件扫描左侧二维码添加本站。扫描完成后请填写二步验证APP给出的6位验证码以开启二步验证。</Typography>
                         <TextField

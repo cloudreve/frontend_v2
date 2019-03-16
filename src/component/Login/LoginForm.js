@@ -97,7 +97,7 @@ class LoginFormCompoment extends Component {
                 this.setState({
                     loading:false,
                 });
-                if(response.data.message=="tsp"){
+                if(response.data.message==="tsp"){
                     window.location.href="/Member/TwoStep";
                 }else{
                     this.props.toggleSnackbar("top","right",response.data.message,"warning");
@@ -174,7 +174,7 @@ class LoginFormCompoment extends Component {
                                 autoComplete />
                                
                             </FormControl> <div>
-                                <img src={this.state.captchaUrl} onClick={this.refreshCaptcha}></img>
+                                <img src={this.state.captchaUrl} alt="captcha" onClick={this.refreshCaptcha}></img>
                             </div>
                         </div>
                         }

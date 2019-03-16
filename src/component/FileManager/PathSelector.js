@@ -81,7 +81,7 @@ class PathSelectorCompoment extends Component {
         })
         .then( (response)=> {
             var dirList =  response.data.result.filter( (x)=> {
-                return (x .type === "dir" && (this.props.selected.findIndex((value)=>{
+                return (x.type === "dir" && (this.props.selected.findIndex((value)=>{
                     return (value.name === x.name )&&(value.path === x.path);
                 }))===-1);
             });

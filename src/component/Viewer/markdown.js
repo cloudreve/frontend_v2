@@ -77,7 +77,8 @@ class MarkdownViewerCompoment extends Component {
 
     componentDidMount = ()=>{
         let suffix = window.fileInfo.name.split(".").pop().toLowerCase();
-        if(suffix == "md"){
+        if(suffix === "md"){
+            // eslint-disable-next-line
             var editor = window.editormd("editormd", {
                 path : "/static/js/mdeditor/lib/",
                 height: 740,
@@ -95,6 +96,7 @@ class MarkdownViewerCompoment extends Component {
                 },
             });
         }else if(editSuffix.indexOf(suffix)!==-1){
+            // eslint-disable-next-line
             var editor = window.editormd("editormd", {
                 path : "/static/js/mdeditor/lib/",
                 height: 740,

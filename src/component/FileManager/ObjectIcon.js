@@ -18,7 +18,7 @@ import FileIcon from "./FileIcon"
 import SmallIcon from "./SmallIcon"
 import TableItem from "./TableRow"
 import classNames from 'classnames';
-import {imgPreviewSuffix,isPreviewable} from "../../config"
+import {isPreviewable} from "../../config"
 import {allowSharePreview} from "../../untils/index"
 const styles = theme => ({
     container: {
@@ -164,10 +164,6 @@ class ObjectCompoment extends Component {
 
         const { classes } = this.props;
 
-        const isSelected = (this.props.selected.findIndex((value) => {
-            return value === this.props.file;
-        })) !== -1;
-
         if(this.props.viewMethod === "list"){
             return (
                 <TableItem
@@ -193,10 +189,10 @@ class ObjectCompoment extends Component {
                     {(this.props.file.type==="dir" &&this.props.viewMethod !== "list") &&
                         <Folder folder={this.props.file}/>
                     }
-                    {((this.props.file.type==="file") && this.props.viewMethod == "icon") &&
+                    {((this.props.file.type==="file") && this.props.viewMethod === "icon") &&
                         <FileIcon file={this.props.file}/>
                     }
-                    {((this.props.file.type==="file") && this.props.viewMethod == "smallIcon") &&
+                    {((this.props.file.type==="file") && this.props.viewMethod === "smallIcon") &&
                         <SmallIcon file={this.props.file}/>
                     }
                 </div>
