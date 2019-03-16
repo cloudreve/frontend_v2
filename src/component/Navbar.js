@@ -435,6 +435,12 @@ class NavbarCompoment extends Component {
                         </ListItemIcon>
                         <ListItemText inset primary="我的分享" />
                     </ListItem>
+                    <ListItem button key="离线下载"  onClick={()=>window.location.href="/Home/Download"}>
+                        <ListItemIcon>
+                                <DownloadIcon className={classes.iconFix} />
+                        </ListItemIcon>
+                        <ListItemText inset primary="离线下载" />
+                    </ListItem>
                 {!window.isSharePage&&
                     <div>
                         <StorageBar></StorageBar>

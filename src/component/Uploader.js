@@ -156,7 +156,7 @@ const Uploader = connect(
     ['/static/js/uploader/plupload.dev.js'],
     ['/static/js/uploader/i18n/zh_CN.js'], 
     ['/static/js/uploader/ui.js'],
-    ['/static/js/uploader/qiniu.js'],
+    ['/static/js/uploader/uploader.js'],
 
 )(UploaderCompoment))
   

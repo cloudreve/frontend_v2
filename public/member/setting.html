@@ -6,13 +6,17 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="{$options.themeColor}" />
+
     <link rel="manifest" href="/manifest.json">
-    <title>离线下载管理- {$options.siteName}</title>
+
+    <title>用户设置- {$options.siteName}</title>
     <script type="text/javascript">
         colorTheme = {:json_encode($options["themeConfig"])};
+        colorThemeOptions = {$options["themes"]};
         isHomePage = false;
         isSharePage = false;
-        pageId="shareLock";
+        pageId="userSetting";
+        siteUrl = "{$options.siteURL}";
         userInfo = {
             uid: {$userInfo.uid},
             nick: "{$userInfo.userNick}",
@@ -20,9 +24,13 @@
             group: "{$userInfo.groupData.group_name}",
             groupId: {$userInfo.groupData.id},
             groupColor: "{$userInfo.groupData.color}",
+            regTime: "{$userSQL.user_date}",
+            homePage: "{$userSQL.profile}",
+            twoFactor: "{$userSQL.two_step}",
+            webdav:"{$userInfo.groupData.webdav}",
         };
         siteInfo = {
-            mainTitle: "离线下载",
+            mainTitle: "{$options.siteName}",
         };
         uploadConfig = {
             allowSource: false,
@@ -40,5 +48,7 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+
 </body>
+
 </html>

@@ -30,6 +30,7 @@ const defaultStatus = {
             music:false,
             remoteDownload:false,
             torrentDownload:false,
+            getSource:false,
         },
         snackbar:{
             toggle:false,

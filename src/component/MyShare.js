@@ -112,7 +112,7 @@ class MyShareCompoment extends Component {
                 this.setState({
                     shareList:oldList
                 });
-                this.props.toggleSnackbar("top","right","分享已取消","error");
+                this.props.toggleSnackbar("top","right","分享已取消","success");
             }
         })
         .catch((error) =>{

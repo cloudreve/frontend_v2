@@ -91,6 +91,7 @@ class ModalsCompoment extends Component {
         shareUrl:"",
         downloadURL:"",
         remoteDownloadPathSelect:false,
+        source:"",
     } 
 
     handleInputChange = (e)=>{
@@ -111,6 +112,20 @@ class ModalsCompoment extends Component {
                 newName:name.join("."),
             });
             return; 
+        }
+        if((this.props.modalsStatus.getSource!==nextProps.modalsStatus.getSource)&&nextProps.modalsStatus.getSource===true){
+            axios.post('/File/gerSource', {
+                action: 'source',
+                path:(this.props.selected[0].path === "/"?"":this.props.path)+"/"+this.props.selected[0].name,
+            })
+            .then( (response)=> {
+                this.setState({
+                    source:response.data.url,
+                })
+            })
+            .catch((error) =>{
+                this.props.toggleSnackbar("top","right",error.message ,"error");
+            });
         }
     }
 
@@ -344,6 +359,7 @@ class ModalsCompoment extends Component {
             downloadURL:"",
             shareUrl:"",
             remoteDownloadPathSelect:false,
+            source:"",
         });
         this.newNameSuffix = "";
         this.props.closeAllModals();
@@ -361,6 +377,33 @@ class ModalsCompoment extends Component {
 
         return (
             <div>
+                <Dialog
+                open={this.props.modalsStatus.getSource}
+                onClose={this.onClose}
+                aria-labelledby="form-dialog-title"
+                >
+                <DialogTitle id="form-dialog-title">获取文件外链</DialogTitle>
+                    
+                    <DialogContent>
+                        <form onSubmit={this.submitCreateNewFolder}>
+                            <TextField
+                            autoFocus
+                            margin="dense"
+                            id="newFolderName"
+                            label="外链地址"
+                            type="text"
+                            value={this.state.source}
+                            fullWidth
+                            /> 
+                         </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.onClose}>
+                            关闭
+                        </Button>
+                    </DialogActions>
+                
+                </Dialog>
                 <Dialog
                 open={this.props.modalsStatus.createNewFolder}
                 onClose={this.onClose}

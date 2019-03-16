@@ -92,6 +92,8 @@ class StorageBarCompoment extends Component {
             if(response.data.rate>=100){
                 percent = 100;
                 this.props.toggleSnackbar("top","right","您的已用容量已超过容量配额，请尽快删除多余文件或购买容量","warning");
+            }else{
+                percent = response.data.rate;
             }
             this.setState({
                 percent:percent,

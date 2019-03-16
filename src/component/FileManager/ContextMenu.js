@@ -15,6 +15,7 @@ import {
     toggleSnackbar,
     openRemoteDownloadDialog,
     openTorrentDownloadDialog,
+    openGetSourceDialog,
  } from "../../actions/index"
 import {isPreviewable,isTorrent} from "../../config"
 import {allowSharePreview} from "../../untils/index"
@@ -32,6 +33,7 @@ import OpenFolderIcon from '@material-ui/icons/FolderOpen'
 import ShareIcon from '@material-ui/icons/Share'
 import RenameIcon from '@material-ui/icons/BorderColor'
 import MoveIcon from '@material-ui/icons/Input'
+import LinkIcon from '@material-ui/icons/InsertLink'
 import DeleteIcon from '@material-ui/icons/Delete'
 import OpenIcon from '@material-ui/icons/OpenInNew'
 import {MagnetOn} from 'mdi-material-ui'
@@ -94,6 +96,9 @@ const mapDispatchToProps = dispatch => {
         },
         openTorrentDownloadDialog:()=>{
             dispatch(openTorrentDownloadDialog())
+        },
+        openGetSourceDialog:()=>{
+            dispatch(openGetSourceDialog())
         }
     }
 }
@@ -255,6 +260,15 @@ class ContextMenuCompoment extends Component {
                                     <DownloadIcon/>
                                 </ListItemIcon>
                                 <Typography variant="inherit">下载</Typography>
+                            </MenuItem>
+                        }
+
+                        {(!this.props.isMultiple&&this.props.withFile&&(window.uploadConfig.allowSource==="1"))&&
+                            <MenuItem onClick={()=>this.props.openGetSourceDialog()}>
+                                <ListItemIcon>
+                                    <LinkIcon/>
+                                </ListItemIcon>
+                                <Typography variant="inherit">获取外链</Typography>
                             </MenuItem>
                         }
 

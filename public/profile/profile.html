@@ -20,20 +20,30 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>{eq name="pageId" value="resetPwdForm"}找回密码{/eq}{eq name="pageId" value="resetPwd"}找回密码{/eq}{eq name="pageId" value="emailActivate"}激活成功{/eq}{eq name="pageId" value="login"}登录{/eq}{eq name="pageId" value="register"}注册{/eq}{eq name="pageId" value="TwoStep"}二步验证{/eq} - {$options.siteName}</title>
+    <title>用户主页 - {$options.siteName}</title>
     <script type="text/javascript">
         colorTheme = {:json_encode($options["themeConfig"])};
         isHomePage = false;
         isSharePage = false;
-        captcha = "{$RegOptions.login_captcha}";
-        regCaptcha = "{$RegOptions.reg_captcha}";
-        findPwdCaptcha = "{$RegOptions.forget_captcha}";
-        {if isset($key)}
-          resetKey = '{$key}';
-        {/if}
-        pageId="{$pageId}";
+        pageId="profile";
+        taegetUserInfo = {
+            uid:{$targetUserInfo.id},
+            nickname:"{$targetUserInfo.user_nick}",
+            regDate:"{$targetUserInfo.user_date}",
+            shareCount:"{$shareCount}",
+            group:"{$groupData.group_name}",
+        };
         userInfo = {
-            uid: -1,
+            uid: {$userInfo.uid},
+            nick: "{$userInfo.userNick}",
+            email: "{$userInfo.userMail}",
+            group: "{$userInfo.groupData.group_name}",
+            groupId: {$userInfo.groupData.id},
+            groupColor: "{$userInfo.groupData.color}",
+            regTime: "{$userSQL.user_date}",
+            homePage: "{$userSQL.profile}",
+            twoFactor: "{$userSQL.two_step}",
+            webdav:"{$userInfo.groupData.webdav}",
         };
         siteInfo = {
             mainTitle: "{$options.siteName}",

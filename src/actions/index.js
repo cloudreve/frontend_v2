@@ -131,6 +131,11 @@ export const openTorrentDownloadDialog = ()=>{
     }
 }
 
+export const openGetSourceDialog = ()=>{
+    return {
+        type:'OPEN_GET_SOURCE_DIALOG',
+    }
+}
 
 export const closeAllModals = () => {
     return {
