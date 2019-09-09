@@ -89,7 +89,7 @@ module.exports = {
     // require.resolve('webpack/hot/dev-server'),
     hot:require.resolve('react-dev-utils/webpackHotDevClient'),
     // Finally, this is your app's code:
-    index:paths.appIndexJs,
+    index:'./src/pages/index_dev.js',
     video:'./src/pages/video.js',
     markdown:'./src/pages/markdown.js',
     folderShare:'./src/pages/folderShare.js',
