@@ -1,4 +1,4 @@
-cloudreve-frontend [![Build Status](https://travis-ci.org/HFO4/cloudreve-frontend.svg?branch=master)](https://travis-ci.org/HFO4/cloudreve-frontend)
+cloudreve-frontend [![Build Status](https://travis-ci.org/cloudreve/frontend.svg?branch=master)](https://travis-ci.org/cloudreve/frontend)
 =========================
 
 Build:
